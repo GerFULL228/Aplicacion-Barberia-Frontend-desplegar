@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { LoginRequest } from '../models/LoginRequest';
-import { AuthService } from '../../../core/services/auth/auth';
-import { Token } from '../../../core/services/token/token';
+import { LoginRequest } from '../../models/LoginRequest';
+import { AuthService } from '../../../../core/services/auth/auth';
+import { Token } from '../../../../core/services/token/token';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -36,7 +36,7 @@ export class Login {
 
       next: () => {
 
-        if(this.tokenService.getRoles().includes('ROLE_admin')){
+        if(this.tokenService.getRoles().includes('ROLE_cliente')){
           this.router.navigate(['/app']);
           
         }else{
