@@ -1,79 +1,74 @@
 export const MENU_CONFIG = [
-    {
-        label: 'Dashboard',
-        icon: 'pi pi-th-large',
-        route: '/dashboard',
-
-
-    },
-    {
-        label: 'Clientes',
-        icon: 'pi pi-users',
-        route: '/inicio',
-        permission: 'CLIENTE_VIEW'
-
-    },
-    {
-        label: 'Barberos',
-        icon: ' pi pi-user-plus',
-        route: '/barberos',
-        permission: 'BARBERO_VIEW'
-
-    },
-    {
-        label: 'Productos',
-        icon: 'pi pi-box',
-        route: '/productos',
-        permission: 'PRODUCTO_VIEW'
-        
-    },
-    {
-        label: 'Categorias',
-        icon: 'pi pi-home',
-        route: '/categorias',
-        permission: 'CATEGORIA_VIEW'
-    },
-    {
-        label: 'Servicios',
-        icon: 'pi pi-home',
-        route: '/servicios',
-        permission: 'SERVICIO_VIEW'
-    },
-    {
-        label: 'Reservas',
-        icon: 'pi pi-home',
-        route: '/reservas',
-        permission: 'RESERVA_VIEW'
-    },
-    {
-        label: 'Ventas',
-        icon: 'pi pi-home',
-        route: '/ventas',
-        permission: 'VENTA_VIEW'
-    },
-    {
-        label: 'Cortes',
-        icon: 'pi pi-home',
-        route: '/cortes',
-        permission: 'CORTE_VIEW'
-    },
-    {
-        label: 'Reportes',
-        icon: 'pi pi-home',
-        route: '/reportes',
-        permission: 'REPORTE_VIEW'
-    },
-    {
-        label: 'Estadisticas',
-        icon: 'pi pi-home',
-        route: '/estadisticas',
-        permission: 'ESTADISTICA_VIEW'
-    },
-    {
-        label: 'Configuracion',
-        icon: 'pi pi-home',
-        route: '/configuracion',
-        permission: 'CONFIGURACION_VIEW'
-    },
-
+  {
+    label: 'Dashboard',
+    icon: 'pi pi-th-large',
+    route: '/dashboard',
+    permission: 'DASHBOARD_READ'
+  },
+  {
+    label: 'Clientes',
+    icon: 'pi pi-users',
+    route: '/clientes',
+    permission: 'USUARIO_VIEW'
+  },
+  {
+    label: 'Barberos',
+    icon: 'pi pi-user-plus',
+    route: '/barberos',
+    permission: 'BARBERO_VIEW'
+  },
+  {
+    label: 'Productos',
+    icon: 'pi pi-box',
+    route: '/productos',
+    permission: 'PRODUCTO_READ'
+  },
+  {
+    label: 'Categorías',
+    icon: 'pi pi-home',
+    route: '/categorias',
+    permission: 'CATEGORIA_READ'
+  },
+  {
+    label: 'Servicios',
+    icon: 'pi pi-home',
+    route: '/servicios',
+    permission: 'SERVICIO_READ'
+  },
+  {
+    label: 'Reservas',
+    icon: 'pi pi-calendar',
+    route: '/reservas',
+    permission: 'RESERVA_READ'
+  },
+  {
+    label: 'Ventas',
+    icon: 'pi pi-shopping-cart',
+    route: '/ventas',
+    permission: 'VENTA_READ'
+  },
+  {
+    label: 'Cortes',
+    icon: 'pi pi-scissors',
+    route: '/cortes',
+    permission: 'CORTE_READ'
+  },
+  {
+    label: 'Reportes',
+    icon: 'pi pi-chart-bar',
+    route: '/reportes',
+    permission: 'REPORTE_READ'
+  },
+  {
+    label: 'Estadísticas',
+    icon: 'pi pi-chart-line',
+    route: '/estadisticas',
+    permission: 'ESTADISTICA_READ'
+  },
+  {
+    label: 'Configuración',
+    icon: 'pi pi-cog',
+    route: '/configuracion',
+    permission: 'CONFIGURACION_READ'
+  }
 ];
