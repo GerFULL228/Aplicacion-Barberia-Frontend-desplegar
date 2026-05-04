@@ -1,44 +1,56 @@
 <div class="flex justify-center p-6">
   <p-card 
-    class="shadow-3 border-round-xl overflow-hidden transition-all transition-duration-300 hover:shadow-6 carta"
-    [style]="{ width: '22rem' }"
+    class="shadow-3 flex flex-row justify-between border-round-xl overflow-hidden transition-all transition-duration-300 hover:shadow-6 carta"
+    [style]="{ width: '20rem' , height: '30rem' }"
   >
 
-    <!-- 🖼️ Imagen -->
+    
     <ng-template #header>
       <div class="relative">
         <img
           alt="Card"
           class="w-full h-56 object-cover"
-          [src]="producto.imagenes?.[1] || '/imagenes/default-hotel.png'"
+          [src]="producto.imagenes?.[0] || '/imagenes/default-hotel.png'"
         />
 
-        <!-- Badge publicado -->
-        <span 
-          *ngIf="producto.publicado"
-          class="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 text-xs border-round"
-        >
-          Disponible
-        </span>
+        @if (producto.publicado) {
+          <span 
+            class="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 text-xs rounded-2xl"
+          >
+            Disponible
+          </span>
+        }
+            @else {
+            <span 
+                class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 text-xs border-round"
+            >
+                No Disponible
+            </span>
+            }
+
+         <span class="absolute bg-[#1A1A1A] text-yellow-300 top-2 left-2 px-2 py-1 text-xs rounded-2xl">
+           {{producto.nombreCategoria}}
+         </span>
       </div>
+
     </ng-template>
 
-    <!-- 📝 Título -->
+  
     <ng-template #title>
-      <div class="text-lg font-semibold text-900 line-clamp-1">
+      <div class="text-lg text-white font-semibold text-900 line-clamp-1">
         {{ producto.nombre }}
       </div>
     </ng-template>
 
-    <!-- 📄 Descripción -->
+   
     <ng-template #subtitle>
-      <div class="text-sm text-600 line-clamp-2">
+      <div class="text-sm text-600 line-clamp-2 text-gray-300">
         {{ producto.descripcion }}
       </div>
     </ng-template>
 
-    <!-- 💰 Precio -->
-    <div class="mt-3 flex justify-between items-center">
+    
+    <div class="mt-auto pt-3 flex justify-between items-center text-yellow-300">
       <span class="text-xl font-bold text-primary">
         {{ producto.precio | currency:'USD' }}
       </span>
@@ -48,23 +60,23 @@
       </span>
     </div>
 
-    <!-- 🔘 Botones -->
+   
     <ng-template #footer>
-      <div class="flex gap-2 mt-4">
+      <div class="flex gap-2 mt-4 contenedor align-bottom">
         
         <button 
           pButton 
           label="Ver" 
           icon="pi pi-eye"
           [routerLink]="['/productos', producto.id]"
-          class="p-button-outlined w-full"
+          class="p-button-outlined w-28 boton"
         ></button>
 
         <button 
           pButton 
-          label="Reservar" 
+          
           icon="pi pi-shopping-cart"
-          class="p-button-primary w-full"
+          class="p-button-primary boton"
         ></button>
 
       </div>

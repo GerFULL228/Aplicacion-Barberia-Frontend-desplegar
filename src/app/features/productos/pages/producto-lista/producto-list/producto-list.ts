@@ -1,10 +1,12 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, WritableSignal } from '@angular/core';
 import { ProductoResponse } from '../../../models/response/ProductoResponse';
 import { ProductoCard } from '../../../components/producto-card/producto-card/producto-card';
 import { map, Observable } from 'rxjs';
 import { ProductoService } from '../../../services/producto-service';
 import { ProductoLista } from "../../../components/productoLista/producto-lista/producto-lista";
 import { AsyncPipe } from '@angular/common';
+import { ProductoStore } from '../../../store/producto.store';
+import { ProductoFacade } from '../../../facade/producto.facade';
 
 @Component({
   standalone: true,
@@ -14,22 +16,26 @@ import { AsyncPipe } from '@angular/common';
   styleUrl: './producto-list.css',
 })
 export class ProductoList implements OnInit{
+
+ 
   
-
-
-  productos$!: Observable<ProductoResponse[]>;
-  private productoService = inject(ProductoService);
   
+  private facade = inject(ProductoFacade);
 
-  ngOnInit(): void {
-    this.cargarProductos();
+  productos = this.facade.productos;
+
+  ngOnInit() {
+    this.facade.cargarProductos();
+    setInterval(() => {
+    this.facade.cargarProductos(); 
+  }, 10000);
+
   }
 
-  cargarProductos(): void {
-    this.productos$ = this.productoService.getProductos().pipe(
-      map(response => response.data.content) 
-    );
+  refrescar() {
+    this.facade.cargarProductos();
   }
+  
 
   
 
