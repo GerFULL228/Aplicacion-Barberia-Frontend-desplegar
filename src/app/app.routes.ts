@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { Inicio } from './features/public/pages/inicio/inicio';
 import { Nosotros } from './features/public/pages/nosotros/nosotros';
-import { Productos } from './features/public/pages/productos/productos';
 import { Servicios } from './features/public/pages/servicios/servicios';
 import { Reservas } from './features/public/pages/reservas/reservas';
 import { Reclamos } from './features/public/pages/reclamos/reclamos';
@@ -12,10 +11,12 @@ import { EmpleadoLayout } from './layout/empleado-layout/empleado-layout';
 import { PublicLayout } from './layout/public-layout/public-layout';
 import { authGuardGuard } from './core/guards/auth/auth-guard-guard';
 import { guestGuardGuard } from './core/guards/guess/guest-guard-guard';
+import { rolGuardsGuard } from './core/guards/rol/rol-guards-guard';
 
 
 
 export const routes: Routes = [
+  
 
  {
   path: '',
@@ -23,7 +24,7 @@ export const routes: Routes = [
   children: [
     { path: '', component: Inicio,  canActivate: [guestGuardGuard], },
 
-    { path: 'inicio', component: Inicio },
+    
     { path: 'nosotros', component: Nosotros },
     {
       path: 'productos',
@@ -43,9 +44,9 @@ export const routes: Routes = [
   path: 'dashboard',
   component: EmpleadoLayout,
   canActivate: [authGuardGuard],
-  children: [
-    
-  ]
+  data: {roles: ['admin','barbero']},
+  loadChildren:() =>import('../app/features/productos/admin/producto.Admin.route').then(m => m.PRODUCTOS_ROUTE_ADMIN)
+  
 },
   {
     path: 'login',

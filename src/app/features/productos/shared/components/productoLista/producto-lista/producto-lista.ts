@@ -1,6 +1,6 @@
-import { Component, Input, WritableSignal } from '@angular/core';
+import { Component, Input, Signal, WritableSignal } from '@angular/core';
 import { ProductoCard } from '../../producto-card/producto-card/producto-card';
-import { ProductoResponse } from '../../../models/response/ProductoResponse';
+import { ProductoResponse } from '../../../../models/response/ProductoResponse';
 
 @Component({
   standalone: true,
@@ -10,6 +10,6 @@ import { ProductoResponse } from '../../../models/response/ProductoResponse';
   styleUrl: './producto-lista.css',
 })
 export class ProductoLista {
-  @Input() productos!: WritableSignal<ProductoResponse[]>;
+  @Input() productos!: ProductoResponse[] ;
 
 }

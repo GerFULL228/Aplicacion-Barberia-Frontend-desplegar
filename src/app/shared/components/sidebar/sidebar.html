@@ -9,7 +9,7 @@
 
     <ul class="text-white">
         @for (item of menu$ | async; track item.route) {
-        <li class="p-6 m-4  rounded-2xl  hover:bg-[#292311] hover:text-yellow-400 text-lg ">
+        <li class="p-3 m-4  rounded-2xl  hover:bg-[#292311] hover:text-yellow-400 text-lg ">
             <a [routerLink]="item.route" class="flex items-center gap-3">
                 <i [class]="item.icon"></i>
 

@@ -8,31 +8,30 @@ import { tap } from "rxjs";
 export class ProductoFacade {
 
      private api = inject(ProductoService);
-  private store = inject(ProductoStore);
+      private store = inject(ProductoStore);
+
+      productos = this.store.productos;
+
+
+      cargarProductos(){
+        this.api.getProductos().subscribe({
+            next: (Response) =>{
+                this.store.setProductos(Response.data.content);
+            },
+            error: (error) => {
+                console.error('Error al cargar productos:', error);
+            }
+        })
+      }
+
+      crearProducto(producto: any){
+        
+      }
 
   
-  private refresh = signal(0);
+  
 
-  productos = this.store.productos;
 
-  constructor() {
-    
-    effect(() => {
-      this.refresh();
-
-      this.api.getProductos().subscribe(res => {
-        this.store.setProductos(res.data.content);
-      });
-    });
-  }
-
-  cargarProductos() {
-    this.refresh.update(v => v + 1);
-  }
-
-  agregarProducto(producto: any) {
-    this.store.agregarProducto(producto);
-  }
 
    
 }

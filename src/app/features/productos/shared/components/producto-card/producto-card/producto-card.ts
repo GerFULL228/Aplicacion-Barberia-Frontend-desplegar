@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ProductoResponse } from '../../../models/response/ProductoResponse';
+import { ProductoResponse } from '../../../../models/response/ProductoResponse';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { RouterLink } from '@angular/router';
