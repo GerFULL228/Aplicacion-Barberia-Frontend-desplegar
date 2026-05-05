@@ -8,25 +8,25 @@ export const MENU_CONFIG = [
   {
     label: 'Clientes',
     icon: 'pi pi-users',
-    route: '/clientes',
+    route: '/dashboard/clientes',
     permission: 'USUARIO_VIEW'
   },
   {
     label: 'Barberos',
     icon: 'pi pi-user-plus',
-    route: '/barberos',
+    route: '/dashboard/barberos',
     permission: 'BARBERO_VIEW'
   },
   {
     label: 'Productos',
     icon: 'pi pi-box',
-    route: '/productos',
+    route: '/dashboard/productos',
     permission: 'PRODUCTO_READ'
   },
   {
     label: 'Categorías',
     icon: 'pi pi-home',
-    route: '/categorias',
+    route: '/dashboard/categorias',
     permission: 'CATEGORIA_READ'
   },
   {
