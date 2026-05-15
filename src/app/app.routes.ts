@@ -1,25 +1,70 @@
 import { Routes } from '@angular/router';
-import { Inicio } from './public/inicio/inicio';
-import { Nosotros } from './public/nosotros/nosotros';
-import { Productos } from './public/productos/productos';
-import { Servicios } from './public/servicios/servicios';
-import { Reclamos } from './public/reclamos/reclamos';
-import { Login } from './public/login/login';
-import { Register } from './public/register/register';
-import { Error404 } from './public/error404/error404';
-import { Reservas } from './public/reservas/reservas';
-
-
+import { authGuard } from './core/guards/auth.guard';
+import { guestGuard } from './core/guards/guest.guard';
+import { NosotrosComponent } from './features/public/pages/nosotros/nosotros..component';
+import { ServiciosComponent } from './features/public/pages/servicios/servicios.component';
+import { ReservasComponent } from './features/public/pages/reservas/reservas.component';
+import { ReclamosComponent } from './features/public/pages/reclamos/reclamos.component';
+import { RegisterComponent } from './features/auth/register/register.component';
+import { PrivateLayoutComponent } from './features/private/layout/private-layout.component';
+import { PublicLayoutComponent } from './features/public/layout/public-layout.component';
+import { Error404Component } from './shared/components/error404/error404.component';
+import { InicioComponent } from './features/public/pages/inicio/inicio.component';
+import { PerfilClient } from './features/private/components/gestion/clientes/perfil-client/perfil-client';
+import { RegistrarClient } from './features/private/components/gestion/clientes/registrar-client/registrar-client';
 
 export const routes: Routes = [
-    {path:'',component:Inicio,title:'Inicio'},
-    {path:'inicio',component:Inicio,title:'Inicio'},
-    {path:'nosotros',component:Nosotros,title:'Nosotros'},
-    {path:'productos',component:Productos,title:'Productos'},
-    {path:'servicios',component:Servicios,title:'Servicios'},
-    {path:'reclamos',component:Reclamos,title:'Reclamos'},
-    {path:'reservas',component:Reservas,title:'Reservas'},
-    {path:'login',component:Login,title:'Login'},
-    {path:'register',component:Register,title:'Register'},
-    {path:'**',component:Error404,title:'Error'}
+
+  {
+    path: '',
+    component: PublicLayoutComponent,
+    children: [
+      { path: 'inicio', redirectTo: '', pathMatch: 'full' },
+      { path: '', component: InicioComponent, canActivate: [guestGuard], },
+
+      { path: 'nosotros', component: NosotrosComponent },
+      //esta raro esta wea 
+      { path: 'productos', loadChildren: () => import('./features/productos/productos.route').then(m => m.PRODUCTOS_ROUTE) },
+      { path: 'servicios', component: ServiciosComponent },
+      { path: 'reclamos', component: ReclamosComponent },
+      { path: 'reservas', component: ReservasComponent },
+      { path: 'register', component: RegisterComponent },
+    ]
+  },
+
+  {
+    path: 'dashboard',
+    component: PrivateLayoutComponent,
+    canActivate: [authGuard],
+    data: { roles: ['admin', 'barbero'] },
+    children: [
+      { path: '', redirectTo: 'resumen', pathMatch: 'full' },
+      { path: 'resumen', loadComponent: () => import('./features/private/components/resumen/resumen').then(m => m.Resumen) },
+      {
+        path: 'catalogo', children: [
+          { path: 'categorias', loadComponent: () => import('./features/private/components/catalogo/categorias/categorias.component').then(m => m.CategoriasComponent) },
+          { path: 'productos', loadComponent: () => import('./features/private/components/catalogo/productos/productos.component').then(m => m.ProductosComponent) },
+          { path: 'servicios', loadComponent: () => import('./features/private/components/catalogo/servicios/servicios.component').then(m => m.ServiciosComponent) },
+        ]
+      },
+      {
+        path: 'gestion', children: [
+          { path: 'clientes', loadComponent: () => import('./features/private/components/gestion/clientes/clientes').then(m => m.Clientes) },
+          { path: 'clientes/registrar-client', component: RegistrarClient },
+          { path: 'clientes/:id', component: PerfilClient },
+          { path: 'barberos', loadComponent: () => import('./features/private/components/gestion/barberos/barberos').then(m => m.Barberos) },
+        ]
+      },
+      { path: '**', loadComponent: () => import('./shared/components/error404/error404.component').then(m => m.Error404Component) }
+    ]
+
+  },
+  {
+    path: 'login',
+    canActivate: [guestGuard],
+    loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent)
+  },
+
+  { path: '**', component: Error404Component },
+
 ];

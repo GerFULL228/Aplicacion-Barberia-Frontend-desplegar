@@ -1,15 +1,21 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Header } from './layout/header/header';
-import { Footer } from './layout/footer/footer';
+import { Toast } from 'primeng/toast';
+import { TokenService } from './core/services/auth/token.service';
+
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,Header,Footer],
+  imports: [RouterOutlet, Toast],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
   protected readonly title = signal('Aplicacion-Barberia-Frontend');
+  private tokenService = inject(TokenService);
+
+  ngOnInit() {
+    this.tokenService.initPermisos();
+  }
 }
