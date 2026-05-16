@@ -5,7 +5,7 @@ import { ResumenGeneralClient } from './components/resumen-general-client/resume
 import { ClienteFilterCriteria, ClienteFilterMode, FiltrarClients } from './components/filtrar-clients/filtrar-clients';
 import { TableClient } from './components/table-client/table-client';
 import { ClienteService } from '@/app/core/services/gestion/cliente.service';
-import { Cliente } from '@/app/core/models/gestion/cliente.model';
+import { Cliente } from '@/app/core/models/gestion/cliente/cliente.model';
 
 @Component({
   selector: 'app-clientes',

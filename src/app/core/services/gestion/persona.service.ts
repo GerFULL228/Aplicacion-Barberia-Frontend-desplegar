@@ -6,7 +6,7 @@ import { environment } from '@/environments/environment.development';
 
 import { ApiResponse } from '../../models/gestion/api-response.model';
 
-import { PersonaUpdateRequest } from '../../models/gestion/persona-update.model';
+import { PersonaUpdateRequest } from '../../models/gestion/persona/persona-update.model';
 
 @Injectable({
     providedIn: 'root'

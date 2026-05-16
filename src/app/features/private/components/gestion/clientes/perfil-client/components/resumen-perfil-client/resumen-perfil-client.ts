@@ -2,7 +2,7 @@ import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ClienteService } from '@/app/core/services/gestion/cliente.service';
-import { ClienteDetalleResumen } from '@/app/core/models/gestion/cliente-detalle-resumen.model';
+import { ClienteDetalleResumen } from '@/app/core/models/gestion/cliente/cliente-detalle-resumen.model';
 
 @Component({
   selector: 'app-resumen-perfil-client',

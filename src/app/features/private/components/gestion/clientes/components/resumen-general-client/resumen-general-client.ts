@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ClienteResumen } from '@core/models/gestion/ClienteResumen.model';
+import { ClienteResumen } from '@/app/core/models/gestion/cliente/ClienteResumen.model';
 import { OnInit, inject } from '@angular/core';
 import { ClienteService } from '@/app/core/services/gestion/cliente.service';
 @Component({

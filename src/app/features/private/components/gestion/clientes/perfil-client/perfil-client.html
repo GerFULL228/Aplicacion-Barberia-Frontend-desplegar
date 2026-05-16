@@ -28,8 +28,7 @@
 
 
 	<div class="mt-6 md:mt-8">
-		<app-credenciales-perfil-client [usuario]="usuario" [contrasena]="contrasena"
-			(resetPassword)="onResetPassword()"></app-credenciales-perfil-client>
+		<app-credenciales-perfil-client [usuario]="usuario" [contrasena]="contrasena" [idUsuario]="idUsuario" (passwordReset)="onPasswordReset()" (usernameUpdate)="onUsernameUpdate()"></app-credenciales-perfil-client>
 	</div>
 
 	<div class="mt-6 md:mt-8">
