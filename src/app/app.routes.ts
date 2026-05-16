@@ -10,6 +10,8 @@ import { PrivateLayoutComponent } from './features/private/layout/private-layout
 import { PublicLayoutComponent } from './features/public/layout/public-layout.component';
 import { Error404Component } from './shared/components/error404/error404.component';
 import { InicioComponent } from './features/public/pages/inicio/inicio.component';
+import { PerfilClient } from './features/private/components/gestion/clientes/perfil-client/perfil-client';
+import { RegistrarClient } from './features/private/components/gestion/clientes/registrar-client/registrar-client';
 
 export const routes: Routes = [
 
@@ -44,6 +46,14 @@ export const routes: Routes = [
           { path: 'productos', loadComponent: () => import('./features/private/components/catalogo/productos/productos.component').then(m => m.ProductosComponent) },
           { path: 'detalle/:id', loadComponent: () => import('./features/private/components/catalogo/productos/producto-detalle/producto-detalle.component').then(m => m.ProductoDetalleComponent) },
           { path: 'servicios', loadComponent: () => import('./features/private/components/catalogo/servicios/servicios.component').then(m => m.ServiciosComponent) },
+        ]
+      },
+      {
+        path: 'gestion', children: [
+          { path: 'clientes', loadComponent: () => import('./features/private/components/gestion/clientes/clientes').then(m => m.Clientes) },
+          { path: 'clientes/registrar-client', component: RegistrarClient },
+          { path: 'clientes/:id', component: PerfilClient },
+          { path: 'barberos', loadComponent: () => import('./features/private/components/gestion/barberos/barberos').then(m => m.Barberos) },
         ]
       },
       { path: '**', loadComponent: () => import('./shared/components/error404/error404.component').then(m => m.Error404Component) }
