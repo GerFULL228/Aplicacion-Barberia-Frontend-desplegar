@@ -4,11 +4,11 @@ import { Observable } from 'rxjs';
 
 import { ApiResponse } from '../../models/gestion/api-response.model';
 import { PageResponse } from '../../models/gestion/page-response.model';
-import { Cliente } from '../../models/gestion/cliente.model';
+import { Cliente } from '../../models/gestion/cliente/cliente.model';
 import { environment } from '@/environments/environment.development';
-import { ClienteResumen } from '../../models/gestion/ClienteResumen.model';
-import { ClienteDetalleResumen } from '../../models/gestion/cliente-detalle-resumen.model';
-import { ActividadReciente } from '../../models/gestion/ActividadReciente.model';
+import { ClienteResumen } from '../../models/gestion/cliente/ClienteResumen.model';
+import { ClienteDetalleResumen } from '../../models/gestion/cliente/cliente-detalle-resumen.model';
+import { ActividadReciente } from '../../models/gestion/cliente/ActividadReciente.model';
 
 @Injectable({
     providedIn: 'root'
