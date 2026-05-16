@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 
 import { ClienteService } from '@/app/core/services/gestion/cliente.service';
 
-import { ActividadReciente } from '@/app/core/models/gestion/ActividadReciente.model';
+import { ActividadReciente } from '@/app/core/models/gestion/cliente/ActividadReciente.model';
 
 @Component({
   selector: 'app-actividad-client',

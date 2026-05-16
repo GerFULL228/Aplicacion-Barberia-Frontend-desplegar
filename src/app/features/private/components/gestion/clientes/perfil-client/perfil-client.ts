@@ -7,7 +7,7 @@ import { ResumenPerfilClient } from './components/resumen-perfil-client/resumen-
 import { CredencialesPerfilClient } from './components/credenciales-perfil-client/credenciales-perfil-client';
 import { ActividadClient } from './components/actividad-client/actividad-client';
 import { ClienteService } from '@/app/core/services/gestion/cliente.service';
-import { Cliente } from '@/app/core/models/gestion/cliente.model';
+import { Cliente } from '@/app/core/models/gestion/cliente/cliente.model';
 
 @Component({
   selector: 'app-perfil-client',
@@ -50,6 +50,8 @@ export class PerfilClient {
   registro = '';
   usuario = '';
   contrasena = '';
+  idUsuario = 0;
+  clienteIdActual = 0;
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -66,6 +68,7 @@ export class PerfilClient {
     this.clienteService.obtenerPorId(id).subscribe({
       next: (response) => {
         this.cliente = response.data;
+          this.clienteIdActual = response.data.clienteId;
         this.actualizarVista();
         this.cargando = false;
       },
@@ -93,6 +96,7 @@ export class PerfilClient {
     this.registro = cliente.fechaRegistro ?? '';
     this.usuario = cliente.persona?.usuario?.user ?? '';
     this.contrasena = this.maskPassword(cliente.persona?.usuario?.password ?? '');
+    this.idUsuario = cliente.persona?.usuario?.idUsuario ?? 0;
     this.clienteNombre = apellido ? `${nombre} ${apellido}` : nombre;
     this.clienteIniciales = this.getInitials(this.clienteNombre);
 
@@ -129,8 +133,20 @@ export class PerfilClient {
     return `${'•'.repeat(maskedLength)}${suffix}`;
   }
 
-  onResetPassword(): void {
-    window.alert('Falta integrar el endpoint de restablecimiento de contraseña.');
+  onPasswordReset(): void {
+    if (!this.clienteIdActual) {
+      return;
+    }
+
+    this.cargarCliente(this.clienteIdActual);
+  }
+
+  onUsernameUpdate(): void {
+    if (!this.clienteIdActual) {
+      return;
+    }
+
+    this.cargarCliente(this.clienteIdActual);
   }
 
 }

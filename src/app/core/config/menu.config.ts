@@ -33,13 +33,13 @@ export const MENU_CONFIG = [
         label: "Clientes",
         icon: "pi pi-user",
         routerLink: ["gestion/clientes"],
-        //permission: "USUARIO_READ"
+        permission: "USUARIO_READ_ALL"
       },
       {
         label: "Barberos",
         icon: "pi pi-crown",
         routerLink: ["gestion/barberos"],
-        //permission: "BARBERO_READ"
+        permission: "BARBERO_READ_ALL"
       }
     ]
   },

@@ -1,4 +1,4 @@
-import { Persona } from "./persona.model";
+import { Persona } from "../persona/persona.model";
 
 export interface Cliente {
   clienteId: number;
