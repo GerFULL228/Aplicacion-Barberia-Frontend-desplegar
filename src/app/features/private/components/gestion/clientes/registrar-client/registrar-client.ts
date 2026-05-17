@@ -94,7 +94,7 @@ export class RegistrarClient {
         console.log('registrarCliente response:', res);
         this.isSubmitting = false;
         this.showConfirm = false;
-        this.notification.showSuccess('Cliente creado correctamente');
+        this.notification.showSuccess(res?.message || 'Cliente creado correctamente');
         this.router.navigate(['/dashboard/gestion/clientes']);
       },
       error: (err) => {
@@ -113,5 +113,4 @@ export class RegistrarClient {
   togglePasswordConfirm(): void {
     this.showPasswordConfirm = !this.showPasswordConfirm;
   }
-
 }

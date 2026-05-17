@@ -14,8 +14,8 @@ import {
 } from '@angular/forms';
 
 import { PersonaService } from '@/app/core/services/gestion/persona.service';
+import { NotificationService } from '@/app/core/services/common/notification.service';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -26,7 +26,6 @@ import { MessageService } from 'primeng/api';
     ReactiveFormsModule,
     ToastModule
   ],
-  providers: [MessageService],
   templateUrl: './informacion-basica.html',
   styleUrl: './informacion-basica.css',
 })
@@ -35,7 +34,7 @@ export class InformacionBasica {
   private fb = inject(FormBuilder);
 
   private personaService = inject(PersonaService);
-  private messageService = inject(MessageService);
+  private notificationService = inject(NotificationService);
 
   @Input() personaId!: number;
 
@@ -118,7 +117,7 @@ export class InformacionBasica {
     )
       .subscribe({
 
-        next: () => {
+        next: (response) => {
 
           this.nombre = this.form.value.nombre ?? '';
 
@@ -132,26 +131,19 @@ export class InformacionBasica {
 
           this.cargando = false;
 
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Actualizado',
-            detail: 'Datos actualizados correctamente',
-            life: 3000
-          });
+          this.notificationService.showSuccess(
+            response?.message || 'Datos actualizados correctamente',
+            'Actualizado'
+          );
 
           this.actualizado.emit();
         },
 
-        error: () => {
+        error: (err) => {
 
           this.cargando = false;
 
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'No se pudo actualizar los datos',
-            life: 3000
-          });
+          this.notificationService.showHttpError(err, 'Error');
         }
       });
   }
