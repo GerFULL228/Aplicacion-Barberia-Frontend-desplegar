@@ -23,7 +23,7 @@
                                 <p-button type="button" [pRowToggler]="producto" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" class="boton-expandir-tabla"></p-button>
                                 @if(producto.urlsMultimedia && producto.urlsMultimedia.length > 0){
                                     <span class="relative inline-block">
-                                        <p-image [src]="environment + producto.urlsMultimedia[0]" alt="Imagen de {{ producto.nombre }}" width="40" height="40" [preview]="false" class="rounded-lg object-cover cursor-pointer" imageClass="rounded-lg" (click)="abrirGaleria(producto,0)"></p-image>
+                                        <p-image [src]="producto.urlsMultimedia[0] | safeImageUrl" alt="Imagen de {{ producto.nombre }}" width="40" height="40" [preview]="false" class="rounded-lg object-cover cursor-pointer" imageClass="rounded-lg" (click)="abrirGaleria(producto,0)"></p-image>
                                         @if(producto.urlsMultimedia.length > 0){
                                             <span class="absolute -top-1 -right-1 bg-black text-white text-xs px-1 rounded">{{producto.urlsMultimedia.length}}</span>
                                         }

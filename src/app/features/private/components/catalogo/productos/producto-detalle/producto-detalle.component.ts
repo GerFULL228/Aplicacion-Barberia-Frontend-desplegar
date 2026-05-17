@@ -7,10 +7,11 @@ import { StatusBadgeComponent } from '@/app/shared/components/status-badge/statu
 import { ProductoService } from '@/app/core/services/catalogos/producto.service';
 import { environment } from '@/environments/environment.development';
 import { Producto } from '@/app/core/models/catalogos/productos.model';
+import { SafeImageUrlPipe } from '@/app/shared/pipes/safe-image-url.pipe';
 
 @Component({
   selector: 'app-producto-detalle',
-  imports: [ButtonModule, ImageModule, CommonModule, StatusBadgeComponent],
+  imports: [ButtonModule, ImageModule, CommonModule, StatusBadgeComponent, SafeImageUrlPipe],
   templateUrl: './producto-detalle.html',
   styleUrl: './producto-detalle.css',
 })

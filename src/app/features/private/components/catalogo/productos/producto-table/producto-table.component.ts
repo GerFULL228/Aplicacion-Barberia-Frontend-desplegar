@@ -14,11 +14,12 @@ import { ConfirmPopoverComponent } from '@/app/shared/components/confirm-popover
 import { StatusBadgeComponent } from '@/app/shared/components/status-badge/status-badge.component';
 import { Producto } from '@/app/core/models/catalogos/productos.model';
 import { environment } from '@/environments/environment.development';
+import { SafeImageUrlPipe } from '@/app/shared/pipes/safe-image-url.pipe';
 
 @Component({
   selector: 'app-producto-table',
   imports: [ButtonModule, CommonModule, TableModule, ConfirmPopoverComponent, DialogModule, ToggleSwitchModule,
-    ImageModule, IconFieldModule, InputIconModule, StatusBadgeComponent, GalleriaModule, FormsModule
+    ImageModule, IconFieldModule, InputIconModule, StatusBadgeComponent, GalleriaModule, FormsModule, SafeImageUrlPipe
   ],
   templateUrl: './producto-table.html',
   styleUrl: './producto-table.css',
@@ -35,7 +36,6 @@ export class ProductoTableComponent {
   @Input() cargado = false;
   @Input() totalRecords = 0;
   @Input() rows = 25;
-
 
   mostrarConfirmacion = false;
   productoAEliminar: Producto | null = null;
@@ -90,13 +90,11 @@ export class ProductoTableComponent {
 
   abrirGaleria(producto: Producto, index: number = 0) {
     if (!producto.urlsMultimedia?.length) return;
-
     this.imagenesGaleria = producto.urlsMultimedia.map((url, i) => ({
-      itemImageSrc: this.environment + url,
-      thumbnailImageSrc: this.environment + url,
+      itemImageSrc: `${this.environment}uploads/${url}`,
+      thumbnailImageSrc: `${this.environment}uploads/${url}`,
       alt: producto.nombre + ' ' + i
     }));
-
     this.activeIndex = Math.min(index, this.imagenesGaleria.length - 1);
     this.numVisible = Math.min(this.imagenesGaleria.length, 5);
     this.mostrarGaleria = true;

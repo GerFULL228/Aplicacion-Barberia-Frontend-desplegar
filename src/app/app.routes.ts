@@ -24,7 +24,7 @@ export const routes: Routes = [
 
       { path: 'nosotros', component: NosotrosComponent },
       //esta raro esta wea 
-      { path: 'productos', loadChildren: () => import('./features/productos/productos.route').then(m => m.PRODUCTOS_ROUTE) },
+      // { path: 'productos', loadChildren: () => import('./features/public/pages/productos/productos.module').then(m => m.ProductosModule) },
       { path: 'servicios', component: ServiciosComponent },
       { path: 'reclamos', component: ReclamosComponent },
       { path: 'reservas', component: ReservasComponent },
@@ -44,7 +44,7 @@ export const routes: Routes = [
         path: 'catalogo', children: [
           { path: 'categorias', loadComponent: () => import('./features/private/components/catalogo/categorias/categorias.component').then(m => m.CategoriasComponent) },
           { path: 'productos', loadComponent: () => import('./features/private/components/catalogo/productos/productos.component').then(m => m.ProductosComponent) },
-          { path: 'detalle/:id', loadComponent: () => import('./features/private/components/catalogo/productos/producto-detalle/producto-detalle.component').then(m => m.ProductoDetalleComponent) },
+          { path: 'productos/detalle/:id', loadComponent: () => import('./features/private/components/catalogo/productos/producto-detalle/producto-detalle.component').then(m => m.ProductoDetalleComponent) },
           { path: 'servicios', loadComponent: () => import('./features/private/components/catalogo/servicios/servicios.component').then(m => m.ServiciosComponent) },
         ]
       },
