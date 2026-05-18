@@ -27,7 +27,8 @@
                 </div>
                 <div class="flex flex-col gap-1">
                     <span class="font-semibold mb-5">Precio Venta</span>
-                    <span class="font-bold text-brand-gold text-lg">${{ detalleProducto.precio | number:'1.2-2' }}</span>
+                    <span class="font-bold text-brand-gold text-lg">${{ detalleProducto.precio | number:'1.2-2'
+                        }}</span>
                 </div>
 
                 <div class="flex flex-col gap-1">
@@ -36,23 +37,30 @@
                 </div>
                 <div class="flex flex-col gap-1">
                     <span class="font-semibold mb-5">Publicado</span>
-                    <app-status-badge type="boolean" [value]="detalleProducto.publicado" trueLabel="Sí"falseLabel="No" />
+                    <app-status-badge type="boolean" [value]="detalleProducto.publicado" trueLabel="Sí"
+                        falseLabel="No" />
                 </div>
                 <div class="flex flex-col gap-1 sm:col-span-2">
                     <span class="font-semibold mb-5">Estado</span>
-                    <app-status-badge type="boolean" [value]="detalleProducto.estado" trueLabel="Activo"falseLabel="Inactivo" />
+                    <app-status-badge type="boolean" [value]="detalleProducto.estado" trueLabel="Activo"
+                        falseLabel="Inactivo" />
                 </div>
             </div>
 
             <div class="flex flex-col gap-4">
                 <h2 class="font-bold">Imágenes</h2>
-                @if ((detalleProducto.urlsMultimedia?.length ?? 0) === 0) {
-                    <div class="w-full aspect-square max-w-[250px] border rounded-xl overflow-hidden shadow flex items-center justify-center"> <i class="pi pi-image text-4xl"></i></div>
-                }@else {
+                @if (detalleProducto.urlsMultimedia.length === 0) {
+                <div
+                    class="w-full aspect-square max-w-[250px] border rounded-xl overflow-hidden shadow flex items-center justify-center">
+                    <i class="pi pi-image text-4xl"></i>
+                </div>
+                } @else {
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    @for (img of detalleProducto.urlsMultimedia ?? []; track $index) {
-                    <div class="aspect-square rounded-lg overflow-hidden border shadow flex items-center justify-center">
-                        <p-image [src]="img | safeImageUrl" imageClass="w-full h-full object-cover" class="w-full h-full object-cover cursor-pointer" [preview]="true" />
+                    @for (img of detalleProducto.urlsMultimedia; track $index) {
+                    <div
+                        class="aspect-square rounded-lg overflow-hidden border shadow flex items-center justify-center">
+                        <p-image [src]="img | safeImageUrl" imageClass="w-full h-full object-cover"
+                            class="w-full h-full object-cover cursor-pointer" [preview]="true" />
                     </div>
                     }
                 </div>
@@ -63,9 +71,9 @@
         <div class="flex flex-col gap-3">
             <h2 class="font-bold mb-5">Descripción</h2>
             @if (!detalleProducto.descripcion) {
-                <p class="italic">No hay descripción para este producto.</p>
+            <p class="italic">No hay descripción para este producto.</p>
             } @else {
-                <p class="leading-relaxed">{{ detalleProducto.descripcion }}</p>
+            <p class="leading-relaxed">{{ detalleProducto.descripcion }}</p>
             }
         </div>
     </div>

@@ -36,14 +36,14 @@ export class ClienteService {
         nombre: string,
         page: number = 0,
         size: number = 5
-    ): Observable<ApiResponse<PageResponse<Cliente>>> {
+    ): Observable<ApiResponse<Page<Cliente>>> {
 
         const params = new HttpParams()
             .set('nombre', nombre)
             .set('page', page)
             .set('size', size);
 
-        return this.http.get<ApiResponse<PageResponse<Cliente>>>(
+        return this.http.get<ApiResponse<Page<Cliente>>>(
             `${this.apiUrl}/buscar`,
             { params }
         );
@@ -53,14 +53,14 @@ export class ClienteService {
         filtro: 'recientes' | 'mes' | 'anio',
         page: number = 0,
         size: number = 5
-    ): Observable<ApiResponse<PageResponse<Cliente>>> {
+    ): Observable<ApiResponse<Page<Cliente>>> {
 
         const params = new HttpParams()
             .set('filtro', filtro)
             .set('page', page)
             .set('size', size);
 
-        return this.http.get<ApiResponse<PageResponse<Cliente>>>(
+        return this.http.get<ApiResponse<Page<Cliente>>>(
             `${this.apiUrl}/filtrar`,
             { params }
         );
@@ -71,7 +71,7 @@ export class ClienteService {
         fechaFin: string,
         page: number = 0,
         size: number = 5
-    ): Observable<ApiResponse<PageResponse<Cliente>>> {
+    ): Observable<ApiResponse<Page<Cliente>>> {
 
         const params = new HttpParams()
             .set('fechaInicio', fechaInicio)
@@ -79,7 +79,7 @@ export class ClienteService {
             .set('page', page)
             .set('size', size);
 
-        return this.http.get<ApiResponse<PageResponse<Cliente>>>(
+        return this.http.get<ApiResponse<Page<Cliente>>>(
             `${this.apiUrl}/filtrar/rango`,
             { params }
         );
@@ -103,9 +103,8 @@ export class ClienteService {
     }
 
     obtenerActividadReciente(id: number): Observable<ApiResponse<ActividadReciente[]>> {
-
-    return this.http.get<ApiResponse<ActividadReciente[]>>(
-        `${this.apiUrl}/${id}/actividad`
-    );
-}
+        return this.http.get<ApiResponse<ActividadReciente[]>>(
+            `${this.apiUrl}/${id}/actividad`
+        );
+    }
 }

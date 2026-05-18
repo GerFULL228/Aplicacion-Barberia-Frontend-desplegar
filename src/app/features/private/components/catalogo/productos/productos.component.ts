@@ -25,12 +25,12 @@ import { Categoria, CategoriaTipo } from '@/app/core/models/catalogos/categorias
 })
 export class ProductosComponent implements OnInit {
 
+  private router = inject(Router);
+  private cd = inject(ChangeDetectorRef);
+  private notify = inject(NotificationService);
   private productoService = inject(ProductoService);
   private categoriaService = inject(CategoriaService);
-  private notify = inject(NotificationService);
-  private cd = inject(ChangeDetectorRef);
-  private router = inject(Router);
-
+  
   productoSeleccionado: Producto | null = null;
   filtro: Partial<ProductoFilter> = {};
   categorias: Categoria[] = [];

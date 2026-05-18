@@ -20,11 +20,11 @@ export class VentaService {
 
   obtenerVentas() {
 
-  return this.http.get<ApiResponse<Venta[]>>(
-    this.apiUrl
-  );
+    return this.http.get<ApiResponse<Venta[]>>(
+      this.apiUrl
+    );
 
-}
+  }
 
   buscarVentaPorId(id: number) {
 
@@ -43,7 +43,7 @@ export class VentaService {
 
   }
 
- 
+
 
   eliminarVenta(id: number) {
 
