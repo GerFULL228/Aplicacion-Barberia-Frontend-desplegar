@@ -26,6 +26,13 @@
 	</div>
 
 	<div class="section-content">
-		<app-table-barbero></app-table-barbero>
+		<app-table-barbero
+			[barberos]="barberos"
+			[totalElements]="totalElements"
+			[currentPage]="currentPage"
+			[totalPages]="totalPages"
+			(prev)="onPrev()"
+			(next)="onNext()">
+		</app-table-barbero>
 	</div>
 </section>
