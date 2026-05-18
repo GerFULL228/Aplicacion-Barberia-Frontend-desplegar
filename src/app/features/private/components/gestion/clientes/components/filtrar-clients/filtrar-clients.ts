@@ -1,14 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-
-export type ClienteFilterMode = 'todos' | 'recientes' | 'mes' | 'anio' | 'rango' | 'personalizado';
-
-export interface ClienteFilterCriteria {
-  mode: ClienteFilterMode;
-  year: number | null;
-  month: number | null;
-  fromDate: string;
-  toDate: string;
-}
+import { ClienteFilterCriteria, ClienteFilterMode } from '@/app/core/models/gestion/cliente/cliente-filter.model';
 
 @Component({
   selector: 'app-filtrar-clients',

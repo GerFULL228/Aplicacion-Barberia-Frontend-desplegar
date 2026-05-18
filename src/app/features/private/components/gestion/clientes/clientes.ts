@@ -2,9 +2,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HeaderClient } from './components/header-client/header-client';
 import { ResumenGeneralClient } from './components/resumen-general-client/resumen-general-client';
-import { ClienteFilterCriteria, ClienteFilterMode, FiltrarClients } from './components/filtrar-clients/filtrar-clients';
+import { FiltrarClients } from './components/filtrar-clients/filtrar-clients';
 import { TableClient } from './components/table-client/table-client';
 import { ClienteService } from '@/app/core/services/gestion/cliente.service';
+import { ClienteFilterCriteria, ClienteFilterMode } from '@/app/core/models/gestion/cliente/cliente-filter.model';
 import { Cliente } from '@/app/core/models/gestion/cliente/cliente.model';
 
 @Component({
@@ -40,110 +41,24 @@ export class Clientes implements OnInit {
   }
 
   cargarClientes(page: number = 0): void {
+    this.cargarClientesBase(page);
+  }
+
+  private cargarClientesBase(page: number = 0): void {
     this.clienteService.listar(page, this.pageSize).subscribe({
-      next: (response) => {
-        this.clients = response.data.content;
-        this.aplicarFiltro();
-        this.totalElements = response.data.totalElements;
-        this.currentPage = response.data.pageNumber;
-        this.totalPages = response.data.totalPages;
-      },
-      error: (error) => {
-        console.error('Error al cargar clientes', error);
-      }
+      next: (response) => this.aplicarRespuestaListado(response, page),
+      error: (error) => console.error('Error al cargar clientes', error),
     });
-  }
-
-  aplicarFiltro(): void {
-    const hoy = new Date();
-    const criterio = this.filterCriteria;
-    const search = this.searchTerm.trim().toLowerCase();
-
-    this.visibleClients = this.clients.filter((cliente) => {
-      const fechaRegistro = this.parseFecha(cliente.fechaRegistro);
-      const nombre = cliente.persona?.nombre?.toLowerCase() ?? '';
-      const apellido = cliente.persona?.apellido?.toLowerCase() ?? '';
-      const email = cliente.persona?.email?.toLowerCase() ?? '';
-      const usuario = cliente.persona?.usuario?.user?.toLowerCase() ?? '';
-      const nombreCompleto = `${nombre} ${apellido}`.trim();
-
-      const coincideBusqueda = !search || [nombre, apellido, nombreCompleto, email, usuario].some((campo) => campo.includes(search));
-
-      if (!coincideBusqueda) {
-        return false;
-      }
-
-      switch (criterio.mode) {
-        case 'recientes': {
-          const limiteRecientes = new Date(hoy);
-          limiteRecientes.setDate(limiteRecientes.getDate() - 30);
-          return fechaRegistro >= limiteRecientes;
-        }
-        case 'mes':
-          return (
-            criterio.year !== null &&
-            criterio.month !== null &&
-            fechaRegistro.getFullYear() === criterio.year &&
-            fechaRegistro.getMonth() === (criterio.month - 1)
-          );
-        case 'anio':
-          return criterio.year !== null && fechaRegistro.getFullYear() === criterio.year;
-        case 'rango': {
-          const desde = criterio.fromDate ? this.parseFecha(criterio.fromDate) : null;
-          const hasta = criterio.toDate ? this.parseFecha(criterio.toDate) : null;
-
-          if (desde && fechaRegistro < desde) return false;
-          if (hasta) {
-            const ultimoDia = new Date(hasta);
-            ultimoDia.setHours(23, 59, 59, 999);
-            if (fechaRegistro > ultimoDia) return false;
-          }
-          return true;
-        }
-        case 'personalizado': {
-          const añoSeleccionado = criterio.year;
-          const mesSeleccionado = criterio.month;
-          const desde = criterio.fromDate ? this.parseFecha(criterio.fromDate) : null;
-          const hasta = criterio.toDate ? this.parseFecha(criterio.toDate) : null;
-
-          if (añoSeleccionado !== null && fechaRegistro.getFullYear() !== añoSeleccionado) {
-            return false;
-          }
-
-          if (mesSeleccionado !== null && fechaRegistro.getMonth() !== mesSeleccionado - 1) {
-            return false;
-          }
-
-          if (desde && fechaRegistro < desde) return false;
-
-          if (hasta) {
-            const ultimoDia = new Date(hasta);
-            ultimoDia.setHours(23, 59, 59, 999);
-            if (fechaRegistro > ultimoDia) return false;
-          }
-
-          return true;
-        }
-        case 'todos':
-        default:
-          return true;
-      }
-    });
-  }
-
-  private parseFecha(fecha: string): Date {
-    const parsed = new Date(`${fecha}T00:00:00`);
-    return Number.isNaN(parsed.getTime()) ? new Date(0) : parsed;
   }
 
   onPrevPage(): void {
     if (this.currentPage <= 0) return;
-    this.cargarClientes(this.currentPage - 1);
+    this.cargarPaginaActual(this.currentPage - 1);
   }
 
   onNextPage(): void {
     if (this.currentPage >= this.totalPages - 1) return;
-    this.cargarClientes(this.currentPage + 1);
+    this.cargarPaginaActual(this.currentPage + 1);
   }
 
   abrirCrear() {
@@ -153,12 +68,12 @@ export class Clientes implements OnInit {
   onFilterChange(criteria: ClienteFilterCriteria) {
     this.filterCriteria = criteria;
     this.activeFilter = criteria.mode;
-    this.aplicarFiltro();
+    this.cargarClientesFiltrados(0, criteria);
   }
 
   onSearch(query: string): void {
     this.searchTerm = query;
-    this.aplicarFiltro();
+    this.cargarPaginaActual(0);
   }
 
   onCustomModeChange(isCustomMode: boolean): void {
@@ -176,5 +91,93 @@ export class Clientes implements OnInit {
     }
 
     this.activeFilter = this.filterCriteria.mode === 'personalizado' ? 'todos' : this.filterCriteria.mode;
+  }
+
+  private cargarClientesFiltrados(page: number, criteria: ClienteFilterCriteria): void {
+    const size = this.pageSize;
+
+    if (criteria.mode === 'todos') {
+      this.clienteService.listar(page, size).subscribe({
+        next: (response) => this.aplicarRespuestaListado(response, page),
+        error: (error) => console.error('Error al cargar clientes', error),
+      });
+      return;
+    }
+
+    if (criteria.mode === 'recientes' || criteria.mode === 'mes' || criteria.mode === 'anio') {
+      this.clienteService.filtrarPorTipo(criteria.mode, page, size).subscribe({
+        next: (response) => this.aplicarRespuestaListado(response, page),
+        error: (error) => console.error('Error al filtrar clientes', error),
+      });
+      return;
+    }
+
+    const rango = this.obtenerRangoPersonalizado(criteria);
+
+    if (rango) {
+      this.clienteService.filtrarPorRango(rango.fechaInicio, rango.fechaFin, page, size).subscribe({
+        next: (response) => this.aplicarRespuestaListado(response, page),
+        error: (error) => console.error('Error al filtrar clientes por rango', error),
+      });
+    }
+  }
+
+  private cargarPaginaActual(page: number): void {
+    const search = typeof this.searchTerm === 'string' ? this.searchTerm.trim() : '';
+
+    if (search) {
+      this.clienteService.buscarPorNombre(search, page, this.pageSize).subscribe({
+        next: (response) => this.aplicarRespuestaListado(response, page),
+        error: (error) => console.error('Error al buscar clientes', error),
+      });
+      return;
+    }
+
+    this.cargarClientesFiltrados(page, this.filterCriteria);
+  }
+
+  private obtenerRangoPersonalizado(criteria: ClienteFilterCriteria): { fechaInicio: string; fechaFin: string } | null {
+    if (criteria.fromDate && criteria.toDate) {
+      return {
+        fechaInicio: criteria.fromDate,
+        fechaFin: criteria.toDate,
+      };
+    }
+
+    if (criteria.year === null && criteria.month === null) {
+      return null;
+    }
+
+    const year = criteria.year ?? new Date().getFullYear();
+
+    if (criteria.month !== null) {
+      const firstDay = new Date(year, criteria.month - 1, 1);
+      const lastDay = new Date(year, criteria.month, 0);
+
+      return {
+        fechaInicio: this.formatearFecha(firstDay),
+        fechaFin: this.formatearFecha(lastDay),
+      };
+    }
+
+    const firstDayYear = new Date(year, 0, 1);
+    const lastDayYear = new Date(year, 11, 31);
+
+    return {
+      fechaInicio: this.formatearFecha(firstDayYear),
+      fechaFin: this.formatearFecha(lastDayYear),
+    };
+  }
+
+  private formatearFecha(fecha: Date): string {
+    return fecha.toISOString().slice(0, 10);
+  }
+
+  private aplicarRespuestaListado(response: any, page: number): void {
+    this.clients = response.data.content;
+    this.visibleClients = response.data.content;
+    this.totalElements = response.data.totalElements;
+    this.currentPage = response.data.pageNumber ?? page;
+    this.totalPages = response.data.totalPages;
   }
 }

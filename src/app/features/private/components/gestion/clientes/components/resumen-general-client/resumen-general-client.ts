@@ -51,7 +51,7 @@ export class ResumenGeneralClient implements OnInit {
             },
 
             {
-              valor: `${data.retencion}%`,
+              valor: `${data.retencion.toFixed(2)}%`,
               titulo: 'Retención',
               delta: data.deltaRetencion,
               positivo: data.retencion >= 50,

@@ -32,6 +32,59 @@ export class ClienteService {
         );
     }
 
+    buscarPorNombre(
+        nombre: string,
+        page: number = 0,
+        size: number = 5
+    ): Observable<ApiResponse<PageResponse<Cliente>>> {
+
+        const params = new HttpParams()
+            .set('nombre', nombre)
+            .set('page', page)
+            .set('size', size);
+
+        return this.http.get<ApiResponse<PageResponse<Cliente>>>(
+            `${this.apiUrl}/buscar`,
+            { params }
+        );
+    }
+
+    filtrarPorTipo(
+        filtro: 'recientes' | 'mes' | 'anio',
+        page: number = 0,
+        size: number = 5
+    ): Observable<ApiResponse<PageResponse<Cliente>>> {
+
+        const params = new HttpParams()
+            .set('filtro', filtro)
+            .set('page', page)
+            .set('size', size);
+
+        return this.http.get<ApiResponse<PageResponse<Cliente>>>(
+            `${this.apiUrl}/filtrar`,
+            { params }
+        );
+    }
+
+    filtrarPorRango(
+        fechaInicio: string,
+        fechaFin: string,
+        page: number = 0,
+        size: number = 5
+    ): Observable<ApiResponse<PageResponse<Cliente>>> {
+
+        const params = new HttpParams()
+            .set('fechaInicio', fechaInicio)
+            .set('fechaFin', fechaFin)
+            .set('page', page)
+            .set('size', size);
+
+        return this.http.get<ApiResponse<PageResponse<Cliente>>>(
+            `${this.apiUrl}/filtrar/rango`,
+            { params }
+        );
+    }
+
     obtenerPorId(id: number): Observable<ApiResponse<Cliente>> {
         return this.http.get<ApiResponse<Cliente>>(`${this.apiUrl}/${id}`);
     }

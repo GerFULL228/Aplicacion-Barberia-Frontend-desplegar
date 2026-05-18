@@ -99,8 +99,8 @@ export class CredencialesPerfilClient {
     };
 
     this.usuarioService.resetPassword(this.idUsuario, payload).subscribe({
-      next: () => {
-        this.notification.showSuccess('Contraseña restablecida correctamente');
+      next: (response) => {
+        this.notification.showSuccess(response?.message || 'Contraseña restablecida correctamente');
         this.closeResetModal();
         this.passwordReset.emit();
       },
@@ -148,8 +148,8 @@ export class CredencialesPerfilClient {
     };
 
     this.usuarioService.updateUsername(this.idUsuario, payload).subscribe({
-      next: () => {
-        this.notification.showSuccess('Nombre de usuario actualizado correctamente');
+      next: (response) => {
+        this.notification.showSuccess(response?.message || 'Nombre de usuario actualizado correctamente');
         this.closeEditUsernameModal();
         this.usernameUpdate.emit();
       },
