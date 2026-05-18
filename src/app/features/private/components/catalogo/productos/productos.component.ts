@@ -14,7 +14,7 @@ import { SearchBarComponent } from '@/app/shared/components/search-bar/search-ba
 import { DialogHeaderComponent } from '@/app/shared/components/dialog-header/dialog-header.component';
 import { ProductoService } from '@/app/core/services/catalogos/producto.service';
 import { Producto, ProductoFilter, ProductoRequest } from '@/app/core/models/catalogos/productos.model';
-import { Categoria } from '@/app/core/models/catalogos/categorias.model';
+import { Categoria, CategoriaTipo } from '@/app/core/models/catalogos/categorias.model';
 
 @Component({
   selector: 'app-productos',
@@ -25,7 +25,7 @@ import { Categoria } from '@/app/core/models/catalogos/categorias.model';
 })
 export class ProductosComponent implements OnInit {
 
-  private productosService = inject(ProductoService);
+  private productoService = inject(ProductoService);
   private categoriaService = inject(CategoriaService);
   private notify = inject(NotificationService);
   private cd = inject(ChangeDetectorRef);
@@ -41,7 +41,7 @@ export class ProductosComponent implements OnInit {
   cargado = false;
   totalRecords = 0;
   resetFormTrigger = 0;
-  mostrarFormulario: boolean = false;
+  mostrarFormulario = false;
   modo: 'crear' | 'editar' | 'ver' | null = null;
   cargandoEstado: Set<number> = new Set();
   publicadoAnterior: Set<number> = new Set();
@@ -55,7 +55,7 @@ export class ProductosComponent implements OnInit {
   cargarProductos(page: number, size: number): void {
     this.pageActual = page;
     this.cargado = false;
-    this.productosService.obtenerProductosConFiltro({ ...this.filtro, page, size, sort: 'id,desc' }).subscribe({
+    this.productoService.obtenerProductosConFiltro({ ...this.filtro, page, size, sort: 'id,desc' }).subscribe({
       next: (resp) => {
         this.productos = resp.data.content;
         this.totalRecords = resp.data.totalElements;
@@ -81,7 +81,7 @@ export class ProductosComponent implements OnInit {
   }
 
   eliminarProducto(producto: Producto) {
-    this.productosService.eliminarProducto(producto.id).subscribe({
+    this.productoService.eliminarProducto(producto.id).subscribe({
       next: (resp) => {
         this.notify.showSuccess(resp.message);
         this.cargarProductos(0, this.rows);
@@ -122,13 +122,6 @@ export class ProductosComponent implements OnInit {
     this.modo = null;
   }
 
-  onLazyLoad(event: TableLazyLoadEvent) {
-    const first = event.first ?? 0;
-    const rows = event.rows ?? 25;
-    const page = Math.floor(first / rows);
-    const size = rows;
-    this.cargarProductos(page, size);
-  }
 
   private postGuardar(mensaje: string) {
     this.notify.showSuccess(mensaje);
@@ -138,7 +131,7 @@ export class ProductosComponent implements OnInit {
   }
 
   private crearProducto(data: ProductoRequest, imagenes?: File[]) {
-    this.productosService.crearProducto(data, imagenes).subscribe({
+    this.productoService.crearProducto(data, imagenes).subscribe({
       next: (resp) => { this.postGuardar(resp.message); },
       error: (err) => { this.notify.showHttpError(err); },
     });
@@ -146,16 +139,10 @@ export class ProductosComponent implements OnInit {
 
   private editarProducto(data: ProductoRequest, imagenes?: File[]) {
     if (!this.productoSeleccionado) return;
-    this.productosService.actualizarProducto(this.productoSeleccionado.id, data, imagenes).subscribe({
+    this.productoService.actualizarProducto(this.productoSeleccionado.id, data, imagenes).subscribe({
       next: (resp) => { this.postGuardar(resp.message); },
       error: (err) => { this.notify.showHttpError(err); },
     });
-  }
-
-  private cargarCategorias() {
-    return this.categoriaService.obtenerCategoriasActivas().pipe(
-      tap(resp => this.categorias = resp.data.content)
-    );
   }
 
   onCambiarEstado(event: { id: number, activo: boolean }) {
@@ -165,7 +152,7 @@ export class ProductosComponent implements OnInit {
     const estadoAnterior = producto.estado;
     producto.estado = event.activo;
     this.cargandoEstado.add(event.id);
-    this.productosService.cambiarEstado(event.id, event.activo).subscribe({
+    this.productoService.cambiarEstado(event.id, event.activo).subscribe({
       next: () => { this.notify.showSuccess(`Producto ${event.activo ? 'activado' : 'desactivado'} exitosamente`); },
       error: (err) => {
         producto.estado = estadoAnterior;
@@ -181,15 +168,29 @@ export class ProductosComponent implements OnInit {
     if (!producto) return;
     const publicadoAnterior = producto.publicado;
     producto.publicado = event.publicado;
-    this.cargandoEstado.add(event.id);
-    this.productosService.cambiarPublicado(event.id, event.publicado).subscribe({
+    this.publicadoAnterior.add(event.id);
+    this.productoService.cambiarPublicado(event.id, event.publicado).subscribe({
       next: () => { this.notify.showSuccess(`Producto ${event.publicado ? 'publicado' : 'no publicado'} exitosamente`); },
       error: (err) => {
-        producto.estado = publicadoAnterior;
+        producto.publicado = publicadoAnterior;
         this.notify.showHttpError(err);
       },
-      complete: () => { this.cargandoEstado.delete(event.id); }
+      complete: () => { this.publicadoAnterior.delete(event.id); }
     });
+  }
+
+  onLazyLoad(event: TableLazyLoadEvent) {
+    const first = event.first ?? 0;
+    const rows = event.rows ?? 25;
+    const page = Math.floor(first / rows);
+    const size = rows;
+    this.cargarProductos(page, size);
+  }
+
+  private cargarCategorias() {
+    return this.categoriaService.obtenerCategoriasPorTipo(CategoriaTipo.PRODUCTO).pipe(
+      tap(resp => this.categorias = resp.data.content)
+    );
   }
 
   onDialogHide() {

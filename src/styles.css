@@ -172,7 +172,7 @@ p-button .p-button {
 }
 
 .p-dialog-header-actions button.p-ripple:not(:disabled):hover {
-	@apply bg-amber-500 text-white border border-amber-500/30;
+	@apply boton-tabla bg-amber-500 text-white border border-amber-500/30;
 }
 
 
@@ -231,7 +231,7 @@ p-treeSelect button {
 }
 
 .subtitle-form {
-	@apply text-lg font-medium text-center;
+	@apply text-lg font-medium text-center text-brand-gold mb-6;
 }
 
 
@@ -261,6 +261,7 @@ p-treeSelect button {
 
 	.p-dialog-content {
 		background: var(--color-ui-card) !important;
+		border: 1px solid var(--color-brand-gold-soft) !important;
 	}
 
 	.custom-panelmenu .p-menuitem-link-active {
@@ -270,7 +271,8 @@ p-treeSelect button {
 		border-radius: 6px;
 	}
 
-	.p-select-option:not(.p-select-option-selected):not(.p-disabled).p-focus {
+	.p-select-option:not(.p-select-option-selected):not(.p-disabled).p-focus,
+	.p-tree-node-selectable:not(.p-tree-node-selected):not(.p-disabled).p-focus {
 		@apply bg-ui-border text-text-primary;
 	}
 
@@ -278,6 +280,10 @@ p-treeSelect button {
 		@apply bg-ui-card border border-ui-border rounded-xl shadow-lg;
 	}
 
+	.p-treeselect-label {
+		color: var(--color-text-primary) !important;
+	}
+	
 	.p-component-overlay {
 		background: var(--color-ui-card) !important;
 		border: 1px solid var(--color-ui-border) !important;
@@ -285,10 +291,32 @@ p-treeSelect button {
 
 	.p-select-option.p-select-option-selected.p-focus,
 	.p-select-option.p-select-option-selected,
-	.p-select-option:not(.p-select-option-selected):not(.p-disabled):hover,
 	.p-select-option:not(.p-select-option-selected):not(.p-disabled):focus {
 		background: var(--color-brand-gold) !important;
-		color: var(--color-text-black) !important;
+		color: var(--color-text-primary) !important;
+	}
+
+	.p-tree-node-content.p-tree-node-selectable:not(.p-disabled):hover {
+		background: var(--color-ui-border) !important;
+	}
+
+	.p-tree-node-content.p-tree-node-selected,
+	.p-tree-node-content.p-tree-node-selectable:not(.p-disabled):focus {
+		background: var(--color-brand-gold) !important;
+		color: var(--color-text-primary) !important;
+
+	}
+
+
+	.p-tree-node-content.p-tree-node-selected,
+	.p-tree-node-selectable {
+		color: var(--color-text-primary) !important;
+	}
+
+
+	.p-tree-node-selectable:not(.p-tree-node-selected):hover {
+		background: var(--color-ui-border) !important;
+		color: var(--color-text-primary) !important;
 	}
 
 	.p-select-option:not(.p-select-option-selected):not(.p-disabled).p-focus {
@@ -316,10 +344,11 @@ p-treeSelect button {
 input,
 textarea,
 p-select:not(.p-paginator .p-select),
+.p-treeselect-overlay .p-tree,
 p-treeSelect,
 p-fileUpload,
 app-search-bar input {
-	@apply w-full px-4 py-3 rounded-xl border border-ui-border bg-ui-card text-text-secondary focus:border-brand-gold outline-none transition;
+	@apply w-full px-4 py-3 rounded-xl border border-ui-border bg-ui-card text-text-primary focus:border-brand-gold outline-none transition;
 	background: var(--color-ui-card) !important;
 	color: var(--color-text-primary) !important;
 	font-weight: semibold;
@@ -329,10 +358,9 @@ app-search-bar input {
 	}
 }
 
-p-select {
-	span {
-		padding: 0 !important;
-	}
+p-select span,
+p-treeselect.p-treeselect {
+	padding: 0 !important;
 }
 
 app-search-bar input {
@@ -410,12 +438,12 @@ p-colorpicker {
 	@apply boton-base bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500 hover:text-black;
 }
 
-.p-button.boton-cierre {
-	@apply bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 cursor-pointer;
+.p-button.boton-cierre, .boton-cierre {
+	@apply boton-tabla bg-amber-500/10 border border-amber-400 text-amber-400 hover:bg-amber-500 hover:text-white hover:border-amber-400;
 }
 
-.p-button.boton-cerrar:not(:disabled):hover {
-	@apply boton-tabla bg-amber-500 hover:bg-amber-600 text-white border border-amber-500/30;
+.p-button.boton-cierre:not(:disabled):hover	{
+	@apply boton-tabla bg-amber-50 text-white border border-amber-500/30;
 }
 
 .boton-logout {
@@ -519,7 +547,7 @@ p-colorpicker {
 ========================= */
 .p-paginator-page.p-paginator-page-selected {
 	background: var(--color-brand-gold) !important;
-	border-color: var(--color-brand-gold) !important;
+	border-color: 1px solid var(--color-brand-red) !important;
 	color: black !important;
 }
 
@@ -540,6 +568,13 @@ p-colorpicker {
 /* =========================
    BADGES
 ========================= */
+@utility badge-base {
+	@apply text-sm font-medium px-3 py-1 rounded-full whitespace-nowrap;
+}
+
+.badge-text {
+	@apply badge-base bg-indigo-500/10 text-indigo-400 border border-indigo-500/30;
+}
 
 .badge-activo {
 	@apply badge-base bg-green-500/10 text-green-400 border border-green-500/30;
@@ -733,7 +768,6 @@ app-footer i {
 
 .dialog-header-crear {
 	@apply bg-brand-gold/10 text-brand-gold border border-amber-500/30;
-
 }
 
 .dialog-header-editar {
@@ -746,4 +780,55 @@ app-footer i {
 
 .dialog-header-anular {
 	@apply bg-amber-500/10 text-amber-400 border border-amber-500/30;
+}
+
+.p-galleria {
+	@apply rounded-lg border border-brand-gold;
+}
+
+.p-galleria-thumbnails-content,
+.p-tree-node-toggle-button {
+	background: var(--color-ui-card) !important;
+}
+
+.p-galleria-item img {
+	@apply my-10;
+}
+
+.p-galleria-thumbnails-content,
+.p-galleria-thumbnails {
+	@apply rounded-lg border border-t-text-secondary;
+}
+
+.p-inputnumber-button:not(:disabled):active,
+.p-inputnumber-button:not(:disabled):hover {
+	@apply bg-brand-gold;
+}
+
+.p-inputnumber-increment-button:hover,
+.p-inputnumber-increment-button:active,
+.p-inputnumber-decrement-button:hover,
+.p-inputnumber-decrement-button:active {
+	background: var(--color-brand-gold) !important;
+	color: black !important;
+	border-color: var(--color-brand-gold) !important;
+}
+
+.p-fileupload p-button button,
+.p-fileupload p-button .button,
+.p-button-secondary:not(:disabled):active,
+.p-button-secondary:not(:disabled):hover {
+	@apply boton-base bg-brand-gold/10 text-brand-gold border border-brand-gold/30 hover:bg-brand-gold hover:text-black hover:border-brand-gold active:bg-brand-gold active:text-black active:border-brand-gold;
+}
+
+.p-treeselect-tree-container {
+	color: var(--color-text-primary) !important;
+}
+
+.contenido-imagen {
+	@apply flex flex-col sm:flex-row items-center sm:justify-between gap-4 border rounded-lg p-3 bg-ui-card w-full;
+}
+
+.contenido-imagen img {
+	@apply border border-brand-gold;
 }

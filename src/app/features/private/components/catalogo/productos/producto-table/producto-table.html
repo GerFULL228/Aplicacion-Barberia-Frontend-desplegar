@@ -35,14 +35,19 @@
                             </div>
                         </td>
                         <td class="whitespace-nowrap text-center">{{producto.nombre}}</td>
-                        <td class="whitespace-nowrap text-center"> <app-status-badge type="text" [value]="producto.categoriaNombre" /></td>
-                        <td class="whitespace-nowrap text-center">{{producto.precio ? (producto.precio | currency:'USD':'symbol') : 'No asignado'}}</td>
-                        <td class="whitespace-nowrap text-center"><app-status-badge type="range" [value]="producto.stock" [warningLimit]="producto.stockMinimo" /></td>
-                        <td class="whitespace-nowrap text-center"><app-status-badge type="boolean" [value]="producto.publicado" trueLabel="Si" falseLabel="No" /></td>
+                        <td class="whitespace-nowrap text-center"> <app-status-badge type="text" [value]="producto.nombreCategoria" /></td>
+                        <td class="whitespace-nowrap text-center">{{producto.precio ? (producto.precio | currency:moneda:'symbol':'1.2-2':'es-PE') : 'No asignado'}}</td>
+                        <td class="whitespace-nowrap text-center"><app-status-badge type="range" [value]="producto.stock" [warningLimit]="stockMinimo" /></td>
                         <td class="whitespace-nowrap text-center">
                             <div class="flex items-center justify-center gap-2">
-                                <app-status-badge type="boolean" [value]="producto.activo" trueLabel="Activo" falseLabel="Inactivo" />
-                                <p-toggleSwitch [ngModel]="producto.activo" (onChange)="cambiarEstadoProducto(producto, $event)" class="scale-90" />
+                                <app-status-badge type="boolean" [value]="producto.publicado" trueLabel="Si" falseLabel="No" />
+                                <p-toggleSwitch [ngModel]="producto.publicado" (onChange)="cambiarPublicadoProducto(producto, $event)" class="scale-90" />
+                            </div>
+                        </td>
+                        <td class="whitespace-nowrap text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                <app-status-badge type="boolean" [value]="producto.estado" trueLabel="Activo" falseLabel="Inactivo" />
+                                <p-toggleSwitch [ngModel]="producto.estado" (onChange)="cambiarEstadoProducto(producto, $event)" class="scale-90" />
                             </div>
                         </td>
                         <td class="whitespace-nowrap text-center">

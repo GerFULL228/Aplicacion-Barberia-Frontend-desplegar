@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, DestroyRef, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin } from 'rxjs';
 import { TreeNode } from 'primeng/api';
@@ -17,10 +17,11 @@ import { Categoria } from '@/app/core/models/catalogos/categorias.model';
 import { ImageUploadService } from '@/app/core/services/common/imageUpload.service';
 import { ImagenProductoUI } from '@/app/core/models/common/imagen.model';
 import { campoInvalido, marcarFormulario } from '@/app/shared/utils/form-utils.component';
+import { SafeImageUrlPipe } from '@/app/shared/pipes/safe-image-url.pipe';
 
 @Component({
   selector: 'app-producto-form',
-  imports: [ReactiveFormsModule, InputTextModule, SelectModule, CheckboxModule, TreeSelectModule,
+  imports: [ReactiveFormsModule, InputTextModule, SelectModule, CheckboxModule, TreeSelectModule, SafeImageUrlPipe,
     ButtonModule, MessageModule, ImageModule, FileUploadModule, InputNumberModule, TreeSelectModule],
 
   templateUrl: './producto-form.html',
@@ -55,45 +56,41 @@ export class ProductoFormComponent implements OnChanges, OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.productoForm) return;
-    if (changes['resetTrigger'] && !changes['resetTrigger'].firstChange) { this.limpiarFormulario(); }
-    if (changes['categorias'] || (changes['producto'] && !this.producto)) { this.cargarCategoriasEnTree(); }
-    if (changes['producto']) {
-      this.limpiarEstadoImagen();
-      this.abrirSelector = false;
-      if (this.producto?.urlsMultimedia?.length) { this.cargarImagenExistente(this.producto.urlsMultimedia); }
+    if (changes['resetTrigger'] && !changes['resetTrigger'].firstChange) {
+      this.limpiarFormulario();
     }
-    this.actualizarFormulario();
+    if (changes['categorias'] || (changes['producto'] && !this.producto)) {
+      this.cargarCategoriasEnTree();
+    }
+    if (changes['producto']) {
+      this.actualizarFormulario();
+      if (this.producto?.urlsMultimedia?.length) {
+        this.cargarImagenExistente(this.producto.urlsMultimedia);
+      }
+    }
   }
 
   private initForm(): void {
     this.productoForm = this.fb.group({
       nombre: ['', Validators.required],
-      sku: ['', Validators.required],
       descripcion: [''],
-      precioCompra: [0, Validators.required],
-      precioVenta: [0, Validators.required],
-      precioPromo: [null],
-      stockMinimo: [0, Validators.required],
-      puntosRecompensa: [0],
+      precio: [0, [Validators.required, Validators.min(0)]],
+      stock: [0, [Validators.required, Validators.min(0)]],
+      idCategoria: [null, Validators.required],
       publicado: [false],
-      activo: [false],
-      categoriaId: [null, Validators.required],
-      atributos: this.fb.array([]),
-      caracteristicas: [null, Validators.required]
+      estado: [false]
     });
   }
 
   private cargarImagenExistente(urls: string[]): void {
-    const observables = urls.map(url =>
-      this.imageService.obtenerImagenProtegida(url).pipe(takeUntilDestroyed(this.destroyRef))
-    );
-    forkJoin(observables).subscribe(blobs => {
-      blobs.forEach((blob, index) => {
-        if (!blob) return;
+    const requests = urls.map(url => this.imageService.obtenerImagenProtegida(url));
+    forkJoin(requests).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(blobs => {
+      this.imagenes = [];
+      blobs.forEach((blob, index) => {if (!blob) return;
         const file = new File([blob], `imagen-${index}.jpg`, { type: blob.type });
         this.imagenes.push({
           file,
-          preview: URL.createObjectURL(blob),
+          preview: URL.createObjectURL(file),
           nombre: `Imagen actual`,
           peso: this.imageService.obtenerReadableSize(file),
           tipo: 'existente',
@@ -104,46 +101,11 @@ export class ProductoFormComponent implements OnChanges, OnInit {
     });
   }
 
-  onCancelar(): void {
-    this.formSubmitted = false;
-    this.limpiarFormulario();
-    this.abrirSelector = false;
-    this.cancelarEvento.emit();
-  }
-
-  onGuardar(): void {
-    this.formSubmitted = true;
-    if (this.productoForm.invalid) {
-      marcarFormulario(this.productoForm);
-      return;
-    }
-    const archivos: File[] = this.imagenes.filter(img => img.file).map(img => img.file as File);
-    const categoriaSeleccionada = this.productoForm.value.categoriaId;
-
-    const data: ProductoRequest = {
-      nombre: this.productoForm.value.nombre,
-      descripcion: this.productoForm.value.descripcion,
-      precio: this.productoForm.value.precioPromo,
-      stock: this.productoForm.value.stockMinimo ?? 0,
-      publicado: this.productoForm.value.publicado,
-      estado: this.productoForm.value.activo,
-      idCategoria: Number(categoriaSeleccionada.key),
-      urlsMultimedia: [],
-    };
-    this.guardar.emit({ data, imagenes: archivos.length ? archivos : undefined });
-  }
-
   onSeleccionarArchivo(event: any): void {
     const files: File[] = Array.from(event.files);
     const validas = this.imageService.imagenesValidas(files);
     validas.forEach(file => {
-      this.imagenes.push({
-        file,
-        preview: URL.createObjectURL(file),
-        nombre: file.name,
-        peso: this.imageService.obtenerReadableSize(file),
-        tipo: 'nueva'
-      });
+      this.imagenes.push({ file, preview: URL.createObjectURL(file), nombre: file.name, peso: this.imageService.obtenerReadableSize(file), tipo: 'nueva' });
     });
   }
 
@@ -154,35 +116,31 @@ export class ProductoFormComponent implements OnChanges, OnInit {
     this.imagenes.splice(index, 1);
   }
 
-  private limpiarFormulario(): void {
-    this.formSubmitted = false;
-    this.resetFormularioBase();
-    this.productoForm.markAsPristine();
-    this.productoForm.markAsUntouched();
+  private limpiarEstadoImagen(): void {
+    this.imagenes.forEach(img => { if (img.preview) { URL.revokeObjectURL(img.preview); } });
+    this.imagenes = [];
+    this.imagenesEliminada = [];
+    this.fileUpload?.clear();
   }
 
   private resetFormularioBase(): void {
     this.productoForm.reset({
       nombre: '',
       descripcion: '',
-      precioCompra: 0,
-      precioVenta: 0,
-      precioPromo: null,
-      stockMinimo: 0,
-      puntosRecompensa: 0,
+      precio: 0,
+      stock: 0,
       publicado: false,
-      activo: false,
-      categoriaId: null,
-      atributos: []
+      estado: false,
+      idCategoria: null
     });
     this.limpiarEstadoImagen();
   }
 
-  private limpiarEstadoImagen(): void {
-    this.imagenes.forEach(img => { if (img.preview) { URL.revokeObjectURL(img.preview); } });
-    this.imagenes = [];
-    this.imagenesEliminada = [];
-    this.fileUpload?.clear();
+  private limpiarFormulario(): void {
+    this.formSubmitted = false;
+    this.resetFormularioBase();
+    this.productoForm.markAsPristine();
+    this.productoForm.markAsUntouched();
   }
 
   private construirTree(categorias: Categoria[]): TreeNode[] {
@@ -219,21 +177,46 @@ export class ProductoFormComponent implements OnChanges, OnInit {
         stock: this.producto.stock,
         publicado: this.producto.publicado,
         estado: this.producto.estado,
-        categoriaId: null,
+        idCategoria: null,
       });
-    } else {
+    }
+    if (this.producto?.idCategoria) {
+      setTimeout(() => {
+        if (this.categoriaTree.length && this.producto?.idCategoria) {
+          const match = this.findTreeNodeById(this.categoriaTree, this.producto.idCategoria!);
+          this.productoForm.patchValue({ idCategoria: match || null });
+          this.cd.detectChanges();
+        }
+      });
+    }
+    else {
       this.resetFormularioBase();
     }
     this.productoForm.markAsPristine();
     this.productoForm.markAsUntouched();
   }
 
-  private findNodesByKeys(nodes: TreeNode[], keys: string[]): TreeNode[] {
-    let result: TreeNode[] = [];
-    for (const node of nodes) {
-      if (keys.includes(node.key!)) { result.push(node); }
-      if (node.children?.length) { result = result.concat(this.findNodesByKeys(node.children, keys)); }
-    }
-    return result;
+  onCancelar(): void {
+    this.formSubmitted = false;
+    this.limpiarFormulario();
+    this.abrirSelector = false;
+    this.cancelarEvento.emit();
+  }
+
+  onGuardar(): void {
+    this.formSubmitted = true;
+    if (this.productoForm.invalid) { marcarFormulario(this.productoForm); return; }
+    const archivos: File[] = this.imagenes.filter(img => img.file).map(img => img.file as File);
+    const categoriaSeleccionada = this.productoForm.value.idCategoria;
+    const data: ProductoRequest = {
+      nombre: this.productoForm.value.nombre,
+      descripcion: this.productoForm.value.descripcion,
+      precio: this.productoForm.value.precio,
+      stock: this.productoForm.value.stock,
+      publicado: this.productoForm.value.publicado,
+      estado: this.productoForm.value.estado,
+      idCategoria: Number(categoriaSeleccionada.key)
+    };
+    this.guardar.emit({ data, imagenes: archivos.length ? archivos : undefined });
   }
 }

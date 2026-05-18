@@ -1,8 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ApiResponse, Page } from '../../models/common/index.model';
-
-import { tap } from 'rxjs';
 import { environment } from '@/environments/environment.development';
 import { buildHttpParamsComponent } from '@/app/shared/utils/build-http-params.component';
 import { Producto, ProductoFilter, ProductoRequest } from '../../models/catalogos/productos.model';
@@ -13,7 +11,6 @@ import { Producto, ProductoFilter, ProductoRequest } from '../../models/catalogo
 export class ProductoService {
     private http = inject(HttpClient);
     private apiUrl = `${environment.apiUrl}/productos`;
-
 
     obtenerProductoId(id:number){
         return this.http.get<ApiResponse<Producto>>(`${this.apiUrl}/${id}`);
@@ -27,7 +24,7 @@ export class ProductoService {
         return this.http.get<ApiResponse<Page<Producto>>>(this.apiUrl, { params: buildHttpParamsComponent(filter) });
     }
 
-    obtenerProdcutosActivas() {
+    obtenerProductosActivos() {
         return this.http.get<ApiResponse<Page<Producto>>>(this.apiUrl, { params: buildHttpParamsComponent({ estado: true, size: 1000 }) });
     }
 
@@ -48,7 +45,7 @@ export class ProductoService {
     }
 
     cambiarPublicado(id: number, publicado: boolean) {
-        return this.http.patch<ApiResponse<Producto>>(`${this.apiUrl}/${id}/publicado`, {}, { params: buildHttpParamsComponent({ publicado }) });
+        return this.http.patch<ApiResponse<Producto>>(`${this.apiUrl}/${id}/publicacion`, {}, { params: buildHttpParamsComponent({ publicado }) });
     }
 
     eliminarProducto(id: number) {

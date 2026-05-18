@@ -4,7 +4,7 @@ import { ApiResponse, Page } from '../../models/common/index.model';
 
 import { of, tap } from 'rxjs';
 import { environment } from '@/environments/environment.development';
-import { Categoria, CategoriaFilter, CategoriaRequest, } from '../../models/catalogos/categorias.model';
+import { Categoria, CategoriaFilter, CategoriaRequest, CategoriaTipo, } from '../../models/catalogos/categorias.model';
 import { buildHttpParamsComponent } from '@/app/shared/utils/build-http-params.component';
 
 @Injectable({
@@ -30,6 +30,10 @@ export class CategoriaService {
     obtenerCategoriasActivas() {
         if (this.categoriasCache) { return of({ data: { content: this.categoriasCache } } as ApiResponse<Page<Categoria>>); }
         return this.http.get<ApiResponse<Page<Categoria>>>(this.apiUrl, { params: buildHttpParamsComponent({ estado: true, size: 1000 }) }).pipe(tap(resp => { this.categoriasCache = resp.data.content; }));
+    }
+
+    obtenerCategoriasPorTipo(tipo: CategoriaTipo) {
+        return this.http.get<ApiResponse<Page<Categoria>>>(this.apiUrl, {params: buildHttpParamsComponent({estado: true,tipo,size: 1000})});
     }
 
     buscarCategoriaPorId(id: number) {

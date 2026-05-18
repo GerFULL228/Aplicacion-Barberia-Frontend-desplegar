@@ -1,26 +1,4 @@
-export interface ProductoRequest {
-    nombre: string;
-    descripcion: string;
-    precio: number;
-    stock: number;
-    estado: boolean;
-    publicado: boolean;
-    idCategoria: number;
-    urlsMultimedia?: string[];
-}
-
-export interface ProductoResponse {
-    id: number;
-    nombre: string;
-    descripcion: string;
-    precio: number;
-    stock: number;
-    estado: boolean;
-    publicado: boolean;
-    idCategoria: number;
-    nombreCategoria: string;
-    urlsMultimedia: string[];
-}
+export type ProductoRequest = Omit< Producto,'id' | 'nombreCategoria' | 'urlsMultimedia'>;
 
 export interface Producto {
     id: number;
@@ -31,6 +9,7 @@ export interface Producto {
     estado: boolean;
     publicado: boolean;
     idCategoria: number;
+    nombreCategoria: string;
     urlsMultimedia: string[];
 }
 

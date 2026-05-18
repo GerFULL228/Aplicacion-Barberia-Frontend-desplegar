@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ImageModule } from 'primeng/image';
@@ -15,10 +15,11 @@ import { StatusBadgeComponent } from '@/app/shared/components/status-badge/statu
 import { Producto } from '@/app/core/models/catalogos/productos.model';
 import { environment } from '@/environments/environment.development';
 import { SafeImageUrlPipe } from '@/app/shared/pipes/safe-image-url.pipe';
+import { INVENTARIO_CONFIG } from '@/app/core/config/valores.config';
 
 @Component({
   selector: 'app-producto-table',
-  imports: [ButtonModule, CommonModule, TableModule, ConfirmPopoverComponent, DialogModule, ToggleSwitchModule,
+  imports: [ButtonModule, CommonModule, TableModule, ConfirmPopoverComponent, DialogModule, ToggleSwitchModule, 
     ImageModule, IconFieldModule, InputIconModule, StatusBadgeComponent, GalleriaModule, FormsModule, SafeImageUrlPipe
   ],
   templateUrl: './producto-table.html',
@@ -36,10 +37,12 @@ export class ProductoTableComponent {
   @Input() cargado = false;
   @Input() totalRecords = 0;
   @Input() rows = 25;
-
+  
+  readonly stockMinimo = INVENTARIO_CONFIG.STOCK_MINIMO_GLOBAL;
+  readonly moneda = INVENTARIO_CONFIG.MONEDA;
+  environment = environment.apiBaseUrl;
   mostrarConfirmacion = false;
   productoAEliminar: Producto | null = null;
-  environment = environment.apiBaseUrl;
 
   numVisible = 5;
   activeIndex = 0;
