@@ -5,7 +5,7 @@ import { Injectable, inject } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class ImageUploadService {
   private http = inject(HttpClient);
-  private baseUrl = environment.apiUrl;
+  private baseUrl = environment.apiBaseUrl;
 
   crearPrevisualizacion(file: File): string {
     return URL.createObjectURL(file);
@@ -20,8 +20,8 @@ export class ImageUploadService {
   }
 
   obtenerImagenProtegida(imagenUrl: string) {
-    let url = this.baseUrl + imagenUrl;
-    if (!/^https?:\/\//i.test(imagenUrl)) { url = this.baseUrl.replace(/\/$/, '') + '/' + imagenUrl.replace(/^\//, ''); }
+    const cleanUrl = imagenUrl.startsWith('/') ? imagenUrl : '/' + imagenUrl;
+    const url = `${this.baseUrl}uploads${cleanUrl}`;
     return this.http.get(url, { responseType: 'blob' });
   }
 

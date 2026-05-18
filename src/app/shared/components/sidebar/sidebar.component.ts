@@ -19,9 +19,16 @@ export class SidebarComponent {
   private tokenService = inject(TokenService);
   private sidebarItemsService = inject(SidebarItemsService);
 
-  menu$ = this.tokenService.permisos$.pipe(map((permisos) => {
-      const items = this.sidebarItemsService.getSidebarItems(permisos);
-      return items;
+  constructor() {
+    // initialize permisos from existing token on startup (if any)
+    this.tokenService.initPermisos();
+  }
+
+  menu$ = this.tokenService.permisos$.pipe(
+    map((permisos) => {
+      const role = this.tokenService.getPrimaryRole();
+      console.debug('[Sidebar] permisos=', permisos, ' role=', role);
+      return this.sidebarItemsService.getSidebarItems(permisos, role);
     })
   );
 

@@ -72,10 +72,40 @@ export class TokenService {
   }
 
   getHomeByRole(): string {
+
     const roles = this.getRoles();
-    if (roles.includes('ROLE_admin')) return '/dashboard';
-    if (roles.includes('ROLE_barbero')) return '/dashboard';
-    if (roles.includes('ROLE_cliente')) return '/app';
-    return '/dashboard';
+
+    if (roles.includes('ROLE_admin')) {
+      return '/dashboard/admin';
+    }
+
+    if (roles.includes('ROLE_barbero')) {
+      return '/dashboard/barbero';
+    }
+
+    if (roles.includes('ROLE_cliente')) {
+      return '/dashboard/cliente';
+    }
+
+    return '/login';
+  }
+
+  getPrimaryRole(): string {
+
+    const roles = this.getRoles();
+
+    if (roles.includes('ROLE_admin')) {
+      return 'admin';
+    }
+
+    if (roles.includes('ROLE_barbero')) {
+      return 'barbero';
+    }
+
+    if (roles.includes('ROLE_cliente')) {
+      return 'cliente';
+    }
+
+    return '';
   }
 }

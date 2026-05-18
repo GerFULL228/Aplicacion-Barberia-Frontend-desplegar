@@ -1,14 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { ApiResponse } from '../../models/gestion/api-response.model';
-import { PageResponse } from '../../models/gestion/page-response.model';
 import { Cliente } from '../../models/gestion/cliente/cliente.model';
 import { environment } from '@/environments/environment.development';
 import { ClienteResumen } from '../../models/gestion/cliente/ClienteResumen.model';
 import { ClienteDetalleResumen } from '../../models/gestion/cliente/cliente-detalle-resumen.model';
 import { ActividadReciente } from '../../models/gestion/cliente/ActividadReciente.model';
+import { ApiResponse, Page } from '../../models/common/index.model';
 
 @Injectable({
     providedIn: 'root'
@@ -22,13 +20,13 @@ export class ClienteService {
     listar(
         page: number = 0,
         size: number = 5
-    ): Observable<ApiResponse<PageResponse<Cliente>>> {
+    ): Observable<ApiResponse<Page<Cliente>>> {
 
         const params = new HttpParams()
             .set('page', page)
             .set('size', size);
 
-        return this.http.get<ApiResponse<PageResponse<Cliente>>>(
+        return this.http.get<ApiResponse<Page<Cliente>>>(
             this.apiUrl,
             { params }
         );
@@ -38,14 +36,14 @@ export class ClienteService {
         nombre: string,
         page: number = 0,
         size: number = 5
-    ): Observable<ApiResponse<PageResponse<Cliente>>> {
+    ): Observable<ApiResponse<Page<Cliente>>> {
 
         const params = new HttpParams()
             .set('nombre', nombre)
             .set('page', page)
             .set('size', size);
 
-        return this.http.get<ApiResponse<PageResponse<Cliente>>>(
+        return this.http.get<ApiResponse<Page<Cliente>>>(
             `${this.apiUrl}/buscar`,
             { params }
         );
@@ -55,14 +53,14 @@ export class ClienteService {
         filtro: 'recientes' | 'mes' | 'anio',
         page: number = 0,
         size: number = 5
-    ): Observable<ApiResponse<PageResponse<Cliente>>> {
+    ): Observable<ApiResponse<Page<Cliente>>> {
 
         const params = new HttpParams()
             .set('filtro', filtro)
             .set('page', page)
             .set('size', size);
 
-        return this.http.get<ApiResponse<PageResponse<Cliente>>>(
+        return this.http.get<ApiResponse<Page<Cliente>>>(
             `${this.apiUrl}/filtrar`,
             { params }
         );
@@ -73,7 +71,7 @@ export class ClienteService {
         fechaFin: string,
         page: number = 0,
         size: number = 5
-    ): Observable<ApiResponse<PageResponse<Cliente>>> {
+    ): Observable<ApiResponse<Page<Cliente>>> {
 
         const params = new HttpParams()
             .set('fechaInicio', fechaInicio)
@@ -81,7 +79,7 @@ export class ClienteService {
             .set('page', page)
             .set('size', size);
 
-        return this.http.get<ApiResponse<PageResponse<Cliente>>>(
+        return this.http.get<ApiResponse<Page<Cliente>>>(
             `${this.apiUrl}/filtrar/rango`,
             { params }
         );
@@ -105,9 +103,8 @@ export class ClienteService {
     }
 
     obtenerActividadReciente(id: number): Observable<ApiResponse<ActividadReciente[]>> {
-
-    return this.http.get<ApiResponse<ActividadReciente[]>>(
-        `${this.apiUrl}/${id}/actividad`
-    );
-}
+        return this.http.get<ApiResponse<ActividadReciente[]>>(
+            `${this.apiUrl}/${id}/actividad`
+        );
+    }
 }

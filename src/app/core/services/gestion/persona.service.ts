@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 
 import { environment } from '@/environments/environment.development';
 
-import { ApiResponse } from '../../models/gestion/api-response.model';
 
 import { PersonaUpdateRequest } from '../../models/gestion/persona/persona-update.model';
+import { ApiResponse } from '../../models/common/index.model';
 
 @Injectable({
     providedIn: 'root'
