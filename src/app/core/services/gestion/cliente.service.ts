@@ -1,7 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-
 import { Cliente } from '../../models/gestion/cliente/cliente.model';
 import { environment } from '@/environments/environment.development';
 import { ClienteResumen } from '../../models/gestion/cliente/ClienteResumen.model';
@@ -104,9 +103,8 @@ export class ClienteService {
     }
 
     obtenerActividadReciente(id: number): Observable<ApiResponse<ActividadReciente[]>> {
-
-    return this.http.get<ApiResponse<ActividadReciente[]>>(
-        `${this.apiUrl}/${id}/actividad`
-    );
-}
+        return this.http.get<ApiResponse<ActividadReciente[]>>(
+            `${this.apiUrl}/${id}/actividad`
+        );
+    }
 }
