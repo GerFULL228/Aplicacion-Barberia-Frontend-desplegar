@@ -8,10 +8,14 @@ import { ButtonModule } from 'primeng/button';
   styleUrl: './filtrar-barbero.css',
 })
 export class FiltrarBarbero {
-  @Output() apply = new EventEmitter<{ status: string; order: string }>();
+  @Output() apply = new EventEmitter<{ estado: string; order: string }>();
   @Output() clear = new EventEmitter<void>();
 
-  onApply(status: string, order: string) { this.apply.emit({ status, order }); }
-  onClear() { this.clear.emit(); }
+  onApply(estado: string, order: string) { this.apply.emit({ estado, order }); }
+  onClear(statusSelect: HTMLSelectElement, orderSelect: HTMLSelectElement) {
+    statusSelect.value = '';
+    orderSelect.value = '';
+    this.clear.emit();
+  }
 
 }

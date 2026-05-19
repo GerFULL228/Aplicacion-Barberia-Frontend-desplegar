@@ -74,7 +74,8 @@
 
 .table-actions {
   display: flex;
-  gap: 0.375rem;
-  align-items: center;
+  flex-direction: column;
+  gap: 0.45rem;
+  align-items: flex-end;
   justify-content: flex-end;
 }

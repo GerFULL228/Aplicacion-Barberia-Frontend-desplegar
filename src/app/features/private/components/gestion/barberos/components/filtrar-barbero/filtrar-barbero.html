@@ -14,27 +14,31 @@
 
 			<div class="filter-group">
 				<label class="label-form">Estado</label>
-				<select #statusSelect class="inputs-text w-[180px]">
+				<select #statusSelect class="inputs-text w-45">
 					<option value="">Todos</option>
-					<option value="Disponible">Disponible</option>
-					<option value="Ocupado">Ocupado</option>
+					<option value="disponible">Disponible</option>
+					<option value="ocupado">Ocupado</option>
 				</select>
 			</div>
 
 			<div class="filter-group">
 				<label class="label-form">Ordenar</label>
-				<select #orderSelect class="inputs-text w-[200px]">
+				<select #orderSelect class="inputs-text w-50">
 					<option value="">Seleccionar</option>
-					<option value="reservas_desc">Más reservas</option>
-					<option value="reservas_asc">Menos reservas</option>
-					<option value="ventas_desc">Más ventas</option>
-					<option value="ventas_asc">Menos ventas</option>
+					<option value="fechaIngreso_desc">Fecha (más recientes)</option>
+					<option value="fechaIngreso_asc">Fecha (más antiguas)</option>
+					<option value="experiencia_desc">Experiencia (mayor)</option>
+					<option value="experiencia_asc">Experiencia (menor)</option>
+					<option value="sueldo_desc">Sueldo (mayor)</option>
+					<option value="sueldo_asc">Sueldo (menor)</option>
+					<option value="comision_desc">Comisión (mayor)</option>
+					<option value="comision_asc">Comisión (menor)</option>
 				</select>
 			</div>
 
 			<div class="flex gap-3 actions">
 				<button pButton type="button" class="p-button boton-secondary" (click)="onApply(statusSelect.value, orderSelect.value)">Aplicar</button>
-				<button pButton type="button" class="p-button boton-ghost" (click)="onClear()"><i class="pi pi-filter-slash"></i> Limpiar</button>
+				<button pButton type="button" class="p-button boton-ghost" (click)="onClear(statusSelect, orderSelect)"><i class="pi pi-filter-slash"></i> Limpiar</button>
 			</div>
 
 		</div>

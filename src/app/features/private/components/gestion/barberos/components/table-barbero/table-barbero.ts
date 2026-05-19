@@ -19,6 +19,8 @@ export class TableBarbero {
 
   @Input() totalPages: number = 0;
 
+  @Input() pageSize: number = 7;
+
   @Output() prev = new EventEmitter<void>();
 
   @Output() next = new EventEmitter<void>();

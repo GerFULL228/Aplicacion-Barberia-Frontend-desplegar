@@ -1,64 +1,109 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { BarberoService, FiltroBarberoBusqueda, DireccionOrden, OrdenarBarberoPor } from '@/app/core/services/gestion/barbero.service';
 import { HeaderBarbero } from "./components/header-barbero/header-barbero";
-import { ResumenGeneralBarbero } from './components/resumen-general-barbero/resumen-general-barbero';
+import { ResumenGeneralBarberoComponent } from './components/resumen-general-barbero/resumen-general-barbero';
 import { TableBarbero } from './components/table-barbero/table-barbero';
 import { FiltrarBarbero } from "./components/filtrar-barbero/filtrar-barbero";
 
-
 @Component({
   selector: 'app-barberos',
-  imports: [HeaderBarbero, ResumenGeneralBarbero, TableBarbero, FiltrarBarbero],
+  imports: [HeaderBarbero, ResumenGeneralBarberoComponent, TableBarbero, FiltrarBarbero],
   templateUrl: './barberos.html',
   styleUrl: './barberos.css',
 })
-export class Barberos {
-icono: string = 'pi-users';
+export class Barberos implements OnInit {
 
+  icono: string = 'pi-users';
   searchTerm: string = '';
+  private filtrosActuales: FiltroBarberoBusqueda = {};
 
-  barberos: any[] = [
-    {
-      barberoId: 1,
-      persona: { nombre: 'Marco', apellido: 'Vega', email: 'marco@beria.pe' },
-      experiencia: '6 años',
-      estado: 'Disponible',
-      reservas: 7,
-      comision: '22%',
-      sueldo: 'S/1,600',
-      ventasHoy: 'S/290'
-    },
-    {
-      barberoId: 2,
-      persona: { nombre: 'Luis', apellido: 'Ríos', email: 'luis@beria.pe' },
-      experiencia: '3 años',
-      estado: 'En descanso',
-      reservas: 6,
-      comision: '18%',
-      sueldo: 'S/1,200',
-      ventasHoy: 'S/310'
-    }
-  ];
-
-  totalElements: number = this.barberos.length;
+  barberos: any[] = [];
+  totalElements: number = 0;
   currentPage: number = 0;
-  totalPages: number = 1;
+  totalPages: number = 0;
 
-  abrirCrear(): void {
-    // TODO: conectar con el formulario/diálogo de creación de barbero
-    return;
+  private barberoService = inject(BarberoService);
+
+  ngOnInit(): void {
+    this.loadPage(0);
+  }
+
+  private mapBarberos(content: any[]): any[] {
+    return content.map((b: any) => ({
+      barberoId: b.barberoId,
+      persona: b.persona,
+      fechaIngreso: b.fechaIngreso ? new Date(b.fechaIngreso).toLocaleDateString() : '—',
+      experiencia: b.experiencia != null ? `${b.experiencia} años` : '—',
+      estado: b.ocupado ? 'Ocupado' : 'Disponible',
+      comision: b.comision != null ? `${b.comision}%` : '—',
+      sueldo: b.sueldo != null ? `S/${b.sueldo}` : '—'
+    }));
+  }
+
+  private aplicarPagina(res: any): void {
+    if (!res || !res.success) return;
+    const p = res.data;
+    this.barberos     = this.mapBarberos(p.content || []);
+    this.totalElements = p.totalElements || 0;
+    this.currentPage  = p.pageNumber || 0;
+    this.totalPages   = p.totalPages || 0;
+  }
+
+  loadPage(page: number = 0, size: number = 10, filtros: FiltroBarberoBusqueda = this.filtrosActuales): void {
+    const useFilters = Boolean(filtros.estado || filtros.ordenarPor || filtros.direccion);
+    const request$ = useFilters
+      ? this.barberoService.buscar(filtros, page, size)
+      : this.barberoService.listar(page, size);
+
+    request$.subscribe((res: any) => this.aplicarPagina(res));
   }
 
   onSearch(query: string): void {
-    this.searchTerm = query;
-    // Puedes usar searchTerm para filtrar la lista de barberos
+    this.searchTerm = query.trim();
+
+    if (this.searchTerm) {
+      // Hay término → buscar por nombre/apellido, ignora filtros activos
+      this.barberoService.buscarPorNombre(this.searchTerm, 0, 10)
+        .subscribe((res: any) => this.aplicarPagina(res));
+    } else {
+      // Campo vacío → volver al listado normal con filtros activos
+      this.loadPage(0, 10, this.filtrosActuales);
+    }
   }
 
+  onApplyFilters(filters: { estado: string; order: string }): void {
+    const parsed = this.parseOrder(filters.order);
+    this.filtrosActuales = {
+      estado: (filters.estado as FiltroBarberoBusqueda['estado']) || 'todos',
+      ordenarPor: parsed.ordenarPor,
+      direccion: parsed.direccion
+    };
+    this.loadPage(0, 10, this.filtrosActuales);
+  }
+
+  onClearFilters(): void {
+    this.filtrosActuales = {};
+    this.loadPage(0, 10, {});
+  }
+
+  private parseOrder(order: string): { ordenarPor?: OrdenarBarberoPor; direccion?: DireccionOrden } {
+    if (!order) return {};
+    const [ordenarPor, direccion] = order.split('_');
+    const allowedOrder     = ['fechaIngreso', 'experiencia', 'sueldo', 'comision'] as const;
+    const allowedDirection = ['asc', 'desc'] as const;
+    return {
+      ordenarPor: allowedOrder.includes(ordenarPor as OrdenarBarberoPor) ? (ordenarPor as OrdenarBarberoPor) : undefined,
+      direccion:  allowedDirection.includes(direccion as DireccionOrden)  ? (direccion as DireccionOrden)     : undefined
+    };
+  }
+
+  abrirCrear(): void { }
+
   onPrev(): void {
-    if (this.currentPage > 0) this.currentPage -= 1;
+    if (this.currentPage > 0) this.loadPage(this.currentPage - 1, 10, this.filtrosActuales);
   }
 
   onNext(): void {
-    if (this.currentPage < this.totalPages - 1) this.currentPage += 1;
+    if (this.currentPage < this.totalPages - 1) this.loadPage(this.currentPage + 1, 10, this.filtrosActuales);
   }
-
 }

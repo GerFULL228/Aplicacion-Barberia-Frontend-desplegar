@@ -8,11 +8,13 @@
 				<tr class="table-header border-b border-gray-800 text-xs uppercase tracking-[0.2em] text-brand-gold/80">
 					<th class="py-3 px-3 text-left w-[22%]">Nombre</th>
 					<th class="py-3 px-3 text-left w-[16%]">Apellido</th>
+					<th class="py-3 px-3 text-left w-[18%]">Correo</th>
+					<th class="py-3 px-3 text-center w-[14%]">Ingreso</th>
 					<th class="py-3 px-3 text-left w-[14%]">Estado</th>
-					<th class="py-3 px-3 text-center w-[10%]">Reservas</th>
+
 					<th class="py-3 px-3 text-center w-[10%]">Comisión</th>
 					<th class="py-3 px-3 text-center w-[10%]">Sueldo</th>
-					<th class="py-3 px-3 text-center w-[10%]">Ventas hoy</th>
+
 					<th class="py-3 px-3 text-right w-[8%]">Acción</th>
 				</tr>
 			</thead>
@@ -21,43 +23,46 @@
 
 				<tr *ngFor="let b of barberos" class="table-row align-middle transition-colors duration-200 hover:bg-white/5">
 
-					<td class="py-4 px-3">
+					<td class="py-4 px-3" data-label="Nombre">
 
 						<div class="flex items-center gap-3">
-							<div class="cliente-avatar">{{ initials((b.persona?.nombre || b.nombre) + ' ' + (b.persona?.apellido || '')) }}</div>
+							<div class="w-10 h-10 rounded-full flex items-center justify-center bg-yellow-800/20 text-yellow-400 font-bold border border-yellow-600/20 shadow-inner">{{ initials((b.persona?.nombre || b.nombre) + ' ' + (b.persona?.apellido || '')) }}</div>
 							<div>
 								<div class="font-semibold text-gray-100 leading-tight">{{ b.persona?.nombre || b.nombre }}</div>
-								<div class="text-xs text-gray-400">{{ b.persona?.email || b.email }}</div>
 							</div>
 						</div>
 
 					</td>
 
-					<td class="py-4 px-3 font-semibold text-gray-100 leading-tight">
+					<td class="py-4 px-3 font-semibold text-gray-100 leading-tight" data-label="Apellido">
 						{{ b.persona?.apellido || b.apellido || '—' }}
 					</td>
 
-					<td class="py-4 px-3">
+					<td class="py-4 px-3 text-xs text-gray-400" data-label="Correo">{{ b.persona?.email || b.email || '—' }}</td>
+
+					<td class="py-4 px-3 text-center text-gray-300" data-label="Ingreso">{{ b.fechaIngreso || '—' }}</td>
+
+					<td class="py-4 px-3" data-label="Estado">
 						<span *ngIf="b.estado === 'Disponible'" class="inline-flex items-center gap-2 rounded-full border border-lime-400/20 bg-lime-400/10 px-3 py-1 text-xs font-medium text-lime-300">
 							<span class="h-2 w-2 rounded-full bg-lime-400"></span>Disponible
 						</span>
-						<span *ngIf="b.estado === 'Ocupado'" class="inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-400/10 px-3 py-1 text-xs font-medium text-amber-300">
-							<span class="h-2 w-2 rounded-full bg-amber-400"></span>Ocupado
+						<span *ngIf="b.estado === 'Ocupado'" class="inline-flex items-center gap-2 rounded-full border border-red-400/20 bg-red-400/10 px-3 py-1 text-xs font-medium text-red-300">
+							<span class="h-2 w-2 rounded-full bg-red-400"></span>Ocupado
 						</span>
 						<span *ngIf="!b.estado" class="inline-flex items-center gap-2 rounded-full border border-gray-500/20 bg-white/5 px-3 py-1 text-xs font-medium text-gray-300">
 							<span class="h-2 w-2 rounded-full bg-gray-400"></span>—
 						</span>
 					</td>
 
-					<td class="py-4 px-3 text-center text-gray-300">{{ b.reservas || 0 }}</td>
 
-					<td class="py-4 px-3 text-center text-gray-300">{{ b.comision || '—' }}</td>
 
-					<td class="py-4 px-3 text-center text-gray-300">{{ b.sueldo || '—' }}</td>
+					<td class="py-4 px-3 text-center text-gray-300" data-label="Comisión">{{ b.comision || '—' }}</td>
 
-					<td class="py-4 px-3 text-center text-gray-300">{{ b.ventasHoy || '—' }}</td>
+					<td class="py-4 px-3 text-center text-gray-300" data-label="Sueldo">{{ b.sueldo || '—' }}</td>
 
-					<td class="py-4 px-3 text-right w-[8%]">
+
+
+					<td class="py-4 px-3 text-right w-[8%]" data-label="Acción">
 
 						<div class="table-actions">
 							<p-button icon="pi pi-eye" class="boton-editar-tabla" [routerLink]="['/dashboard/admin/gestion/barberos', b.barberoId || b.id]"></p-button>

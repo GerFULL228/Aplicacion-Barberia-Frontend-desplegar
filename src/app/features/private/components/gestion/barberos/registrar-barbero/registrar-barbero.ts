@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { NotificationService } from '@/app/core/services/common/notification.service';
-import { environment } from '@/environments/environment.development';
+import { UsuarioService } from '@/app/core/services/auth/usuario.service';
+import { BarberoRegister } from '@/app/core/models/auth/usuario/barbero-register.model';
 
 @Component({
   selector: 'app-registrar-barbero',
@@ -20,7 +20,12 @@ export class RegistrarBarbero {
   showPassword = false;
   showPasswordConfirm = false;
 
-  constructor(private fb: FormBuilder, private router: Router, private http: HttpClient, private notification: NotificationService) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private usuarioService: UsuarioService,
+    private notification: NotificationService,
+  ) {
     this.form = this.fb.group({
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
@@ -65,31 +70,27 @@ export class RegistrarBarbero {
     if (this.form.invalid) return;
     this.isSubmitting = true;
     const v = this.form.value;
-    const payload = {
-      persona: {
-        nombre: v.nombre,
-        apellido: v.apellido,
-        telefono: v.telefono,
-        email: v.email
-      },
-      usuario: {
-        usuario: v.usuario,
-        password: v.password
-      },
-      barbero: {
-        experiencia: Number(v.experiencia) || 0,
-        fecha_ingreso: v.fechaIngreso,
-        sueldo: v.sueldo ? Number(v.sueldo) : null,
-        comision: v.comision ? Number(v.comision) : null
-      }
+    const payload: BarberoRegister = {
+      idRol: 2,
+      nombre: v.nombre ?? '',
+      apellido: v.apellido ?? '',
+      telefono: v.telefono ?? '',
+      email: v.email ?? '',
+      username: v.usuario ?? '',
+      password: v.password ?? '',
+      experiencia: Number(v.experiencia) || 0,
+      sueldo: v.sueldo ? Number(v.sueldo) : 0,
+      comision: v.comision ? Number(v.comision) : 0,
+      descripcion: '',
+      fotoUrl: null,
     };
 
-    this.http.post<any>(`${environment.apiUrl}/barberos`, payload).subscribe({
+    this.usuarioService.registrarBarbero(payload).subscribe({
       next: (res) => {
         this.isSubmitting = false;
         this.showConfirm = false;
         this.notification.showSuccess(res?.message || 'Barbero creado correctamente');
-        this.router.navigate(['/dashboard/gestion/barberos']);
+        this.router.navigate(['/dashboard/admin/gestion/barberos']);
       },
       error: (err) => {
         console.error('Error crear barbero', err);

@@ -1,50 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { BarberoService } from '@/app/core/services/gestion/barbero.service';
 
 @Component({
   selector: 'app-resumen-perfil-barbero',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './resumen-perfil-barbero.html',
   styleUrl: './resumen-perfil-barbero.css',
 })
 export class ResumenPerfilBarbero implements OnInit {
 
-  barberoNombre = 'Luis Ríos Paredes';
-  barberoIniciales = 'LR';
-  barberoDescripcion = 'Barbero júnior con buen manejo de técnicas modernas';
-  
-  cortesMesActual = 38;
-  ingresosGenerados = 'S/1,900';
-  comisionGanada = 'S/342';
-  reservasHoy = 6;
-  
-  nombre = 'Luis';
-  apellido = 'Ríos Paredes';
-  telefono = '+51 912 345 678';
-  email = 'luis@boria.pe';
-  fechaIngreso = '10 ene 2022';
-  experiencia = '3 años';
-  sueldo = 'S/1,200';
-  comision = '48%';
-  descripcion = 'Barbero júnior con buen manejo de técnicas modernas de degradado y fade. En etapa de crecimiento. Requiere acompañamiento en puntualidad y productividad.';
-  usuario = '';
-  contrasena = '';
-  idUsuario = 0;
+  @Input({ required: true }) barberoId!: number;
+
+  private barberoService = inject(BarberoService);
+
+  barberoNombre    = '';
+  cortesMesActual  = 0;
+  ingresosGenerados = 'S/0';
+  comisionGanada   = 'S/0';
+  reservasHoy      = 0;
+  cargando         = true;
 
   ngOnInit(): void {
-    // Cargar datos del barbero desde el servicio
-    this.actualizarVista();
-  }
-
-
-  private actualizarVista(): void {
-    this.barberoNombre = this.nombre && this.apellido ? `${this.nombre} ${this.apellido}` : this.nombre || 'Barbero';
-    this.barberoIniciales = this.getInitials(this.barberoNombre);
-  }
-
-  private getInitials(name: string): string {
-    const parts = name.split(' ').filter(Boolean);
-    if (parts.length === 0) return 'BR';
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-    return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    this.barberoService.obtenerResumenIndividual(this.barberoId).subscribe({
+      next: (res) => {
+        if (!res?.success || !res.data) return;
+        const d = res.data;
+        this.barberoNombre    = d.nombreBarbero;
+        this.cortesMesActual  = d.cortesEsteMes;
+        this.ingresosGenerados = `S/${d.ingresosGenerados.toFixed(2)}`;
+        this.comisionGanada   = `S/${d.comisionGanada.toFixed(2)}`;
+        this.reservasHoy      = d.reservasHoy;
+        this.cargando         = false;
+      },
+      error: () => { this.cargando = false; }
+    });
   }
 }
