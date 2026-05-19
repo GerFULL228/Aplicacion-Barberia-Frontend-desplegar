@@ -31,4 +31,13 @@ export class AuthService {
   logout() {
     this.tokenService.clearTokens();
   }
+  register(data: {
+    nombre: string;
+    apellido: string;
+    telefono: string;
+    correo: string;
+    password: string;
+  }): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(this.API + "/register", data);
+  }
 }

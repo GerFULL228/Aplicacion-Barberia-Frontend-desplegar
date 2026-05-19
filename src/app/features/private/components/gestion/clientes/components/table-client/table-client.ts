@@ -22,6 +22,8 @@ export class TableClient {
   @Output() prev = new EventEmitter<void>();
 
   @Output() next = new EventEmitter<void>();
+  
+  @Output() delete = new EventEmitter<number>();
 
   get canGoPrev(): boolean {
     return this.currentPage > 0;
@@ -39,6 +41,10 @@ export class TableClient {
   onNext(): void {
     if (!this.canGoNext) return;
     this.next.emit();
+  }
+
+  onDelete(id: number): void {
+    this.delete.emit(id);
   }
 
   initials(name: string) {
