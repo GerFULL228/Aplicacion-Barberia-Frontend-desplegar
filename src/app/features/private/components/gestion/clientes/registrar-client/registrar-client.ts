@@ -95,7 +95,7 @@ export class RegistrarClient {
         this.isSubmitting = false;
         this.showConfirm = false;
         this.notification.showSuccess(res?.message || 'Cliente creado correctamente');
-        this.router.navigate(['/dashboard/gestion/clientes']);
+        this.router.navigate(['/dashboard/admin/gestion/clientes']);
       },
       error: (err) => {
         console.error('Error al registrar cliente', err);
