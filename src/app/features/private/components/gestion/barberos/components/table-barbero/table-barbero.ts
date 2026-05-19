@@ -4,20 +4,22 @@ import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
-  selector: 'app-table-client',
+  selector: 'app-table-barbero',
   imports: [CommonModule, RouterModule, ButtonModule],
-  templateUrl: './table-client.html',
-  styleUrl: './table-client.css',
+  templateUrl: './table-barbero.html',
+  styleUrl: './table-barbero.css',
 })
-export class TableClient {
+export class TableBarbero {
 
-  @Input() clients: any[] = [];
+  @Input() barberos: any[] = [];
 
   @Input() totalElements: number = 0;
 
   @Input() currentPage: number = 0;
 
   @Input() totalPages: number = 0;
+
+  @Input() pageSize: number = 7;
 
   @Output() prev = new EventEmitter<void>();
 
@@ -62,4 +64,5 @@ export class TableClient {
       (parts[1] ? parts[1][0] : '')
     ).toUpperCase();
   }
+
 }
