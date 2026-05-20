@@ -71,6 +71,7 @@ export const routes: Routes = [
           { path: 'barberos', loadComponent: () => import('./features/private/components/gestion/barberos/barberos').then(m => m.Barberos) },
           { path: 'barberos/registrar-barbero', component:RegistrarBarbero},
           { path: 'barberos/:id', component: PerfilBarbero },
+          { path: 'usuarios', loadComponent: () => import('.//features/private/components/gestion/usuario/usuario').then(m => m.Usuario) },
         ]
       },
       { path: '**', loadComponent: () => import('./shared/components/error404/error404.component').then(m => m.Error404Component) }
