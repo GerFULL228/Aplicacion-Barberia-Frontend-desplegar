@@ -8,7 +8,7 @@ import { HeaderComponent } from './components/header/header.component';
   imports: [RouterOutlet, FooterComponent, HeaderComponent],
   template: `
   <app-header/>
-    <main>
+    <main class="min-h-screen pt-20 sm:pt-[88px]">
       <router-outlet></router-outlet>
     </main>
   <app-footer/>`,})
