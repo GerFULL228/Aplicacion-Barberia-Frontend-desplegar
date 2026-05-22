@@ -18,6 +18,7 @@ import { RegistrarClient } from './features/private/components/gestion/clientes/
 import { CarritoComponent } from './features/public/pages/carrito/carrito.component';
 import { PerfilBarbero } from './features/private/components/gestion/barberos/perfil-barbero/perfil-barbero';
 import { RegistrarBarbero } from './features/private/components/gestion/barberos/registrar-barbero/registrar-barbero';
+import { PerfilUsuario } from './features/private/components/gestion/usuario/perfil-usuario/perfil-usuario';
 
 export const routes: Routes = [
   {path: 'dashboard/admin',component: PrivateLayoutComponent,
@@ -36,11 +37,13 @@ export const routes: Routes = [
       ]},
       {path: 'gestion', children: [
         { path: 'clientes', loadComponent: () => import('./features/private/components/gestion/clientes/clientes').then(m => m.Clientes) },
-        { path: 'clientes/register-cliente', component: RegistrarClient },
-        { path: 'clientes/:id', component: PerfilClient },
+          { path: 'clientes/register-cliente', component: RegistrarClient },
+          { path: 'clientes/:id', component: PerfilClient },
         { path: 'barberos', loadComponent: () => import('./features/private/components/gestion/barberos/barberos').then(m => m.Barberos) },
           { path: 'barberos/registrar-barbero', component:RegistrarBarbero},
           { path: 'barberos/:id', component: PerfilBarbero },
+        {path:'usuarios', loadComponent: () => import('./features/private/components/gestion/usuario/usuario').then(m => m.Usuario) }
+        ,{ path: 'usuarios/:id', component: PerfilUsuario }
       ]},
       { path: '**', loadComponent: () => import('./shared/components/error404/error404.component').then(m => m.Error404Component) }
     ]

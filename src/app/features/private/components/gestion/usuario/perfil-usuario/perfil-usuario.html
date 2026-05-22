@@ -1,0 +1,31 @@
+<app-header-perfil-usuario
+	[usuarioNombre]="usuarioNombre"
+	[usuarioIniciales]="usuarioIniciales"
+	[usuarioDescripcion]="usuarioDescripcion"
+	[volver]="volver"
+></app-header-perfil-usuario>
+
+<!-- Aquí van el resto de bloques del perfil (roles, datos, credenciales) -->
+
+
+
+<!-- Datos básicos -->
+<div class="mt-6">
+	<app-datos-basicos-perfil-usuario
+		[nombre]="'—'"
+		[apellido]="'—'"
+		[telefono]="'—'"
+		[email]="'—'"
+	></app-datos-basicos-perfil-usuario>
+</div>
+
+<!-- Credenciales -->
+<div class="mt-6">
+	<app-credenciales-perfil-usuario [usuario]="'user_example'" [contrasena]="'••••••••'" [idUsuario]="0"></app-credenciales-perfil-usuario>
+</div>
+
+<!-- Roles y permisos -->
+<div class="mt-6">
+	<app-roles-permisos-perfil-usuario [usuarioId]="usuarioId"></app-roles-permisos-perfil-usuario>
+</div>
+

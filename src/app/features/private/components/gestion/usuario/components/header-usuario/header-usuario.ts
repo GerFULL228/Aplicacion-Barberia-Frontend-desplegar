@@ -5,6 +5,7 @@ import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-header-usuario',
+  standalone: true,
   imports: [SearchBarComponent, ButtonModule, RouterLink],
   templateUrl: './header-usuario.html',
   styleUrl: './header-usuario.css',

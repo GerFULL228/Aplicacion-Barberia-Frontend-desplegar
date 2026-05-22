@@ -1,3 +1,15 @@
 <div class="mt-5">
   <app-header-usuario></app-header-usuario>
 </div>
+
+<div class="mt-5">
+  <app-filtrar-users
+    (apply)="onApplyFilters($event)"
+    (clear)="onClearFilters()">
+  </app-filtrar-users>
+</div>
+
+<div class="mt-5">
+  <app-table-users [usuarios]="usuarios"></app-table-users>
+</div>
+

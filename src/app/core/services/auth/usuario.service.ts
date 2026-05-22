@@ -1,7 +1,7 @@
 import { environment } from '@/environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { ClienteRegister } from '../../models/auth/usuario/cliente-register.model';
 import { ResetPasswordRequest } from '../../models/auth/usuario/reset-password-request.model';
@@ -43,5 +43,11 @@ export class UsuarioService {
             `${this.apiUrl}/${idUsuario}/username-update`,
             data
         );
+    }
+
+    // Método stub para generar QR - placeholder sin implementación de backend
+    generateQr(idUsuario: number): Observable<any> {
+        // Por ahora no hace nada: devuelve un observable vacío con estructura esperada
+        return of({ qrUrl: null });
     }
 }
