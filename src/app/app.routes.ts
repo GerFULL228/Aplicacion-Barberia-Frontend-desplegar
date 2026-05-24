@@ -1,3 +1,4 @@
+import { Reservas } from './core/services/reserva/reserva';
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
@@ -14,10 +15,12 @@ import { InicioComponent } from './features/public/pages/inicio/inicio.component
 import { CarritoComponent } from './features/public/pages/carrito/carrito.component';
 import { BarberoLayoutComponent } from './features/private/layout/barbero-layout.component';
 import { DashboardAdministrativoComponent } from './features/private/dashboard/dashboard-administrativo/dashboard-administrativo.component';
-import { PerfilClient } from './features/private/components/gestion/clientes/perfil-client/perfil-client';
 import { RegistrarClient } from './features/private/components/gestion/clientes/registrar-client/registrar-client';
 import { RegistrarBarbero } from './features/private/components/gestion/barberos/registrar-barbero/registrar-barbero';
+import { PerfilClient } from './features/private/components/gestion/clientes/perfil-client/perfil-client';
 import { PerfilBarbero } from './features/private/components/gestion/barberos/perfil-barbero/perfil-barbero';
+import { Usuario } from './features/private/components/gestion/usuario/usuario';
+import { PerfilUsuario } from './features/private/components/gestion/usuario/perfil-usuario/perfil-usuario';
 
 export const routes: Routes = [
   {path: 'dashboard/admin',component: DashboardAdministrativoComponent,
@@ -32,15 +35,19 @@ export const routes: Routes = [
         { path: 'servicios', loadComponent: () => import('./features/private/components/catalogo/servicios/servicios.component').then(m => m.ServiciosComponent) },
       ]},
       {path: 'operaciones',children: [
-        {path: 'ventas', loadComponent: () => import('./features/private/components/operaciones/ventas/ventas.component').then(m => m.VentasComponent)}
+        {path: 'ventas', loadComponent: () => import('./features/private/components/operaciones/ventas/ventas.component').then(m => m.VentasComponent)},
+        {path: 'reservas', loadComponent: () => import('./features/private/components/operaciones/reservas/reserva-list/reserva-list').then(m => m.ReservaList)},
+        {path: 'reservas/nueva', loadComponent: () => import('./features/private/components/operaciones/reservas/reserva-create/create-reserva/create-reserva').then(m => m.CreateReserva)},
       ]},
       {path: 'gestion', children: [
         { path: 'clientes', loadComponent: () => import('./features/private/components/gestion/clientes/clientes').then(m => m.Clientes) },
         { path: 'clientes/register-cliente', component: RegistrarClient },
         { path: 'clientes/:id', component: PerfilClient },
         { path: 'barberos', loadComponent: () => import('./features/private/components/gestion/barberos/barberos').then(m => m.Barberos) },
-          { path: 'barberos/registrar-barbero', component:RegistrarBarbero},
-          { path: 'barberos/:id', component: PerfilBarbero },
+        { path: 'barberos/registrar-barbero', component:RegistrarBarbero},
+        { path: 'barberos/:id', component: PerfilBarbero },
+        { path: 'usuarios', component: Usuario },
+        { path: 'usuarios/:id', component: PerfilUsuario },
       ]},
       { path: '**', loadComponent: () => import('./shared/components/error404/error404.component').then(m => m.Error404Component) }
     ]
@@ -55,10 +62,15 @@ export const routes: Routes = [
       {path: 'operaciones',children: [
         {path: 'ventas', loadComponent: () => import('./features/private/components/operaciones/ventas/ventas.component').then(m => m.VentasComponent)}
       ]},
+      {
+        path: 'operaciones', children: [
+          { path: 'reservas', loadComponent: () => import('./features/private/components/operaciones/reservas/reserva-list/reserva-list').then(m => m.ReservaList) },
+        ]
+      },
       {path: 'gestion', children: [
         { path: 'clientes', loadComponent: () => import('./features/private/components/gestion/clientes/clientes').then(m => m.Clientes) },
         { path: 'clientes/registrar-client', component: RegistrarClient },
-          { path: 'clientes/register-cliente', component: RegistrarClient },
+        { path: 'clientes/register-cliente', component: RegistrarClient },
         { path: 'clientes/:id', component: PerfilClient },
         { path: 'barberos', loadComponent: () => import('./features/private/components/gestion/barberos/barberos').then(m => m.Barberos) },
       ]},
