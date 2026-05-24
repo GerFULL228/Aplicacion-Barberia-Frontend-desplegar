@@ -34,6 +34,8 @@ export class TableUsers {
 
   @Output() reactivate = new EventEmitter<number>();
 
+  @Output() createAdmin = new EventEmitter<void>();
+
   get canGoPrev(): boolean {
     return this.currentPage > 0;
   }
@@ -58,6 +60,10 @@ export class TableUsers {
 
   onReactivate(id: number): void {
     this.reactivate.emit(id);
+  }
+
+  onCreateAdmin(): void {
+    this.createAdmin.emit();
   }
 
   private getRoleList(usuario: any): string[] {

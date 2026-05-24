@@ -9,6 +9,7 @@ import { UpdateUsernameRequest } from '../../models/auth/usuario/update-username
 import { BarberoRegister } from '../../models/auth/usuario/barbero-register.model';
 import { ApiResponse, Page } from '../../models/common/index.model';
 import { AssignRolesRequest, Permiso, Rol, UsuarioTablaResponse } from '../../models/gestion/usuario.model';
+import { AdminRegister } from '../../models/auth/usuario/admin-register.model';
 
 @Injectable({
     providedIn: 'root'
@@ -20,18 +21,26 @@ export class UsuarioService {
 
     registrarCliente(data: ClienteRegister): Observable<any> {
         const payload = { ...data, idRol: 3 } as ClienteRegister;
-        return this.http.post<any>(
+        return this.http.post<ClienteRegister>(
             `${this.apiUrl}/cliente`,
             payload
         );
     }
 
     registrarBarbero(data: BarberoRegister): Observable<any> {
-        return this.http.post<any>(
+        return this.http.post<BarberoRegister>(
             `${this.apiUrl}/barbero`,
             data
         );
     }
+
+   registrarAdmin(data: AdminRegister): Observable<any> {
+    const payload = { ...data, idRol: 1 } as AdminRegister; // igual que haces con cliente (idRol: 3)
+    return this.http.post<any>(
+        `${this.apiUrl}/admin`,
+        payload
+    );
+}
 
     resetPassword(idUsuario: number, data: ResetPasswordRequest): Observable<any> {
         return this.http.put<any>(

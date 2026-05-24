@@ -1,21 +1,43 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
+import { PasswordModule } from 'primeng/password';
 import { HeaderUsuario } from "./components/header-usuario/header-usuario";
 import { TableUsers } from './components/table-users/table-users';
 import { FiltrarUsers, FiltroUsuario } from './components/filtrar-users/filtrar-users';
 import { UsuarioService } from '@/app/core/services/auth/usuario.service';
+import { NotificationService } from '@/app/core/services/common/notification.service';
 import { UsuarioTablaResponse } from '@/app/core/models/gestion/usuario.model';
+import { AdminRegister } from '@/app/core/models/auth/usuario/admin-register.model';
+import { campoInvalido, marcarFormulario } from '@/app/shared/utils/form-utils.component';
 
 
 @Component({
   selector: 'app-usuario',
   standalone: true,
-  imports: [CommonModule, HeaderUsuario, FiltrarUsers, TableUsers],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    DialogModule,
+    InputTextModule,
+    MessageModule,
+    PasswordModule,
+    HeaderUsuario,
+    FiltrarUsers,
+    TableUsers,
+  ],
   templateUrl: './usuario.html',
   styleUrl: './usuario.css',
 })
 export class Usuario implements OnInit {
+  private readonly fb = inject(FormBuilder);
   private readonly usuarioService = inject(UsuarioService);
+  private readonly notificationService = inject(NotificationService);
   private readonly pageSize = 10;
 
   usuarios: any[] = [];
@@ -26,6 +48,10 @@ export class Usuario implements OnInit {
   errorCarga = '';
   searchTerm = '';
   isSearchMode = false;
+  showCrearAdminModal = false;
+  adminLoading = false;
+  adminError = '';
+  adminSubmitted = false;
   private filtrosConsulta: {
     rol?: string;
     tieneQr?: boolean;
@@ -38,6 +64,16 @@ export class Usuario implements OnInit {
     qr: '',
     cantidadRoles: '',
   };
+
+  adminForm = this.fb.group({
+    nombre: ['', [Validators.required, Validators.minLength(2)]],
+    apellido: ['', [Validators.required, Validators.minLength(2)]],
+    telefono: [''],
+    email: ['', [Validators.email]],
+    username: ['', [Validators.required, Validators.minLength(4)]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
+    passwordConfirm: ['', [Validators.required]],
+  });
 
   ngOnInit(): void {
     this.cargarUsuarios(0);
@@ -109,6 +145,82 @@ export class Usuario implements OnInit {
 
     this.isSearchMode = false;
     this.cargarUsuarios(0);
+  }
+
+  abrirModalAdmin(): void {
+    this.showCrearAdminModal = true;
+    this.adminError = '';
+    this.adminSubmitted = false;
+    this.adminForm.reset({
+      nombre: '',
+      apellido: '',
+      telefono: '',
+      email: '',
+      username: '',
+      password: '',
+      passwordConfirm: '',
+    });
+  }
+
+  cerrarModalAdmin(): void {
+    this.showCrearAdminModal = false;
+    this.adminError = '';
+    this.adminSubmitted = false;
+    this.adminLoading = false;
+  }
+
+  isAdminInvalid(campo: string): boolean {
+    return campoInvalido(this.adminForm, campo, this.adminSubmitted);
+  }
+
+  onSubmitAdmin(): void {
+    this.adminSubmitted = true;
+    this.adminError = '';
+    marcarFormulario(this.adminForm);
+
+    const passwordConfirmControl = this.adminForm.get('passwordConfirm');
+    if (passwordConfirmControl?.hasError('passwordMismatch')) {
+      passwordConfirmControl.setErrors(null);
+    }
+
+    if (this.adminForm.invalid) {
+      return;
+    }
+
+    const password = this.adminForm.value.password ?? '';
+    const passwordConfirm = this.adminForm.value.passwordConfirm ?? '';
+
+    if (password !== passwordConfirm) {
+      passwordConfirmControl?.setErrors({ passwordMismatch: true });
+      this.adminError = 'Las contraseñas no coinciden.';
+      return;
+    }
+
+    const payload: AdminRegister = {
+      nombre: (this.adminForm.value.nombre ?? '').trim(),
+      apellido: (this.adminForm.value.apellido ?? '').trim(),
+      telefono: (this.adminForm.value.telefono ?? '').trim() || undefined,
+      email: (this.adminForm.value.email ?? '').trim() || undefined,
+      username: (this.adminForm.value.username ?? '').trim(),
+      password,
+      idRol: 1,
+    };
+
+    this.adminLoading = true;
+
+    this.usuarioService.registrarAdmin(payload).subscribe({
+      next: () => {
+        this.adminLoading = false;
+        this.showCrearAdminModal = false;
+        this.notificationService.showSuccess('Administrador registrado correctamente.');
+        this.cargarUsuarios(this.currentPage);
+      },
+      error: (err) => {
+        this.adminLoading = false;
+        this.adminError = err?.error?.message ?? 'No se pudo registrar el administrador.';
+        this.notificationService.showHttpError(err, 'No se pudo registrar el administrador');
+      },
+    });
   }
 
   private aplicarRespuesta(response: any, page: number): void {
