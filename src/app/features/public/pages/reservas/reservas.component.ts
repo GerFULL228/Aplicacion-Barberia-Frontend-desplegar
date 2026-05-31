@@ -5,12 +5,19 @@ import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { TokenService } from '@/app/core/services/auth/token.service';
 
-
 @Component({
   selector: 'app-reservas',
   standalone: true,
   imports: [CommonModule, DialogModule, ButtonModule],
   template: `
+    
+    <div *ngIf="!verificado" class="min-h-screen bg-black flex items-center justify-center">
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto"></div>
+        <p class="text-white mt-4">Verificando acceso...</p>
+      </div>
+    </div>
+
     <p-dialog 
       header="⚠️ Acceso restringido" 
       [(visible)]="showModal" 
@@ -64,6 +71,7 @@ import { TokenService } from '@/app/core/services/auth/token.service';
 })
 export class ReservasComponent implements OnInit {
   showModal = false;
+  verificado = false;
   
   constructor(
     private tokenService: TokenService,
@@ -75,18 +83,30 @@ export class ReservasComponent implements OnInit {
   }
   
   verificarAutenticacion(): void {
-    const isLoggedIn = this.tokenService.isLogged();
-    
-    if (!isLoggedIn) {
-      this.showModal = true;
-    }
+    setTimeout(() => {
+      const isLoggedIn = this.tokenService.isLogged();
+      
+      if (isLoggedIn) {
+       
+        this.router.navigate(['/mi-cuenta/reservar/agendar']);
+      } else {
+      
+        this.showModal = true;
+      }
+      
+      this.verificado = true;
+    }, 100);
   }
   
   irALogin(): void {
-    this.router.navigate(['/login'], { queryParams: { returnUrl: '/mi-cuenta/reservar/agendar' } });
+    this.showModal = false;
+    this.router.navigate(['/login'], { 
+      queryParams: { returnUrl: '/mi-cuenta/reservar/agendar' }
+    });
   }
   
   cancelar(): void {
+    this.showModal = false;
     this.router.navigate(['/']);
   }
 }
