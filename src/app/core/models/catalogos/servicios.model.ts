@@ -28,4 +28,6 @@ export interface ServicioFiltro {
     categoriaId?: number;
     precioMin?: number;
     precioMax?: number;
+    publicado?: boolean;
+    estado?: boolean;
 }

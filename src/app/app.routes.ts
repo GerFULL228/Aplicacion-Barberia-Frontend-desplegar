@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
 import { NosotrosComponent } from './features/public/pages/nosotros/nosotros..component';
-import { ServiciosComponent } from './features/public/pages/servicios/servicios.component';
 import { ReservasComponent } from './features/public/pages/reservas/reservas.component';
 import { ReclamosComponent } from './features/public/pages/reclamos/reclamos.component';
 import { RegisterComponent } from './features/auth/register/register.component';
@@ -120,7 +119,7 @@ export const routes: Routes = [
       { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: 'reset-password', component: ResetPassword },
       { path: 'productos/detalle/:id', loadComponent: () => import('./features/public/pages/productos/producto-detalle/producto-detalle.component').then(m => m.ProductoDetalleComponent) },
-      { path: 'servicios', component: ServiciosComponent },
+      { path: 'servicios', loadComponent: () => import('./features/public/pages/servicios/servicios.component').then(m => m.ServiciosComponent) },
       { path: 'reclamos', component: ReclamosComponent },
       { path: 'reservas', component: ReservasComponent },
       { path: 'login', component: LoginComponent, canActivate: [guestGuard] },

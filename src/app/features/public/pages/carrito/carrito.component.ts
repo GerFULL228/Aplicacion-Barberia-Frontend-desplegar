@@ -30,19 +30,15 @@ export class CarritoComponent {
   readonly total = this.carritoService.total;
   readonly cantidad = this.carritoService.cantidad;
 
-  // =========================
-  // ACCIONES
-  // =========================
-
   procesarCompra(): void {
     if (!this.tokenService.isLogged()) {
       this.notify.showError('Debes iniciar sesión para continuar con la compra');
-      this.router.navigate(['/login']);
+      this.router.navigate(['/productos']);
       return;
     }
-
     this.router.navigate(['/checkout']);
   }
+
   actualizarCantidad(index: number, cantidad: number): void {
     this.carritoService.actualizarCantidad(index, cantidad);
   }
@@ -58,6 +54,6 @@ export class CarritoComponent {
   }
 
   continuarCompra(): void {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/productos']);
   }
 }

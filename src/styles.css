@@ -345,7 +345,8 @@ p-treeSelect button {
 input,
 input.p-inputtext,
 p-inputnumber .p-inputnumber-input,
-textarea,p-treeselect.p-treeselect,
+textarea,
+p-treeselect .p-treeselect-label,
 p-select:not(.p-paginator .p-select),
 .p-treeselect-overlay .p-tree,
 p-treeSelect,
@@ -363,6 +364,7 @@ app-search-bar input {
 
 p-select span,
 p-treeselect.p-treeselect {
+	@apply rounded-xl border-ui-border;
 	padding: 0 !important;
 }
 
@@ -400,6 +402,25 @@ p-colorpicker {
 	.p-colorpicker-preview {
 		@apply p-6 border border-gray-800 rounded-xl focus:outline-none w-10 h-10;
 	}
+}
+
+.filtros-panel {
+	color: var(--color-brand-gold) !important;
+
+}
+
+.filtros-acordeon .p-accordionpanel div:first-child {
+	@apply rounded-lg bg-ui-surface;
+}
+
+.filtros-acordeon .p-accordionpanel:first-child>.p-accordionheader {
+	background: var(--color-ui-surface) !important;
+	border:1px solid var(--color-brand-gold) !important;
+}
+
+.filtros-acordeon .p-accordionpanel:first-child>.p-accordioncontent {
+	background: var(--color-ui-surface) !important;
+	border:1px solid var(--color-brand-gold) !important;
 }
 
 /* =========================
@@ -440,7 +461,7 @@ p-colorpicker {
 
 .p-button.boton-primary:not(:disabled):hover,
 .boton-primary:hover {
-	@apply bg-brand-gold-hover text-black border-brand-gold-hover;
+	@apply bg-brand-gold text-black border-brand-gold;
 }
 
 .p-button.boton-secondary {
@@ -948,7 +969,7 @@ p-paginator.p-paginator {
 }
 
 .producto-page-section {
-	@apply bg-ui-surface px-4 py-10 text-brand-white sm:px-6 lg:px-8 p-0;
+	@apply bg-brand-dark px-4 py-10 text-brand-white sm:px-6 lg:px-8 p-0;
 }
 
 .producto-page-panel {
@@ -1023,7 +1044,7 @@ p-paginator.p-paginator {
 }
 
 .producto-detail-page {
-	@apply bg-ui-surface px-4 pb-10 pt-6 text-brand-white sm:px-6 lg:px-8;
+	@apply bg-brand-dark px-4 pb-10 pt-6 text-brand-white sm:px-6 lg:px-8;
 }
 
 .producto-detail-hero {
@@ -1107,7 +1128,7 @@ p-paginator.p-paginator {
 }
 
 .producto-detail-note {
-	@apply flex items-center justify-between rounded-2xl border border-ui-borderSoft bg-white/5 px-4 py-3 text-sm text-text-secondary;
+	@apply flex items-center justify-between rounded-2xl border border-ui-borderSoft bg-white/5 px-4 py-3 text-sm text-brand-white
 }
 
 .producto-detail-name {
@@ -1220,7 +1241,8 @@ p-paginator.p-paginator {
 		order: 2;
 		padding: 0 1rem;
 	}
-	.producto-detail-actions{
+
+	.producto-detail-actions {
 		padding: 0;
 	}
 

@@ -16,10 +16,12 @@ import { Producto } from '@/app/core/models/catalogos/productos.model';
 import { environment } from '@/environments/environment.development';
 import { SafeImageUrlPipe } from '@/app/shared/pipes/safe-image-url.pipe';
 import { INVENTARIO_CONFIG } from '@/app/core/config/valores.config';
+import { SolesPipe } from '@/app/shared/pipes/moneda.pipe';
+import { Categoria } from '@/app/core/models/catalogos/categorias.model';
 
 @Component({
   selector: 'app-producto-table',
-  imports: [ButtonModule, CommonModule, TableModule, ConfirmPopoverComponent, DialogModule, ToggleSwitchModule, 
+  imports: [ButtonModule, CommonModule, TableModule, ConfirmPopoverComponent, DialogModule, ToggleSwitchModule, SolesPipe,
     ImageModule, IconFieldModule, InputIconModule, StatusBadgeComponent, GalleriaModule, FormsModule, SafeImageUrlPipe
   ],
   templateUrl: './producto-table.html',

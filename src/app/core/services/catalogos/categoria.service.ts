@@ -4,7 +4,7 @@ import { ApiResponse, Page } from '../../models/common/index.model';
 
 import { of, tap } from 'rxjs';
 import { environment } from '@/environments/environment.development';
-import { Categoria, CategoriaFilter, CategoriaRequest, CategoriaTipo, } from '../../models/catalogos/categorias.model';
+import { Categoria, CategoriaFiltro, CategoriaRequest, CategoriaTipo, } from '../../models/catalogos/categorias.model';
 import { buildHttpParamsComponent } from '@/app/shared/utils/build-http-params.component';
 
 @Injectable({
@@ -23,7 +23,7 @@ export class CategoriaService {
         return this.http.get<ApiResponse<Page<Categoria>>>(this.apiUrl, { params: buildHttpParamsComponent({ page, size }) });
     }
 
-    obtenerCategoriasConFiltro(filter?: CategoriaFilter) {
+    obtenerCategoriasConFiltro(filter?: CategoriaFiltro) {
         return this.http.get<ApiResponse<Page<Categoria>>>(this.apiUrl, { params: buildHttpParamsComponent(filter) });
     }
 

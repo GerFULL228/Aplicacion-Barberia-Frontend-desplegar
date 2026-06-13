@@ -46,7 +46,7 @@
                         </div>
                     </td>
                     <td class="text-center">{{ servicio.nombre }}</td>
-                    <td class="text-center"><app-status-badge type="category" [value]="servicio.categoriaNombre" /></td>
+                    <td class="text-center"><app-status-badge type="text" [value]="servicio.categoriaNombre" customClass="badge-text estado-servicio"/></td>
                     <td class="text-center">S/ {{ servicio.precio }}</td>
                     <td class="text-center">{{ servicio.duracion }} min</td>
 

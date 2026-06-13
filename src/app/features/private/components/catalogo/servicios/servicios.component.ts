@@ -14,12 +14,14 @@ import { Categoria, CategoriaTipo } from '@/app/core/models/catalogos/categorias
 import { ServicioFiltro } from '@/app/core/models/catalogos/servicios.model';
 import { CategoriaService } from '@/app/core/services/catalogos/categoria.service';
 import { TableLazyLoadEvent } from 'primeng/table';
-import { tap } from 'rxjs';
+import { FILTROS_SERVICIO } from '@/app/core/config/filtros.config';
+import { FiltrosComponent } from '@/app/shared/components/filtros/filtros.component';
+import { buildCategoryTree } from '@/app/shared/utils/buildCategoryTree.component';
 
 @Component({
   selector: 'app-servicios',
   imports: [ServicioFormComponent, ServicioTableComponent, DialogModule, ButtonModule,
-    CommonModule, FormsModule, SearchBarComponent, DialogHeaderComponent],
+    CommonModule, FormsModule, SearchBarComponent, DialogHeaderComponent, FiltrosComponent],
   templateUrl: './servicios.html',
   styleUrl: './servicios.css',
 })
@@ -34,6 +36,8 @@ export class ServiciosComponent {
   categorias: Categoria[] = [];
   servicioSeleccionado: Servicio | null = null;
 
+
+  filtrosFields = [...FILTROS_SERVICIO];
   rows = 30;
   pageActual = 0;
   cargado = false;
@@ -41,6 +45,7 @@ export class ServiciosComponent {
   resetFormTrigger = 0;
   mostrarFormulario = false;
   icono = 'pi-sparkles';
+  texto = 'Servicios';
 
 
   filtro: ServicioFiltro = { page: 0, size: this.rows };
@@ -56,7 +61,7 @@ export class ServiciosComponent {
     this.filtro = { ...this.filtro, page, size };
 
     this.servicioService.obtenerServiciosConFiltro(this.filtro).subscribe({
-      next: (resp) => {        
+      next: (resp) => {
         this.servicios = resp.data.content;
         this.totalRecords = resp.data.totalElements;
         this.cargado = true;
@@ -141,14 +146,32 @@ export class ServiciosComponent {
   }
 
   private cargarCategorias() {
-    this.categoriaService.obtenerCategoriasPorTipo(CategoriaTipo.SERVICIO).pipe(
-      tap(resp => this.categorias = resp.data.content)
-    ).subscribe({
-      next: () => this.cargarServicios(0, this.rows),
-      error: (err) => {
-        this.notify.showHttpError(err);
-        this.cargarServicios(0, this.rows);
-      }
-    });
+    this.categoriaService.obtenerCategoriasPorTipo(CategoriaTipo.SERVICIO)
+      .subscribe({
+        next: (resp) => {
+          this.categorias = resp.data.content;
+          const nodos = buildCategoryTree(this.categorias);
+          this.filtrosFields = this.filtrosFields.map(filtro => filtro.key === 'categoriaId'? { ...filtro, treeOptions: nodos }: filtro);
+          this.cargarServicios(0, this.rows);
+        },
+        error: (err) => {
+          this.notify.showHttpError(err);
+          this.cargarServicios(0, this.rows);
+        }
+      });
+  }
+
+  onBuscar(filtros: Partial<ServicioFiltro>) {
+    if (filtros.categoriaId && typeof filtros.categoriaId === 'object') {
+      const nodo = filtros.categoriaId as any;
+      filtros.categoriaId = nodo.key ?? nodo.data?.id ?? undefined;
+    }
+    this.filtro = { ...this.filtro, ...filtros };
+    this.cargarServicios(0, this.rows);
+  }
+
+  onLimpiar() {
+    this.filtro = { page: 0, size: this.rows };
+    this.cargarServicios(0, this.rows);
   }
 }

@@ -10,14 +10,16 @@ import { CategoriaFormComponent } from './categoria-form/categoria-form.componen
 import { SearchBarComponent } from '@/app/shared/components/search-bar/search-bar.component';
 import { CategoriaService } from '@/app/core/services/catalogos/categoria.service';
 import { NotificationService } from '@/app/core/services/common/notification.service';
-import { Categoria, CategoriaFilter } from '@/app/core/models/catalogos/categorias.model';
+import { Categoria, CategoriaFiltro } from '@/app/core/models/catalogos/categorias.model';
+import { FiltrosComponent } from '@/app/shared/components/filtros/filtros.component';
+import { FILTROS_CATEGORIA } from '@/app/core/config/filtros.config';
 
 @Component({
   selector: 'app-categorias',
   standalone: true,
   imports: [
     CategoriaTableComponent, CategoriaFormComponent, DialogModule, ButtonModule,
-    CommonModule, FormsModule, SearchBarComponent, DialogHeaderComponent
+    CommonModule, FormsModule, SearchBarComponent, DialogHeaderComponent, FiltrosComponent
   ],
   templateUrl: './categorias.html'
 })
@@ -27,9 +29,10 @@ export class CategoriasComponent implements OnInit {
   private notify = inject(NotificationService);
   private cd = inject(ChangeDetectorRef);
 
+  filtrosFields = [...FILTROS_CATEGORIA];
   categoriaSeleccionada: Categoria | null = null;
   categorias: Categoria[] = [];
-  filtro: CategoriaFilter = {};
+  filtro: Partial<CategoriaFiltro> = {};
   mostrarFormulario: boolean = false;
   cargandoEstado: Set<number> = new Set();
   rows = 25;
@@ -37,6 +40,7 @@ export class CategoriasComponent implements OnInit {
   cargado = false;
   totalRecords = 0;
   icono = 'pi-tags';
+  texto = 'Categorías';
 
   ngOnInit() {
     this.cargarCategorias(0, this.rows);
@@ -155,4 +159,19 @@ export class CategoriasComponent implements OnInit {
       error: (err) => { this.notify.showHttpError(err); },
     });
   }
+
+  onBuscar(filtros: any) {
+    this.filtro = {
+      ...this.filtro,
+      ...filtros
+    };
+
+    this.cargarCategorias(0, this.rows);
+  }
+
+  onLimpiar() {
+    this.filtro = {};
+    this.cargarCategorias(0, this.rows);
+  }
+
 }

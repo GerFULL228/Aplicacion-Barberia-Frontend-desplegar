@@ -6,9 +6,6 @@ import { Component, Input } from '@angular/core';
   selector: 'app-status-badge',
   imports: [CommonModule],
   template: `<span [ngClass]="badgeClass">{{ label }}</span>`,
-
-
-
 })
 export class StatusBadgeComponent {
   @Input({ required: true }) value!: boolean | string | number;
@@ -16,6 +13,7 @@ export class StatusBadgeComponent {
   @Input() trueLabel: string = 'Activo';
   @Input() falseLabel: string = 'Inactivo';
   @Input() warningLimit: number = 10;
+  @Input() customClass?: string;
 
 
   get label(): string {
@@ -31,6 +29,9 @@ export class StatusBadgeComponent {
   }
 
   get badgeClass(): string {
+    if (this.customClass) {
+      return this.customClass;
+    }
     switch (this.type) {
       case 'boolean': return Boolean(this.value) ? 'badge-activo' : 'badge-inactivo';
       case 'text': {
