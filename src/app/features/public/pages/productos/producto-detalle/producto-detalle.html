@@ -24,7 +24,7 @@
             </div>
 
             <div class="producto-detail-info">
-                <app-status-badge type="text" [value]="producto.nombreCategoria"></app-status-badge>
+                <app-status-badge type="text" [value]="producto.nombreCategoria" customClass="badge-text estado-producto"/>
                 <h1 class="producto-detail-name py-2">{{ producto.nombre }}</h1>
                 <div class="producto-detail-price-row py-2">
                     <div class="producto-detail-price">{{ producto.precio | soles}}</div>

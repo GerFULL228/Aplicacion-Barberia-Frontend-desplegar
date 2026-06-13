@@ -1,21 +1,7 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  EventEmitter,
-  inject,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
-
+import { ChangeDetectorRef, Component, DestroyRef, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin } from 'rxjs';
-
 import { TreeNode } from 'primeng/api';
 import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { ImageModule } from 'primeng/image';
@@ -25,7 +11,6 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { TreeSelectModule } from 'primeng/treeselect';
 import { InputNumberModule } from 'primeng/inputnumber';
-
 import { Servicio, ServicioRequest } from '@/app/core/models/catalogos/servicios.model';
 import { Categoria } from '@/app/core/models/catalogos/categorias.model';
 import { ImageUploadService } from '@/app/core/services/common/imageUpload.service';
@@ -36,7 +21,7 @@ import { campoInvalido, marcarFormulario } from '@/app/shared/utils/form-utils.c
 @Component({
   selector: 'app-servicio-form',
   imports: [
-    ReactiveFormsModule, InputTextModule,CheckboxModule, TreeSelectModule, ButtonModule, 
+    ReactiveFormsModule, InputTextModule, CheckboxModule, TreeSelectModule, ButtonModule,
     MessageModule, ImageModule, FileUploadModule, InputNumberModule, SafeImageUrlPipe
   ],
   templateUrl: './servicio-form.html',
@@ -104,9 +89,6 @@ export class ServicioFormComponent implements OnInit, OnChanges {
     });
   }
 
-  // ========================
-  // PATCH EDIT
-  // ========================
   private actualizarFormulario(): void {
     this.imagenes = [];
     this.imagenesEliminadas = [];

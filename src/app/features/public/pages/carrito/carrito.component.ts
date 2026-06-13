@@ -9,11 +9,13 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { TokenService } from '@/app/core/services/auth/token.service';
 import { NotificationService } from '@/app/core/services/common/notification.service';
 import { CarritoService } from '@/app/core/services/catalogos/carrito.service';
+import { SafeImageUrlPipe } from '@/app/shared/pipes/safe-image-url.pipe';
+import { SolesPipe } from '@/app/shared/pipes/moneda.pipe';
 
 @Component({
   selector: 'app-carrito',
   standalone: true,
-  imports: [ CommonModule, FormsModule, TableModule, ButtonModule, InputNumberModule,
+  imports: [ CommonModule, FormsModule, TableModule, ButtonModule, InputNumberModule, SafeImageUrlPipe, SolesPipe
   ],
   templateUrl: './carrito.html',
   styleUrl: './carrito.css'

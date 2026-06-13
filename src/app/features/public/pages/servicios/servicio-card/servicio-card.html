@@ -5,8 +5,10 @@
     </div>
 
     <div class="p-3 flex flex-col flex-1">
-        <app-status-badge type="text" [value]="servicio.categoriaNombre" class="producto-card-category" />
-        <p class="text-gray-400 text-xs leading-relaxed mb-3 flex-1">{{ servicio.categoriaNombre }}</p>
+        <span class="absolute top-2 left-2 bg-black/50 rounded-full px-2 py-1">
+            <app-status-badge type="text" [value]="servicio.categoriaNombre" customClass="badge-text estado-servicio "/>
+        </span>
+        <p class="text-gray-400 text-xs leading-relaxed mb-3 flex-1">{{ servicio.nombre }}</p>
         <div class="flex items-center justify-between pt-2 border-t border-white/10">
             <span class="text-yellow-500 font-bold text-lg">{{ servicio.precio | soles }}</span>
             <span class="text-gray-500 text-xs flex items-center gap-1">

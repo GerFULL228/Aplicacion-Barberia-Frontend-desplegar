@@ -480,8 +480,11 @@ p-colorpicker {
 	@apply bg-ui-border text-white border border-ui-border;
 }
 
-.p-button.boton-danger {
-	@apply boton-base bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white;
+.p-button.boton-danger  {
+	@apply boton-base bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white border border-red-400;
+}
+.p-button.boton-danger:not(:disabled):hover {
+	@apply bg-red-500 text-white border border-red-400;
 }
 
 .p-button.boton-warning {
@@ -998,10 +1001,6 @@ p-paginator.p-paginator {
 
 .producto-card-image {
 	@apply h-56 w-full object-cover;
-}
-
-.producto-card-category {
-	@apply absolute left-2 top-2 rounded-2xl bg-ui-card px-2 py-1 text-xs font-semibold text-brand-gold;
 }
 
 .producto-card-body {

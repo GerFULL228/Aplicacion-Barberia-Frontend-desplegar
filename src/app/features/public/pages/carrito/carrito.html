@@ -10,7 +10,7 @@
 
         <div class="rounded-2xl border border-ui-border bg-ui-card px-4 py-3 shadow-sm">
             <p class="text-xs uppercase tracking-wide text-text-secondary">Productos</p>
-            <p class="text-2xl font-bold text-brand-gold">{{ cantidad() }}</p>
+            <p class="text-2xl font-bold text-center text-brand-gold">{{ cantidad() }}</p>
         </div>
     </div>
 
@@ -60,30 +60,30 @@
                                         <div class="h-16 w-16 overflow-hidden rounded-xl border border-ui-border bg-ui-black flex items-center justify-center">
 
                                             @if (item.producto.urlsMultimedia.length) {
-                                                <img [src]="item.producto.urlsMultimedia[0]" class="h-full w-full object-contain p-2" />
+                                                <img [src]="item.producto.urlsMultimedia[0] | safeImageUrl" class="h-full w-full object-contain p-2 transition-transform hover:scale-110" />
                                             } @else {
                                                 <i class="pi pi-image text-text-muted text-2xl"></i>
                                             }
                                         </div>
 
-                                        <div>
-                                            <p class="font-semibold text-text-primary">{{ item.producto.nombre }}</p>
-                                            <p class="text-xs text-text-secondary">ID: {{ item.producto.id }}</p>
+                                        <div class="min-w-0">
+                                            <p class="font-semibold text-text-primary hover:text-brand-gold">{{ item.producto.nombre }}</p>
+                                            <p class="text-sm text-text-secondary hover:text-brand-gold">{{ item.producto.nombreCategoria }}</p>
                                         </div>
                                     </div>
                                 </td>
 
-                                <td class="px-5 py-4 text-center font-medium text-text-primary">{{ item.producto.precio }}</td>
+                                <td class="px-5 py-4 text-center font-medium text-text-primary">{{ item.producto.precio | soles }}</td>
 
                                 <td class="px-5 py-4 text-center">
                                     <div class="flex items-center justify-center gap-2">
-                                        <button class="h-8 w-8 rounded bg-ui-elevated hover:bg-ui-border transition"(click)="actualizarCantidad(i, item.cantidad - 1)">-</button>
+                                        <button class="size-10 rounded bg-ui-elevated hover:bg-brand-gold text-2xl transition cursor-pointer"(click)="actualizarCantidad(i, item.cantidad - 1)">-</button>
                                         <span class="w-10 text-center font-semibold text-text-primary">{{ item.cantidad }}</span>
-                                        <button class="h-8 w-8 rounded bg-ui-elevated hover:bg-ui-border transition"(click)="actualizarCantidad(i, item.cantidad + 1)">+</button>
+                                        <button class="size-10 rounded bg-ui-elevated hover:bg-brand-gold text-2xl transition cursor-pointer"(click)="actualizarCantidad(i, item.cantidad + 1)">+</button>
                                     </div>
                                 </td>
-                                <td class="px-5 py-4 text-right font-bold text-brand-gold">{{ item.cantidad * item.producto.precio }}</td>
-                                <td class="px-5 py-4 text-center"><button class="text-brand-red hover:opacity-80 transition"(click)="eliminarProducto(i)"> <i class="pi pi-trash"></i></button></td>
+                                <td class="px-5 py-4 text-right font-bold text-brand-gold">{{ item.cantidad * item.producto.precio | soles }}</td>
+                                <td class="px-5 py-4 text-center"><p-button class="boton-eliminar-tabla"(click)="eliminarProducto(i)"> <i class="pi pi-trash"></i></p-button></td>
                             </tr>
                         }
                     </tbody>
@@ -102,7 +102,7 @@
             <div class="mt-6 space-y-4 text-text-secondary">
                 <div class="flex justify-between">
                     <span>Subtotal</span>
-                    <span class="font-semibold text-text-primary">{{ subtotal() }}</span>
+                    <span class="font-semibold text-text-primary">{{ subtotal() | soles}}</span>
                 </div>
 
                 <div class="flex justify-between">
@@ -112,13 +112,13 @@
 
                 <div class="border-t border-ui-border pt-4 flex justify-between">
                     <span class="font-bold text-text-primary">Total</span>
-                    <span class="text-xl font-bold text-brand-gold">{{ total() }}</span>
+                    <span class="text-xl font-bold text-brand-gold">{{ total() | soles}}</span>
                 </div>
 
             </div>
             <div class="mt-6 space-y-3">
-                <p-button label="Procesar compra" icon="pi pi-check" styleClass="boton-primary w-full" (click)="procesarCompra()" />
-                <p-button label="Vaciar carrito" severity="danger" styleClass="boton-danger w-full" (click)="vaciarCarrito()" />
+                <p-button label="Procesar compra" icon="pi pi-check" styleClass="boton-primary w-full mb-4" (click)="procesarCompra()" />
+                <p-button label="Vaciar carrito" icon="pi pi-eraser" styleClass="boton-danger w-full" (click)="vaciarCarrito()" />
             </div>
         </aside>
     </div>
