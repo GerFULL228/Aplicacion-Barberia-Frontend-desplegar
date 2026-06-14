@@ -26,7 +26,7 @@ export class ServiciosComponent implements OnInit {
   private readonly tokenService = inject(TokenService);
   private readonly servicioService = inject(ServicioService);
   private readonly categoriaService = inject(CategoriaService);
-  private readonly notificationService = inject(NotificationService);
+  private readonly notify = inject(NotificationService);
 
   servicios: Servicio[] = [];
   cargando = true;
@@ -53,7 +53,7 @@ export class ServiciosComponent implements OnInit {
         this.filtrosFields = this.filtrosFields.map(filtro => filtro.key === 'categoriaId' ? { ...filtro, treeOptions: nodos } : filtro);
       },
       error: (error) => {
-        this.notificationService.showError(error.message || 'Error al cargar categorías');
+        this.notify.showHttpError(error.message);
       }
     });
   }
@@ -67,7 +67,7 @@ export class ServiciosComponent implements OnInit {
         this.cargando = false;
       },
       error: (error) => {
-        this.notificationService.showError(error.message || 'Error al cargar servicios');
+        this.notify.showHttpError(error.message);
         this.servicios = [];
         this.cargando = false;
       }
@@ -92,7 +92,7 @@ export class ServiciosComponent implements OnInit {
       },
       error: (error) => {
         this.cargandoDetalle = false;
-        this.notificationService.showError(error.message || 'Error al cargar el detalle del servicio');
+        this.notify.showHttpError(error.message);
       }
     });
   }
@@ -113,14 +113,10 @@ export class ServiciosComponent implements OnInit {
           queryParams: { servicioId: idServicio }
         });
       } else {
-        this.router.navigate([
-          `/dashboard/${this.tokenService.getPrimaryRole()}/operaciones/reservas/nueva`
-        ]);
+        this.router.navigate([`/dashboard/${this.tokenService.getPrimaryRole()}/operaciones/reservas/nueva`]);
       }
     } else {
-      this.router.navigate(['/login'], {
-        queryParams: { returnUrl: `/mi-cuenta/reservar/agendar?servicioId=${idServicio}` }
-      });
+      this.router.navigate(['/login'], { queryParams: { returnUrl: `/mi-cuenta/reservar/agendar?servicioId=${idServicio}` } });
     }
   }
 

@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ApiResponse, Page } from '../../models/common/index.model';
-
 import { of, tap } from 'rxjs';
 import { environment } from '@/environments/environment.development';
 import { Categoria, CategoriaFiltro, CategoriaRequest, CategoriaTipo, } from '../../models/catalogos/categorias.model';
@@ -27,13 +26,17 @@ export class CategoriaService {
         return this.http.get<ApiResponse<Page<Categoria>>>(this.apiUrl, { params: buildHttpParamsComponent(filter) });
     }
 
+    obtenerCategoriasPadre() {
+        return this.http.get<ApiResponse<Categoria[]>>(`${this.apiUrl}/padres`);
+    }
+
     obtenerCategoriasActivas() {
         if (this.categoriasCache) { return of({ data: { content: this.categoriasCache } } as ApiResponse<Page<Categoria>>); }
         return this.http.get<ApiResponse<Page<Categoria>>>(this.apiUrl, { params: buildHttpParamsComponent({ estado: true, size: 1000 }) }).pipe(tap(resp => { this.categoriasCache = resp.data.content; }));
     }
 
     obtenerCategoriasPorTipo(tipo: CategoriaTipo) {
-        return this.http.get<ApiResponse<Page<Categoria>>>(this.apiUrl, {params: buildHttpParamsComponent({estado: true,tipo,size: 1000})});
+        return this.http.get<ApiResponse<Page<Categoria>>>(this.apiUrl, { params: buildHttpParamsComponent({ estado: true, tipo, size: 1000 }) });
     }
 
     buscarCategoriaPorId(id: number) {
@@ -51,7 +54,7 @@ export class CategoriaService {
     cambiarEstado(id: number, estado: boolean) {
         return this.http.patch<ApiResponse<Categoria>>(`${this.apiUrl}/${id}/estado`, {}, { params: buildHttpParamsComponent({ estado }) });
     }
-        
+
     eliminarCategoria(id: number) {
         return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`);
     }

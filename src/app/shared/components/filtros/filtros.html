@@ -21,7 +21,7 @@
         <div class="bg-brand-dark border border-brand-gold rounded-2xl p-6">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-white font-bold text-lg uppercase tracking-wide">Filtrar {{ titulo }} <i class="{{ icono }}"></i></h2>
-                <span class="filtros-badge">{{ fields.length }} filtro(s)</span>
+                <span class="filtros-badge text-brand-gold">{{ fields.length }} filtro(s)</span>
             </div>
 
             <form [formGroup]="filtrosForm" class="filtros-panel">
@@ -36,8 +36,8 @@
                                 @case ('number') {
                                     <p-inputnumber [formControlName]="$any(field.key)" [placeholder]="field.placeholder ?? ''" [mode]="field.currency ? 'currency' : 'decimal'"  mode="currency" currency="PEN" locale="es-PE" />
                                 }
-                                @case ('select') {
-                                    <p-select [formControlName]="$any(field.key)" [options]="field.options" [placeholder]="field.placeholder ?? 'Seleccione'" [showClear]="true" optionLabel="label" optionValue="value" />
+                                @case ('select') { 
+                                    <p-select [formControlName]="$any(field.key)" [options]="field.options" [placeholder]="field.placeholder ?? 'Seleccione'" [showClear]="true" optionLabel="label" optionValue="value" appendTo="body"/> 
                                 }
                                 @case ('boolean') {
                                     <p-select [formControlName]="$any(field.key)" [options]="booleanOptions" [placeholder]="field.placeholder ?? 'Seleccione'" [showClear]="true" optionLabel="label" optionValue="value" />

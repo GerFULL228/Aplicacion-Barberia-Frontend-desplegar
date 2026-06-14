@@ -30,7 +30,7 @@ export class ProductComponent implements OnInit {
 
   private readonly productoService = inject(ProductoService);
   private readonly categoriaService = inject(CategoriaService);
-  private readonly notificationService = inject(NotificationService);
+  private readonly notify = inject(NotificationService);
 
   readonly moneda = INVENTARIO_CONFIG.MONEDA;
 
@@ -55,7 +55,7 @@ export class ProductComponent implements OnInit {
         this.filtrosFields = this.filtrosFields.map(filtro => filtro.key === 'idCategoria' ? { ...filtro, treeOptions: nodos } : filtro);
       },
       error: (error) => {
-        this.notificationService.showError(error.message || 'Error al cargar categorías');
+        this.notify.showHttpError(error.message);
       }
     });
   }
@@ -70,7 +70,7 @@ export class ProductComponent implements OnInit {
         this.cargando = false;
       }
       , error: (error) => {
-        this.notificationService.showError(error.message || 'Error al cargar productos');
+        this.notify.showHttpError(error.message);
         this.productos = [];
         this.cargando = false;
       }

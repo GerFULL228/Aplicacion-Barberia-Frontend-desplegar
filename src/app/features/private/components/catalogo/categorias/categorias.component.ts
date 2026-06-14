@@ -12,6 +12,7 @@ import { CategoriaService } from '@/app/core/services/catalogos/categoria.servic
 import { NotificationService } from '@/app/core/services/common/notification.service';
 import { Categoria, CategoriaFiltro } from '@/app/core/models/catalogos/categorias.model';
 import { FiltrosComponent } from '@/app/shared/components/filtros/filtros.component';
+import { SelectOption } from '@/app/core/models/common/select.option.model';
 import { FILTROS_CATEGORIA } from '@/app/core/config/filtros.config';
 
 @Component({
@@ -29,9 +30,10 @@ export class CategoriasComponent implements OnInit {
   private notify = inject(NotificationService);
   private cd = inject(ChangeDetectorRef);
 
-  filtrosFields = [...FILTROS_CATEGORIA];
+  filtrosFields = structuredClone(FILTROS_CATEGORIA);
   categoriaSeleccionada: Categoria | null = null;
   categorias: Categoria[] = [];
+  categoriaPadre: SelectOption[] = [];
   filtro: Partial<CategoriaFiltro> = {};
   mostrarFormulario: boolean = false;
   cargandoEstado: Set<number> = new Set();
@@ -43,6 +45,7 @@ export class CategoriasComponent implements OnInit {
   texto = 'Categorías';
 
   ngOnInit() {
+    this.cargarCategoriasPadre();
     this.cargarCategorias(0, this.rows);
   }
 
@@ -57,10 +60,30 @@ export class CategoriasComponent implements OnInit {
         this.cd.detectChanges();
       },
       error: (err) => {
-        this.notify.showHttpError(err);
+        this.notify.showHttpError(err.message);
         this.cargado = true;
       }
     });
+  }
+
+  cargarCategoriasPadre(): void {
+    this.categoriaService.obtenerCategoriasPadre().subscribe({
+      next: (resp) => {
+        console.log(resp.data);
+        this.categoriaPadre = resp.data.map(categoria => ({label: categoria.nombre,value: categoria.id}));
+        console.log(this.categoriaPadre);
+        this.actualizarFiltroPadre();
+      },
+      error: (err) => this.notify.showHttpError(err.message)
+    });
+  }
+
+  private actualizarFiltroPadre(): void {
+    this.filtrosFields = this.filtrosFields.map(field => {
+      if (field.key === 'padreId') {return { ...field, options: [...this.categoriaPadre] };}
+      return field;
+    });
+    this.cd.detectChanges();
   }
 
   buscarCategorias(nombre: string): void {
@@ -80,7 +103,7 @@ export class CategoriasComponent implements OnInit {
         this.notify.showSuccess(resp.message);
         this.cargarCategorias(0, this.rows);
       },
-      error: (err) => this.notify.showHttpError(err)
+      error: (err) => this.notify.showHttpError(err.message)
     });
   }
 
@@ -117,7 +140,7 @@ export class CategoriasComponent implements OnInit {
   private crearCategoria(data: Categoria) {
     this.categoriaService.crearCategoria(data).subscribe({
       next: (resp) => { this.postGuardar(resp.message); },
-      error: (err) => { this.notify.showHttpError(err); },
+      error: (err) => { this.notify.showHttpError(err.message); },
     });
   }
 
@@ -134,7 +157,7 @@ export class CategoriasComponent implements OnInit {
       },
       error: (err: any) => {
         categoria.estado = estadoAnterior;
-        this.notify.showHttpError(err);
+        this.notify.showHttpError(err.message);
       },
       complete: () => { this.cargandoEstado.delete(event.id); }
     });
@@ -156,22 +179,18 @@ export class CategoriasComponent implements OnInit {
     if (!this.categoriaSeleccionada) return;
     this.categoriaService.actualizarCategoria(this.categoriaSeleccionada.id, data).subscribe({
       next: (resp) => { this.postGuardar(resp.message); },
-      error: (err) => { this.notify.showHttpError(err); },
+      error: (err) => { this.notify.showHttpError(err.message); },
     });
   }
 
-  onBuscar(filtros: any) {
-    this.filtro = {
-      ...this.filtro,
-      ...filtros
-    };
-
+  onBuscar(filtros: Partial<CategoriaFiltro>) {
+    this.filtro = { ...this.filtro, ...filtros };
     this.cargarCategorias(0, this.rows);
   }
 
   onLimpiar() {
     this.filtro = {};
+    this.cargarCategoriasPadre();
     this.cargarCategorias(0, this.rows);
   }
-
 }

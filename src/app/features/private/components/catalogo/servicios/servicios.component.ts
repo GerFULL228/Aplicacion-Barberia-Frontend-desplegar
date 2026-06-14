@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
@@ -25,19 +25,20 @@ import { buildCategoryTree } from '@/app/shared/utils/buildCategoryTree.componen
   templateUrl: './servicios.html',
   styleUrl: './servicios.css',
 })
-export class ServiciosComponent {
+export class ServiciosComponent implements OnInit {
   private cd = inject(ChangeDetectorRef);
   private notify = inject(NotificationService);
   private servicioService = inject(ServicioService);
   private categoriaService = inject(CategoriaService);
 
-
   servicios: Servicio[] = [];
   categorias: Categoria[] = [];
   servicioSeleccionado: Servicio | null = null;
 
-
   filtrosFields = [...FILTROS_SERVICIO];
+  filtro: Partial<ServicioFiltro> = {};
+  cargandoEstado: Set<number> = new Set();
+  publicadoAnterior: Set<number> = new Set();
   rows = 30;
   pageActual = 0;
   cargado = false;
@@ -46,9 +47,6 @@ export class ServiciosComponent {
   mostrarFormulario = false;
   icono = 'pi-sparkles';
   texto = 'Servicios';
-
-
-  filtro: ServicioFiltro = { page: 0, size: this.rows };
 
   ngOnInit() {
     this.cargarCategorias();
@@ -59,7 +57,6 @@ export class ServiciosComponent {
     this.pageActual = page;
     this.cargado = false;
     this.filtro = { ...this.filtro, page, size };
-
     this.servicioService.obtenerServiciosConFiltro(this.filtro).subscribe({
       next: (resp) => {
         this.servicios = resp.data.content;
@@ -68,7 +65,7 @@ export class ServiciosComponent {
         this.cd.detectChanges();
       },
       error: (err) => {
-        this.notify.showError(err.message);
+        this.notify.showHttpError(err.message);
         this.cargado = true;
       }
     });
@@ -79,26 +76,57 @@ export class ServiciosComponent {
     this.cargarServicios(0, this.rows);
   }
 
-  guardarServicio(event: { data: ServicioRequest, imagenes?: File[] }) {
-    if (this.servicioSeleccionado) {
-      this.editarServicio(event.data);
-    } else {
-      this.crearServicio(event.data);
-    }
+  guardarServicio(event: { data: ServicioRequest, imagenes?: File[] | null }) {
+    if (this.servicioSeleccionado) { this.editarServicio(event.data, event.imagenes || undefined); }
+    else { this.crearServicio(event.data, event.imagenes || undefined); }
   }
 
   private crearServicio(data: ServicioRequest, imagenes?: File[]) {
     this.servicioService.crearServicio(data, imagenes).subscribe({
       next: (resp) => { this.postGuardar(resp.message); },
-      error: (err) => { this.notify.showHttpError(err); },
+      error: (err) => { this.notify.showHttpError(err.message); },
     });
   }
 
-  private editarServicio(data: ServicioRequest) {
+  private editarServicio(data: ServicioRequest, imagenes?: File[]) {
     if (!this.servicioSeleccionado) return;
-    this.servicioService.actualizarServicio(this.servicioSeleccionado.servicioId, data).subscribe({
+    this.servicioService.actualizarServicio(this.servicioSeleccionado.servicioId, data, imagenes).subscribe({
       next: () => this.postGuardar('Servicio actualizado correctamente'),
-      error: (err) => this.notify.showHttpError(err)
+      error: (err) => this.notify.showHttpError(err.message)
+    });
+  }
+
+  onCambiarEstado(event: { id: number, activo: boolean }) {
+    if (this.cargandoEstado.has(event.id)) return;
+    const producto = this.servicios.find(p => p.servicioId === event.id);
+    if (!producto) return;
+    const estadoAnterior = producto.estado;
+    producto.estado = event.activo;
+    this.cargandoEstado.add(event.id);
+    this.servicioService.cambiarEstado(event.id, event.activo).subscribe({
+      next: () => { this.notify.showSuccess(`Servicio ${event.activo ? 'activado' : 'desactivado'} exitosamente`); },
+      error: (err) => {
+        producto.estado = estadoAnterior;
+        this.notify.showHttpError(err.message);
+      },
+      complete: () => { this.cargandoEstado.delete(event.id); }
+    });
+  }
+
+  onCambiarPublicado(event: { id: number, publicado: boolean }) {
+    if (this.publicadoAnterior.has(event.id)) return;
+    const producto = this.servicios.find(p => p.servicioId === event.id);
+    if (!producto) return;
+    const publicadoAnterior = producto.publicado;
+    producto.publicado = event.publicado;
+    this.publicadoAnterior.add(event.id);
+    this.servicioService.cambiarPublicado(event.id, event.publicado).subscribe({
+      next: () => { this.notify.showSuccess(`Servicio ${event.publicado ? 'publicado' : 'no publicado'} exitosamente`); },
+      error: (err) => {
+        producto.publicado = publicadoAnterior;
+        this.notify.showHttpError(err.message);
+      },
+      complete: () => { this.publicadoAnterior.delete(event.id); }
     });
   }
 
@@ -108,7 +136,7 @@ export class ServiciosComponent {
         this.notify.showSuccess('Servicio eliminado');
         this.cargarServicios(0, this.rows);
       },
-      error: (err) => this.notify.showHttpError(err)
+      error: (err) => this.notify.showHttpError(err.message)
     });
   }
 
@@ -151,11 +179,11 @@ export class ServiciosComponent {
         next: (resp) => {
           this.categorias = resp.data.content;
           const nodos = buildCategoryTree(this.categorias);
-          this.filtrosFields = this.filtrosFields.map(filtro => filtro.key === 'categoriaId'? { ...filtro, treeOptions: nodos }: filtro);
+          this.filtrosFields = this.filtrosFields.map(filtro => filtro.key === 'categoriaId' ? { ...filtro, treeOptions: nodos } : filtro);
           this.cargarServicios(0, this.rows);
         },
         error: (err) => {
-          this.notify.showHttpError(err);
+          this.notify.showHttpError(err.message);
           this.cargarServicios(0, this.rows);
         }
       });

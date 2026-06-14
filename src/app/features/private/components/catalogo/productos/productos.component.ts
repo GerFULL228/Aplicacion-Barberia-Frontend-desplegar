@@ -68,7 +68,7 @@ export class ProductosComponent implements OnInit {
         this.cd.detectChanges();
       },
       error: (err) => {
-        this.notify.showError(err.message);
+        this.notify.showHttpError(err.message);
         this.cargado = true;
         this.cd.detectChanges();
       }
@@ -91,7 +91,7 @@ export class ProductosComponent implements OnInit {
         this.notify.showSuccess(resp.message);
         this.cargarProductos(0, this.rows);
       },
-      error: (err) => this.notify.showError(err.message),
+      error: (err) => this.notify.showHttpError(err.message),
     });
   }
 
@@ -132,7 +132,7 @@ export class ProductosComponent implements OnInit {
   private crearProducto(data: ProductoRequest, imagenes?: File[]) {
     this.productoService.crearProducto(data, imagenes).subscribe({
       next: (resp) => { this.postGuardar(resp.message); },
-      error: (err) => { this.notify.showHttpError(err); },
+      error: (err) => { this.notify.showHttpError(err.message); },
     });
   }
 
@@ -140,7 +140,7 @@ export class ProductosComponent implements OnInit {
     if (!this.productoSeleccionado) return;
     this.productoService.actualizarProducto(this.productoSeleccionado.id, data, imagenes).subscribe({
       next: (resp) => { this.postGuardar(resp.message); },
-      error: (err) => { this.notify.showHttpError(err); },
+      error: (err) => { this.notify.showHttpError(err.message); },
     });
   }
 
@@ -155,7 +155,7 @@ export class ProductosComponent implements OnInit {
       next: () => { this.notify.showSuccess(`Producto ${event.activo ? 'activado' : 'desactivado'} exitosamente`); },
       error: (err) => {
         producto.estado = estadoAnterior;
-        this.notify.showHttpError(err);
+        this.notify.showHttpError(err.message);
       },
       complete: () => { this.cargandoEstado.delete(event.id); }
     });
@@ -172,7 +172,7 @@ export class ProductosComponent implements OnInit {
       next: () => { this.notify.showSuccess(`Producto ${event.publicado ? 'publicado' : 'no publicado'} exitosamente`); },
       error: (err) => {
         producto.publicado = publicadoAnterior;
-        this.notify.showHttpError(err);
+        this.notify.showHttpError(err.message);
       },
       complete: () => { this.publicadoAnterior.delete(event.id); }
     });
@@ -194,7 +194,7 @@ export class ProductosComponent implements OnInit {
         this.filtrosFields = this.filtrosFields.map(field => field.key === 'idCategoria' ? { ...field, treeOptions: nodos } : field);
       },
       error: (err) => {
-        this.notify.showHttpError(err);
+        this.notify.showHttpError(err.message);
       }
     });
   }
