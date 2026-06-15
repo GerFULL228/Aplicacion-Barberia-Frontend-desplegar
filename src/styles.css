@@ -415,12 +415,12 @@ p-colorpicker {
 
 .filtros-acordeon .p-accordionpanel:first-child>.p-accordionheader {
 	background: var(--color-ui-surface) !important;
-	border:1px solid var(--color-brand-gold) !important;
+	border: 1px solid var(--color-brand-gold) !important;
 }
 
 .filtros-acordeon .p-accordionpanel:first-child>.p-accordioncontent {
 	background: var(--color-ui-surface) !important;
-	border:1px solid var(--color-brand-gold) !important;
+	border: 1px solid var(--color-brand-gold) !important;
 }
 
 /* =========================
@@ -480,9 +480,10 @@ p-colorpicker {
 	@apply bg-ui-border text-white border border-ui-border;
 }
 
-.p-button.boton-danger  {
+.p-button.boton-danger {
 	@apply boton-base bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white border border-red-400;
 }
+
 .p-button.boton-danger:not(:disabled):hover {
 	@apply bg-red-500 text-white border border-red-400;
 }
@@ -702,6 +703,36 @@ p-colorpicker {
 	@apply badge-base bg-purple-500/10 text-purple-400 border border-purple-500/30;
 }
 
+
+/* EstadoReclamo */
+.estado-reclamo-abierto {
+    @apply badge-base bg-yellow-500/10 text-yellow-400 border border-yellow-500/30;
+}
+.estado-reclamo-en-proceso {
+    @apply badge-base bg-blue-500/10 text-blue-400 border border-blue-500/30;
+}
+.estado-reclamo-resuelto {
+    @apply badge-base bg-green-500/10 text-green-400 border border-green-500/30;
+}
+.estado-reclamo-cerrado {
+    @apply badge-base bg-gray-500/10 text-gray-400 border border-gray-500/30;
+}
+.estado-reclamo-anulado {
+    @apply badge-base bg-red-500/10 text-red-400 border border-red-500/30;
+}
+
+/* TipoReclamacion */
+.tipo-reclamacion-reclamo {
+    @apply badge-base bg-orange-500/10 text-orange-400 border border-orange-500/30;
+}
+.tipo-reclamacion-queja {
+    @apply badge-base bg-purple-500/10 text-purple-400 border border-purple-500/30;
+}
+
+/* SolucionReclamo */
+.estado-solucion-reclamo {
+    @apply badge-base bg-teal-500/10 text-teal-400 border border-teal-500/30;
+}
 /* =========================
    LAYOUT
 ========================= */
@@ -1331,4 +1362,98 @@ p-paginator.p-paginator {
 		}
 
 	}
+}
+
+
+/* =========================
+   PRIMENG DATEPICKER
+========================= */
+.p-datepicker-panel {
+	background: var(--color-brand-dark) !important;
+	border: 1px solid var(--color-ui-border) !important;
+	border-radius: 12px !important;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+	padding: 1rem !important;
+}
+
+/* Header: mes y año */
+.p-datepicker-header {
+	background: transparent !important;
+	border-bottom: 1px solid var(--color-text-primary) !important;
+	padding-bottom: 0.75rem !important;
+	margin-bottom: 0.5rem !important;
+}
+
+.p-datepicker-select-month,
+.p-datepicker-select-year {
+	color: var(--color-text-primary) !important;
+	font-weight: 600 !important;
+}
+
+.p-datepicker-select-month:hover,
+.p-datepicker-select-year:hover {
+	color: var(--color-brand-gold) !important;
+}
+
+/* Botones prev/next */
+.p-datepicker-prev-button,
+.p-datepicker-next-button {
+	color: var(--color-text-secondary) !important;
+}
+
+.p-datepicker-prev-button:hover,
+.p-datepicker-next-button:hover {
+	color: var(--color-brand-gold) !important;
+	background: var(--color-brand-gold-soft) !important;
+}
+
+/* Días de la semana */
+.p-datepicker-weekday {
+	color: var(--color-brand-gold) !important;
+	font-size: 0.75rem !important;
+	font-weight: 600 !important;
+	text-transform: uppercase !important;
+	letter-spacing: 0.05em !important;
+}
+
+/* Días */
+.p-datepicker-day {
+	color: var(--color-text-primary) !important;
+	border-radius: 8px !important;
+	transition: all 0.2s !important;
+}
+
+.p-datepicker-day-selected {
+	background: var(--color-brand-gold) !important;
+	color: #000 !important;
+}
+
+.p-datepicker-day:not(.p-disabled):hover {
+	background: var(--color-brand-gold-soft) !important;
+	color: var(--color-brand-gold) !important;
+}
+
+/* Día seleccionado */
+.p-datepicker-day.p-highlight {
+	background: var(--color-brand-gold) !important;
+	color: #000 !important;
+	font-weight: 700 !important;
+}
+
+/* Hoy */
+.p-datepicker-today .p-datepicker-day {
+	border: 1px solid var(--color-brand-gold) !important;
+	color: var(--color-brand-gold) !important;
+}
+
+/* Días deshabilitados */
+.p-datepicker-day.p-disabled {
+	color: var(--color-text-subtle) !important;
+	opacity: 0.4 !important;
+}
+
+/* Días de otro mes */
+.p-datepicker-other-month .p-datepicker-day {
+	color: var(--color-text-subtle) !important;
+	opacity: 0.3 !important;
 }

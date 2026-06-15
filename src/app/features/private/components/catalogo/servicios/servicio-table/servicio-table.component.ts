@@ -15,11 +15,12 @@ import { environment } from '@/environments/environment.development';
 import { ConfirmPopoverComponent } from '@/app/shared/components/confirm-popover/confirm-popover.component';
 import { StatusBadgeComponent } from '@/app/shared/components/status-badge/status-badge.component';
 import { SafeImageUrlPipe } from '@/app/shared/pipes/safe-image-url.pipe';
+import { SolesPipe } from '@/app/shared/pipes/moneda.pipe';
 
 @Component({
   selector: 'app-servicio-table',
   imports: [CommonModule, FormsModule, TableModule, ButtonModule, DialogModule, GalleriaModule, ImageModule, ToggleSwitchModule,
-    InputIconModule, IconFieldModule, ConfirmPopoverComponent, StatusBadgeComponent, SafeImageUrlPipe
+    InputIconModule, IconFieldModule, ConfirmPopoverComponent, StatusBadgeComponent, SafeImageUrlPipe, SolesPipe
   ],
   templateUrl: './servicio-table.html',
   styleUrl: './servicio-table.css',

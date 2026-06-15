@@ -1,4 +1,5 @@
 import { CategoriaTipo } from '@/app/core/models/catalogos/categorias.model';
+import { EstadoReclamo, TipoReclamacion } from '@/app/core/models/operaciones/reclamos-model/reclamo.enum.model';
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
@@ -50,6 +51,17 @@ export class StatusBadgeComponent {
           anulada: 'estado-anulado',
           emitido: 'estado-emitido',
           emitida: 'estado-emitido',
+
+           // EstadoReclamo
+          [EstadoReclamo.ABIERTO.toLowerCase()]:    'estado-reclamo-abierto',
+          [EstadoReclamo.EN_PROCESO.toLowerCase()]: 'estado-reclamo-en-proceso',
+          [EstadoReclamo.RESUELTO.toLowerCase()]:   'estado-reclamo-resuelto',
+          [EstadoReclamo.CERRADO.toLowerCase()]:    'estado-reclamo-cerrado',
+          [EstadoReclamo.ANULADO.toLowerCase()]:    'estado-reclamo-anulado',
+
+          // TipoReclamacion
+          [TipoReclamacion.RECLAMO.toLowerCase()]: 'tipo-reclamacion-reclamo',
+          [TipoReclamacion.QUEJA.toLowerCase()]:   'tipo-reclamacion-queja',
         };
 
         return `badge-text ${clases[estado] || 'estado-default'}`;

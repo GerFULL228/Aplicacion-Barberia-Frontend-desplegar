@@ -37,7 +37,7 @@
                     </td>
                     <td class="text-center">{{ servicio.nombre }}</td>
                     <td class="text-center"><app-status-badge type="text" [value]="servicio.categoriaNombre" customClass="badge-text estado-servicio"/></td>
-                    <td class="text-center">S/ {{ servicio.precio }}</td>
+                    <td class="text-center">S/ {{ servicio.precio | soles }}</td>
                     <td class="text-center">{{ servicio.duracion }} min</td>
                     <td class="whitespace-nowrap text-center">
                         <div class="flex items-center justify-center gap-2">
@@ -82,7 +82,7 @@
                                         </div>
                                         <div class="flex flex-col gap-1 px-3 py-2 bg-neutral-primary-lighter rounded-lg">
                                             <span class="text-xs text-text-tertiary">Precio</span>
-                                            <span class="text-sm font-semibold text-text-primary">S/ {{ servicio.precio }}</span>
+                                            <span class="text-sm font-semibold text-text-primary">{{ servicio.precio | soles }}</span>
                                         </div>
                                         <div class="flex flex-col gap-1 px-3 py-2 bg-neutral-primary-lighter rounded-lg col-span-2">
                                             <span class="text-xs text-text-tertiary">Categoría</span>
