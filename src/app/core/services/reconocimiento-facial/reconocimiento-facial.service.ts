@@ -1,34 +1,50 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ReconocimientoFacialService {
+export class IaService {
 
-  private API = 'http://localhost:8000';
+  private API = `${environment.apiUrl}/ia`;
 
   constructor(private http: HttpClient) {}
 
-  analizar(foto: Blob, nombre: string, genero: string): Observable<any> {
+  analizar(foto: Blob, idCliente: number): Observable<any> {
     const formData = new FormData();
     formData.append('foto', foto, 'foto.jpg');
-    formData.append('nombre_cliente', nombre);
-    formData.append('genero_cliente', genero);
+    formData.append('id_cliente', idCliente.toString());
     return this.http.post(`${this.API}/analizar`, formData);
   }
 
   enviarFeedback(clientId: number, haircutId: number, liked: boolean, rating: number): Observable<any> {
-    const formData = new FormData();
-    formData.append('client_id', clientId.toString());
-    formData.append('haircut_id', haircutId.toString());
-    formData.append('liked', liked.toString());
-    formData.append('rating', rating.toString());
-    return this.http.post(`${this.API}/feedback`, formData);
+    const params = new HttpParams()
+      .set('client_id', clientId.toString())
+      .set('haircut_id', haircutId.toString())
+      .set('liked', liked.toString())
+      .set('rating', rating.toString());
+    return this.http.post(`${this.API}/feedback`, null, { params });
   }
 
   listarCortes(): Observable<any> {
     return this.http.get(`${this.API}/cortes`);
   }
+
+  listarClientes(): Observable<any> {
+    return this.http.get(`${this.API}/clientes`);
+  }
+
+  obtenerFeatures(idCorte: number): Observable<any> {
+    return this.http.get(`${this.API}/features/${idCorte}`);
+  }
+
+  actualizarFeatures(idCorte: number, dto: HaircutFeaturesRequestDTO): Observable<any> {
+    return this.http.put(`${this.API}/features/${idCorte}`, dto);
+  }
+}
+
+export interface HaircutFeaturesRequestDTO {
+  [key: string]: any;
 }

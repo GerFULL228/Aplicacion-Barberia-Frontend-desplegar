@@ -1,1 +1,54 @@
-<p>reconocimiento-facial works!</p>
+
+
+<!-- reconocimiento-facial.html -->
+
+<div class="contenedor-ia">
+
+  @if(!resultado){
+
+    <div class="estado-camara">
+
+      <app-camara
+        (fotoTomada)="onFotoTomada($event)"
+        (previewGenerada)="onPreview($event)">
+      </app-camara>
+
+      <button
+        class="btn-analizar"
+        type="button"
+        [disabled]="!fotoBlob || cargando"
+        (click)="analizar()">
+        ✂ {{ cargando ? 'Analizando...' : 'Analizar rostro' }}
+      </button>
+
+    </div>
+
+  }
+
+  @if(error){
+    <div class="error-mensaje">
+      {{ error }}
+    </div>
+  }
+
+  @if(resultado){
+
+    <div class="estado-resultado">
+
+      <app-resultado
+        [resultado]="resultado"
+        [fotoPreview]="previewFoto">
+      </app-resultado>
+
+      <button
+        class="btn-reiniciar"
+        type="button"
+        (click)="analizarOtraVez()">
+        🔄 Analizar otra vez
+      </button>
+
+    </div>
+
+  }
+
+</div>
