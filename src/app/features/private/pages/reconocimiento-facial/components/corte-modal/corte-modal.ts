@@ -22,4 +22,6 @@ export class CorteModal {
     this.cerrar.emit();
   }
 
+  
+
 }

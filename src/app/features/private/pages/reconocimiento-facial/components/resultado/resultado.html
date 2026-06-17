@@ -135,10 +135,25 @@
   <h2>Cortes recomendados</h2>
   <div class="cortes-grid">          <!-- ← añade este wrapper -->
     @for(corte of resultado.cortes_recomendados; track corte.id){
-      <app-corte-card [corte]="corte" ...></app-corte-card>
-    }
+
+  <app-corte-card
+    [corte]="corte"
+    [clienteId]="clienteId"
+    (ver)="abrirModal($event)">
+  </app-corte-card>
+
+}
   </div>
 </div>
+
+@if(corteSeleccionado){
+
+  <app-corte-modal
+    [corte]="corteSeleccionado"
+    (cerrar)="cerrarModal()">
+  </app-corte-modal>
+
+}
 
 <app-corte-modal [corte]="corteSeleccionado" (cerrar)="cerrarModal()">
 </app-corte-modal>

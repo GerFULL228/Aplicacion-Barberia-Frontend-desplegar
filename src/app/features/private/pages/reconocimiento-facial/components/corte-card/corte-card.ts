@@ -17,7 +17,7 @@ export class CorteCard {
   corte!: CorteRecomendado;
 
   @Input()
-  clienteId = 0;
+  clienteId = 1;
 
   @Output()
   ver = new EventEmitter<CorteRecomendado>();
@@ -31,8 +31,9 @@ export class CorteCard {
   ) {}
 
   abrirModal() {
-    this.ver.emit(this.corte);
-  }
+  console.log('emitiendo corte', this.corte);
+  this.ver.emit(this.corte);
+}
 
   like() {
 

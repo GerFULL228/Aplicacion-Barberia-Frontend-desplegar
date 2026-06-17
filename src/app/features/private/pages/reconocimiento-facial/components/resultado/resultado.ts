@@ -29,6 +29,10 @@ export class Resultado implements AfterViewInit {
   @Input()
   fotoPreview = '';
 
+  @Input() clienteId: number = 0;
+
+
+
   @ViewChild('overlayCanvas')
   overlayCanvas!: ElementRef<HTMLCanvasElement>;
 

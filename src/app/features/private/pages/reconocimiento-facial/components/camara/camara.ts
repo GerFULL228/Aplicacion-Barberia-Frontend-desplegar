@@ -12,7 +12,7 @@ export class Camara {
 
   fotoCapturada = false;
 
-  previewFoto = '';
+  fotoPreview = '';
 
   @Output()
   fotoTomada = new EventEmitter<Blob>();
@@ -42,8 +42,12 @@ export class Camara {
 
   tomarFoto() {
 
+     console.log('Click tomar foto');
+
     const video = this.video.nativeElement;
     const canvas = this.canvas.nativeElement;
+
+    console.log(video.videoWidth, video.videoHeight);
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
@@ -56,16 +60,21 @@ export class Camara {
 
     canvas.toBlob(blob => {
 
-      if (!blob) return;
+  if (!blob) return;
 
-      this.fotoTomada.emit(blob);
+  this.fotoTomada.emit(blob);
 
-      const preview =
-        URL.createObjectURL(blob);
+  const preview = URL.createObjectURL(blob);
 
-      this.previewGenerada.emit(preview);
+  this.previewGenerada.emit(preview);
 
-    }, 'image/jpeg');
+  this.fotoCapturada = true;
+
+  setTimeout(() => {
+    this.fotoCapturada = false;
+  }, 3000);
+
+}, 'image/jpeg');
 
   }
 }

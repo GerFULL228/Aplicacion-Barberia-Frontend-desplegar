@@ -5,6 +5,8 @@ import { Component } from '@angular/core';
 import { Camara } from './components/camara/camara';
 import { Resultado } from './components/resultado/resultado';
 
+
+
 @Component({
   selector: 'app-reconocimiento-facial',
   standalone: true,
@@ -17,6 +19,8 @@ import { Resultado } from './components/resultado/resultado';
   styleUrl: './reconocimiento-facial.css',
 })
 export class ReconocimientoFacial {
+
+  
 
   previewFoto = '';
 
@@ -32,39 +36,48 @@ export class ReconocimientoFacial {
   error = '';
 
   // TEMPORAL
-  idCliente = 1;
+  idCliente = 0;
+  ngOnInit(): void {
+  this.iaService.obtenerMiClienteId().subscribe({
+    next: (res) => this.idCliente = res.data,
+    error: () => this.error = 'No se pudo obtener el perfil de cliente'
+  });
+}
+  
 
   constructor(
     private iaService: IaService
   ) { }
 
   onFotoTomada(blob: Blob) {
+    console.log('Foto recibida');
     this.fotoBlob = blob;
   }
 
   analizar() {
 
-    if (!this.fotoBlob) {
-      return;
-    }
-
-    this.cargando = true;
-    this.error = '';
-
-    this.iaService
-      .analizar(this.fotoBlob, this.idCliente)
-      .subscribe({
-        next: (resp: AnalisisResponse) => {
-          this.resultado = resp;
-          this.cargando = false;
-        },
-        error: (err) => {
-          console.error(err);
-          this.error = 'Error al analizar la imagen';
-          this.cargando = false;
-        }
-      });
+  if (!this.fotoBlob) {
+    this.error = 'Primero toma una fotografía para iniciar el análisis facial.';
+    return;
   }
+
+  this.cargando = true;
+  this.error = '';
+
+  this.iaService
+    .analizar(this.fotoBlob, this.idCliente)
+    .subscribe({
+      next: (resp) => {
+        this.resultado = resp;
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.error = 'Error al analizar la imagen';
+        this.cargando = false;
+      }
+    });
+}
 
   reiniciar() {
     this.resultado = undefined;

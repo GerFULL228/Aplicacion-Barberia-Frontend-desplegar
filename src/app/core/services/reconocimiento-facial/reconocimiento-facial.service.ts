@@ -43,7 +43,13 @@ export class IaService {
   actualizarFeatures(idCorte: number, dto: HaircutFeaturesRequestDTO): Observable<any> {
     return this.http.put(`${this.API}/features/${idCorte}`, dto);
   }
+
+  obtenerMiClienteId(): Observable<any> {
+  return this.http.get(`${environment.apiUrl}/clientes/mi-cliente`);
 }
+}
+
+
 
 export interface HaircutFeaturesRequestDTO {
   [key: string]: any;
