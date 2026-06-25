@@ -98,6 +98,12 @@ export const routes: Routes = [
               import('./features/private/components/analisis/reportes/reportes')
                 .then(m => m.ReportesComponent),
           },
+          {
+  path: 'predicciones',
+  loadComponent: () =>
+    import('./features/private/components/analisis/predicciones/predicciones')
+      .then(m => m.Predicciones),
+},
           { path: '', redirectTo: 'metricas', pathMatch: 'full' },
         ]
       },
