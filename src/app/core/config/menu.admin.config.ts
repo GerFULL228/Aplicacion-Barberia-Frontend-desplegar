@@ -131,7 +131,13 @@ export const ADMIN_MENU = [
         icon: "pi pi-chart-bar",
         routerLink: ["analisis/metricas"],
         permission: "ESTADISTICA_READ_ALL"
-      }
+      },
+          {
+      label: "Predicciones",
+      icon: "pi pi-chart-line",
+      routerLink: ["analisis/predicciones"],
+      permission: "ESTADISTICA_READ_ALL"
+    }
     ]
   },
 
