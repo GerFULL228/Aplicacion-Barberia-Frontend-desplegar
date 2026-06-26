@@ -14,6 +14,9 @@ import { CorteRecomendado } from '@core/models/reconocimiento-facial/Ia.model';
 export class CorteCard {
 
   @Input()
+fotoPreview = '';
+
+  @Input()
   corte!: CorteRecomendado;
 
   @Input()
@@ -50,6 +53,10 @@ export class CorteCard {
 
   }
 
+  modalIaAbierto = false;
+
+
+
   dislike() {
 
     this.liked = false;
@@ -79,5 +86,10 @@ export class CorteCard {
       .subscribe();
 
   }
+
+  probarConIA(): void {
+  console.log('Foto disponible:', this.fotoPreview);
+   this.modalIaAbierto = true;
+}
 
 }
