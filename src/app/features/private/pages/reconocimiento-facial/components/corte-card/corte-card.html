@@ -77,6 +77,15 @@
       <img [src]="fotoPreview" alt="Tu foto" />
     </div>
 
+   @if(cargandoIA){
+  <div class="ia-loading">✨ Generando tu nuevo look...</div>
+}
+
+@if(imagenIA){
+  <div class="foto-container">
+    <img [attr.src]="imagenIA" alt="Tu nuevo look" />
+  </div>
+}
   </div>
 </div>
 }

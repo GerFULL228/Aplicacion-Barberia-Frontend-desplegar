@@ -14,7 +14,7 @@ import { CorteRecomendado } from '@core/models/reconocimiento-facial/Ia.model';
 export class CorteCard {
 
   @Input()
-fotoPreview = '';
+  fotoPreview = '';
 
   @Input()
   corte!: CorteRecomendado;
@@ -31,12 +31,12 @@ fotoPreview = '';
 
   constructor(
     private iaService: IaService
-  ) {}
+  ) { }
 
   abrirModal() {
-  console.log('emitiendo corte', this.corte);
-  this.ver.emit(this.corte);
-}
+    console.log('emitiendo corte', this.corte);
+    this.ver.emit(this.corte);
+  }
 
   like() {
 
@@ -87,9 +87,36 @@ fotoPreview = '';
 
   }
 
+  cargandoIA = false;
+  imagenIA = '';
+
   probarConIA(): void {
-  console.log('Foto disponible:', this.fotoPreview);
-   this.modalIaAbierto = true;
-}
+    this.modalIaAbierto = true;
+    this.cargandoIA = true;
+    this.imagenIA = '';
+
+    fetch(this.fotoPreview)
+      .then(r => r.blob())
+      .then(blob => {
+        const formData = new FormData();
+        formData.append('foto', blob, 'foto.jpg');
+        formData.append('nombre_corte', this.corte.nombre);
+
+        return fetch('http://localhost:8000/ia/preview-corte', {
+          method: 'POST',
+          body: formData
+        });
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.imagen_b64) {
+          this.imagenIA = 'data:image/png;base64,' + data.imagen_b64;
+        }
+        this.cargandoIA = false;
+      })
+      .catch(() => {
+        this.cargandoIA = false;
+      });
+  }
 
 }
