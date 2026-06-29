@@ -89,5 +89,9 @@ if (hasta) {
       `${this.API2}/historial`, 
       { params } );
   }
+  pagarReserva(id: number): Observable<ApiResponse<string>> {
+    return this.http.patch<ApiResponse<string>>(`${this.API2}/${id}/pagar`, {});
+  }
+
 
 }
