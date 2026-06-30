@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '@/environments/environment.development';
-import { Servicio, ServicioRequest } from '../../models/catalogos/servicios.model';
+import { Servicio, ServicioFiltro, ServicioRequest } from '../../models/catalogos/servicios.model';
 import { ApiResponse, PageResponse } from '../../models/common/index.model';
 import { buildHttpParamsComponent } from '@/app/shared/utils/build-http-params.component';
 
@@ -14,7 +14,7 @@ export class ServicioService {
     private apiUrl = `${environment.apiUrl}/servicios`;
     private http = inject(HttpClient);
 
-    obtenerServicioPublicos(filter?: Record<string, any>) {
+    obtenerServicioPublicos(filter?: Partial<ServicioFiltro>) {
         return this.http.get<ApiResponse<PageResponse<Servicio>>>(`${this.apiUrl}/publicados`, { params: buildHttpParamsComponent(filter) });
     }
 
@@ -22,7 +22,7 @@ export class ServicioService {
         return this.http.get<ApiResponse<Servicio>>(`${this.apiUrl}/publicados/${id}`);
     }
 
-    obtenerServiciosConFiltro(filter?: Record<string, any>) {
+    obtenerServiciosConFiltro(filter?: Partial<ServicioFiltro>) {
         return this.http.get<ApiResponse<PageResponse<Servicio>>>(this.apiUrl, { params: buildHttpParamsComponent(filter) });
     }
 
@@ -30,7 +30,7 @@ export class ServicioService {
         return this.http.get<ApiResponse<Servicio>>(`${this.apiUrl}/${id}`);
     }
 
-    crearServicio(data: ServicioRequest, archivos?: File[]) {
+    crearServicio(data: ServicioRequest, archivos?: File[] ) {
         return this.http.post<ApiResponse<Servicio>>(this.apiUrl, this.construirFormData(data, archivos));
     }
 
@@ -38,6 +38,14 @@ export class ServicioService {
         return this.http.put<ApiResponse<Servicio>>(`${this.apiUrl}/${id}`, this.construirFormData(data, archivos));
     }
 
+    cambiarEstado(id: number, estado: boolean) {
+        return this.http.patch<ApiResponse<Servicio>>(`${this.apiUrl}/${id}/estado`, {}, { params: buildHttpParamsComponent({ estado }) });
+    }
+    
+    cambiarPublicado(id: number, publicado: boolean) {
+        return this.http.patch<ApiResponse<Servicio>>(`${this.apiUrl}/${id}/publicacion`, {}, { params: buildHttpParamsComponent({ publicado }) });
+    }
+    
     eliminarServicio(id: number): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
     }

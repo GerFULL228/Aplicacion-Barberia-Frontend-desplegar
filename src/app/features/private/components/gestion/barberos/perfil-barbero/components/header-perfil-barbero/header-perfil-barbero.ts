@@ -7,10 +7,8 @@ import { Component, Input } from '@angular/core';
   styleUrl: './header-perfil-barbero.css',
 })
 export class HeaderPerfilBarbero {
-
   @Input() barberoNombre = 'Barbero';
   @Input() barberoIniciales = 'BR';
   @Input() barberoDescripcion = 'Sin descripción disponible';
   @Input() volver: () => void = () => window.history.back();
-
 }

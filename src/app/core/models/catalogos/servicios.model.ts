@@ -6,8 +6,8 @@ export interface Servicio {
     categoriaNombre: string;
     duracion: number;
     descripcion?: string;
-    publicado?: boolean;
-    estado?: boolean;
+    publicado: boolean;
+    estado: boolean;
     urlsMultimedia?: string[];
 }
 
@@ -16,6 +16,9 @@ export interface ServicioRequest {
     precio: number;
     categoriaId: number;
     duracion: number;
+    descripcion?: string;
+    publicado: boolean;
+    estado: boolean;
 }
 
 export interface ServicioFiltro {
@@ -26,4 +29,6 @@ export interface ServicioFiltro {
     categoriaId?: number;
     precioMin?: number;
     precioMax?: number;
+    publicado?: boolean;
+    estado?: boolean;
 }

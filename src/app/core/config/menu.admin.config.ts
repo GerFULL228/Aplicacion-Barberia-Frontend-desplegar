@@ -7,70 +7,64 @@ export const ADMIN_MENU = [
   },
 
   {
-  label: "Operaciones",
-  icon: "pi pi-briefcase",
-  items: [
+    label: "Operaciones",
+    icon: "pi pi-briefcase",
+    items: [
 
-    {
-      label: "Reservas",
-      icon: "pi pi-calendar",
-      permission: "RESERVA_READ_ALL",
-      items: [
+      {
+        label: "Reservas",
+        icon: "pi pi-calendar",
+        permission: "RESERVA_READ_ALL",
+        items: [
 
-        {
-          label: "Todas las Reservas",
-          icon: "pi pi-globe",
-          routerLink: ["operaciones/reservas"],
-          permission: "RESERVA_READ_ALL"
-        },
+          {
+            label: "Todas las Reservas",
+            icon: "pi pi-globe",
+            routerLink: ["operaciones/reservas"],
+            permission: "RESERVA_READ_ALL"
+          },
 
-        {
-          label: "Calendario",
-          icon: "pi pi-calendar",
-          routerLink: ["operaciones/reservas/calendario"],
-          permission: "RESERVA_READ_ALL"
-        },
+          {
+            label: "Calendario",
+            icon: "pi pi-calendar",
+            routerLink: ["operaciones/reservas/calendario"],
+            permission: "RESERVA_READ_ALL"
+          },
 
-        {
-          label: "Reservas de Hoy",
-          icon: "pi pi-calendar-check",
-          routerLink: ["operaciones/reservas/hoy"],
-          permission: "RESERVA_READ_ALL"
-        },
+          {
+            label: "Nueva Reserva",
+            icon: "pi pi-plus",
+            routerLink: ["operaciones/reservas/nueva"],
+            permission: "RESERVA_CREATE"
+          }
+        ]
+      },
+      {
+        label: "Ventas",
+        icon: "pi pi-shopping-cart",
+        routerLink: ["operaciones/ventas"],
+        permission: "VENTA_READ_ALL"
+      },
 
-        {
-          label: "Pendientes",
-          icon: "pi pi-clock",
-          routerLink: ["operaciones/reservas/pendientes"],
-          permission: "RESERVA_READ_ALL"
-        },
+      {
+        label: "Pagos",
+        icon: "pi pi-credit-card",
+        routerLink: ["operaciones/pagos"],
+      },
 
-        {
-          label: "Historial",
-          icon: "pi pi-history",
-          routerLink: ["operaciones/reservas/historial"],
-          permission: "RESERVA_READ_ALL"
-        },
+      {
+        label: "Reclamos",
+        icon: "pi pi-exclamation-circle",
+        routerLink: ["operaciones/reclamos"],
+      },
+    ]
+  },
 
-        {
-          label: "Nueva Reserva",
-          icon: "pi pi-plus",
-          routerLink: ["operaciones/reservas/nueva"],
-          permission: "RESERVA_CREATE"
-        }
-
-      ]
-    },
-
-    {
-      label: "Ventas",
-      icon: "pi pi-shopping-cart",
-      routerLink: ["operaciones/ventas"],
-      permission: "VENTA_READ_ALL"
-    }
-
-  ]
-},
+   {
+    label: "Sueldos",
+    icon: "pi pi-chart-bar",
+    routerLink: ["sueldos"],
+  },
 
   {
     label: "Gestión",
@@ -137,7 +131,13 @@ export const ADMIN_MENU = [
         icon: "pi pi-chart-bar",
         routerLink: ["analisis/metricas"],
         permission: "ESTADISTICA_READ_ALL"
-      }
+      },
+          {
+      label: "Predicciones",
+      icon: "pi pi-chart-line",
+      routerLink: ["analisis/predicciones"],
+      permission: "ESTADISTICA_READ_ALL"
+    }
     ]
   },
 
