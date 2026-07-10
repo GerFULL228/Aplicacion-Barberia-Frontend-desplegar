@@ -1,6 +1,7 @@
 import { environment } from '@/environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { catchError, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ImageUploadService {
@@ -22,7 +23,7 @@ export class ImageUploadService {
   obtenerImagenProtegida(imagenUrl: string) {
     const cleanUrl = imagenUrl.startsWith('/') ? imagenUrl : '/' + imagenUrl;
     const url = `${this.baseUrl}uploads${cleanUrl}`;
-    return this.http.get(url, { responseType: 'blob' });
+    return this.http.get(url, { responseType: 'blob' }).pipe(catchError(() => of(null)));
   }
 
   crearPrevisualizaciones(files: File[]): string[] {
