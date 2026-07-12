@@ -5,7 +5,6 @@
             <tr>
                 <th>Imagen</th>
                 <th>Nombre</th>
-                <th>Sku</th>
                 <th>Precio</th>
                 <th>Stock</th>
                 <th>Categoría</th>
@@ -25,8 +24,7 @@
                     }
                 </td>
                 <td><div class="font-semibold">{{producto.nombre}}</div></td>
-                <td>{{producto.sku}}</td>
-                <td>${{producto.precio | soles}}</td>
+                <td>{{producto.precio | soles}}</td>
                 <td>{{producto.stock}}</td>
                 <td>{{producto.nombreCategoria}}</td>
                 <td width="90"><p-button icon="pi pi-check" class="boton-agregar" (click)="seleccionarProducto(producto)"></p-button></td>

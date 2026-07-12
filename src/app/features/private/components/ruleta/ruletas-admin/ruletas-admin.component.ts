@@ -18,12 +18,14 @@ import { RuletaPreviewComponent } from './ruleta-preview/ruleta-preview.componen
 import { RuletaItemFormComponent } from './ruleta-item/ruleta-item-form/ruleta-item-form.component';
 import { RuletaItemTableComponent } from './ruleta-item/ruleta-item-table/ruleta-item-table.component';
 import { RULETA_TABS } from '@/app/core/config/tabs.config';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RuletaConfiguracionesComponent } from './ruleta-configuraciones/ruleta-configuraciones.component';
 
 
 @Component({
   selector: 'app-ruletas-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, DialogModule, RuletaPreviewComponent, TabsModule, RuletaAdminFormComponent,
+  imports: [CommonModule, FormsModule, ButtonModule, DialogModule, RuletaPreviewComponent, TabsModule, RuletaAdminFormComponent, RuletaConfiguracionesComponent,
     RuletaAdminTableComponent, RuletaItemFormComponent, RuletaItemTableComponent, DialogHeaderComponent, SearchBarComponent],
   templateUrl: './ruletas-admin.html',
   styleUrl: './ruletas-admin.css',
@@ -34,9 +36,11 @@ export class RuletasAdminComponent implements OnInit {
   private notify = inject(NotificationService);
   private ruletaService = inject(RuletaService);
   private ruletaItemService = inject(RuletaItemService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   icono = 'pi-refresh';
-  activeTab = 'general';
+  activeTab = 'ruletas';
   ruletas: RuletaResponse[] = [];
   ruletaSeleccionada: RuletaResponse | null = null;
   ruletaEnEdicion: RuletaResponse | null = null;
@@ -54,13 +58,24 @@ export class RuletasAdminComponent implements OnInit {
   resetItemFormTrigger = 0;
   tabs = RULETA_TABS;
 
+  constructor() {
+    this.route.queryParams.subscribe(params => {
+      this.activeTab = params['tab'] || 'ruletas';
+    });
+  }
+
   ngOnInit(): void {
     this.cargarRuletas(0, this.rows);
   }
 
   onTabChange(tab: string | number | undefined): void {
     if (tab === undefined || tab === null) return;
-    this.activeTab = String(tab);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab: String(tab) },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   get previewActivo(): boolean {

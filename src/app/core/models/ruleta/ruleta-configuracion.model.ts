@@ -4,6 +4,7 @@ export interface ConfiguracionResponse {
     categoriaNombre: string;
     activa: boolean;
     meta: number;
+    girosPorMeta: number;
     mostrarSiempre: boolean;
     crearTarjetaAutomatica: boolean;
     ruletaId?: number;
@@ -16,6 +17,7 @@ export interface ConfiguracionRequest {
     categoriaId: number;
     activa: boolean;
     meta: number;
+    girosPorMeta: number;
     mostrarSiempre: boolean;
     crearTarjetaAutomatica: boolean;
     ruletaId?: number | null;

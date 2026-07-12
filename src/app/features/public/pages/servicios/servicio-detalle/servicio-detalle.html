@@ -20,9 +20,7 @@
 
         <div class="md:col-span-5 flex flex-col gap-4">
           <div class="w-full aspect-square bg-white/5 rounded-2xl overflow-hidden">
-            <img [src]="servicio.urlsMultimedia?.[0] | safeImageUrl" [alt]="servicio.nombre"
-              (error)="img.src='/assets/cortebarba.jpg'" #img
-              class="w-full h-full object-cover">
+            <img [src]="servicio.urlsMultimedia[0] | safeImageUrl" [alt]="servicio.nombre" (error)="img.src='/assets/cortebarba.jpg'" #img class="w-full h-full object-cover">
           </div>
         </div>
 

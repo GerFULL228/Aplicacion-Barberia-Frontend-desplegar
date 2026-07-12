@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal, inject, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, inject, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RuletaSegmento } from '@/app/core/models/ruleta/ruleta-grafico.model';
 import { ButtonModule } from 'primeng/button';
@@ -6,11 +6,12 @@ import { TipoPremio } from '@/app/core/models/ruleta/ruleta-item.model';
 import { AudioService } from '@/app/core/services/common/audio.service';
 import { SliderModule } from 'primeng/slider';
 import { FormsModule } from '@angular/forms';
+import { SafeImageUrlPipe } from '../../pipes/safe-image-url.pipe';
 
 @Component({
   selector: 'app-ruleta-grafico',
   standalone: true,
-  imports: [CommonModule, ButtonModule, SliderModule, FormsModule],
+  imports: [CommonModule, ButtonModule, SliderModule, FormsModule, SafeImageUrlPipe],
   templateUrl: './ruleta-grafico.html',
   styleUrls: ['./ruleta-grafico.css']
 })

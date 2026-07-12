@@ -9,30 +9,30 @@ import { ConfiguracionTableComponent } from './configuracion-table/configuracion
 import { NotificationService } from '@/app/core/services/common/notification.service';
 import { CategoriaService } from '@/app/core/services/catalogos/categoria.service';
 import { SearchBarComponent } from '@/app/shared/components/search-bar/search-bar.component';
-import { DialogHeaderComponent } from '@/app/shared/components/dialog-header/dialog-header.component';
-import { ConfiguracionResponse, ConfiguracionRequest, ConfiguracionFiltro, ConfiguracionPatchRequest } from '@/app/core/models/fidelizacion/configuracion.model';
+import { DialogHeaderComponent } from '@/app/shared/components/dialog-header/dialog-header.component';  
+import { ConfiguracionResponse, ConfiguracionRequest, ConfiguracionFiltro, ConfiguracionPatchRequest } from '@/app/core/models/ruleta/ruleta-configuracion.model';
 import { Categoria, CategoriaTipo } from '@/app/core/models/catalogos/categorias.model';
 import { FILTROS_CONFIGURACION } from '@/app/core/config/filtros.config';
 import { FiltrosComponent } from '@/app/shared/components/filtros/filtros.component';
-import { buildCategoryTree } from '@/app/shared/utils/buildCategoryTree.component';
-import { ConfiguracionService } from '@/app/core/services/fidelizacion/Configuracion.service';
 import { RuletaService } from '@/app/core/services/ruleta/ruleta.service';
 import { RuletaResponse } from '@/app/core/models/ruleta/ruleta.model';
-
+import { buildCategoryTree } from '@/app/shared/utils/buildCategoryTree.component';
+import { ConfiguracionService } from '@/app/core/services/fidelizacion/configuracion.service';
+ 
 @Component({
-  selector: 'app-configuracion',
+  selector: 'app-ruleta-configuraciones',
   imports: [ConfiguracionFormComponent, ConfiguracionTableComponent, DialogModule, ButtonModule,
     CommonModule, FormsModule, SearchBarComponent, DialogHeaderComponent, FiltrosComponent],
-  templateUrl: './configuraciones.html',
-  styleUrl: './configuraciones.css',
+  templateUrl: './ruleta-configuraciones.html',
+  styleUrl: './ruleta-configuraciones.css',
 })
-export class ConfiguracionesComponent implements OnInit {
+export class RuletaConfiguracionesComponent implements OnInit {
 
   private cd = inject(ChangeDetectorRef);
   private notify = inject(NotificationService);
   private configuracionService = inject(ConfiguracionService);
   private categoriaService = inject(CategoriaService);
-  private ruletaService = inject(RuletaService);
+  private ruletaService = inject(RuletaService); 
 
   configuracionSeleccionada: ConfiguracionResponse | null = null;
   filtro: Partial<ConfiguracionFiltro> = {};
@@ -40,7 +40,7 @@ export class ConfiguracionesComponent implements OnInit {
   ruletas: RuletaResponse[] = [];
   configuraciones: ConfiguracionResponse[] = [];
 
-  filtrosFields = [...FILTROS_CONFIGURACION];
+  filtrosFields = [...FILTROS_CONFIGURACION]; 
   rows = 30;
   pageActual = 0;
   cargado = false;

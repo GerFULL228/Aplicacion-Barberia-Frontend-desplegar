@@ -9,6 +9,7 @@
                 <tr>
                     <th class="whitespace-nowrap text-center">Categoría</th>
                     <th class="whitespace-nowrap text-center">Meta (puntos)</th>
+                    <th class="whitespace-nowrap text-center">Giros por meta</th>
                     <th class="whitespace-nowrap text-center">Ruleta asignada</th>
                     <th class="whitespace-nowrap text-center">Mostrar siempre</th>
                     <th class="whitespace-nowrap text-center">Crear tarjeta automática</th>
@@ -25,6 +26,9 @@
                         <span class="ml-2">{{ configuracion.categoriaNombre }}</span>
                     </td>
                     <td class="whitespace-nowrap text-center">{{ configuracion.meta }}</td>
+                    <td class="whitespace-nowrap text-center">
+                        <app-status-badge type="text" [value]="configuracion.girosPorMeta" customClass="badge-text estado-producto"/>
+                    </td>
                     <td class="whitespace-nowrap text-center">
                         <app-status-badge type="text" [value]="configuracion.ruletaNombre || 'Sin asignar'" customClass="badge-text estado-producto"/>
                     </td>

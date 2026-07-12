@@ -1,0 +1,32 @@
+<div class="flex flex-col gap-6 mt-5">
+    <aside class="flex flex-col gap-4 rounded-xl border border-brand-gold-soft bg-brand-black px-6 py-4 md:flex-row md:items-center md:justify-between">
+        <h1 class="text-center text-lg font-semibold text-brand-gold md:text-start"><i class="pi  pi-star"></i> Fidelización</h1>
+    </aside>
+
+    <div class="overflow-hidden rounded-2xl border border-ui-borderSoft bg-ui-card shadow-lg shadow-black/20">
+        <p-tabs [(value)]="activeTab" (valueChange)="onTabChange($event)">
+            <p-tablist class="flex flex-wrap gap-3 border-b border-ui-borderSoft bg-ui-surface px-3 py-3 md:px-4">
+                @for (tab of tabs; track tab.value) {
+                <p-tab [value]="tab.value" class="flex items-center gap-2 text-inherit">
+                    <div class="flex items-center gap-2 rounded-xl px-4 py-3 transition-colors" [ngClass]="{ 'border border-brand-gold/30 border-b-2 bg-brand-gold/10 shadow-sm text-brand-gold': activeTab === tab.value, 'hover:bg-ui-elevated text-text-secondary': activeTab !== tab.value }">
+                        <i [class]="tab.icon"></i>
+                        <span>{{ tab.label }}</span>
+                    </div>
+                </p-tab>
+                }
+            </p-tablist>
+
+            <p-tabpanels class="overflow-hidden bg-ui-card p-4 md:p-6">
+                <p-tabpanel value="reglas">
+                    <app-reglas />
+                </p-tabpanel>
+                <p-tabpanel value="tarjeta">
+                    <div class="flex flex-col items-center gap-3 py-16 text-center text-text-tertiary">
+                        <i class="pi pi-id-card text-3xl"></i>
+                        <p>Pásame el modelo y servicio de <strong>Tarjeta</strong> (como hiciste con Configuración y Reglas) y lo construyo igual de completo aquí.</p>
+                    </div>
+                </p-tabpanel>
+            </p-tabpanels>
+        </p-tabs>
+    </div>
+</div>

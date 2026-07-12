@@ -4,11 +4,13 @@ import { CategoriaFiltro } from "../models/catalogos/categorias.model";
 import { ProductoFiltro } from "../models/catalogos/productos.model";
 import { ServicioFiltro } from "../models/catalogos/servicios.model";
 import { FilterField } from "../models/common/filtro.model";
-import { BOOLEAN_FILTERS, CATEGORIA_OPTIONS, CAUSA_RECLAMO_OPTIONS, ESTADO_RECLAMO_OPTIONS, TIPO_PROBLEMA_OPTIONS, TIPO_RECLAMACION_OPTIONS, TIPO_RULETA_OPTIONS } from "../models/common/select.option.model";
-import { ConfiguracionFiltro } from "../models/fidelizacion/configuracion.model";
+import { BOOLEAN_FILTERS, CATEGORIA_OPTIONS, CAUSA_RECLAMO_OPTIONS, ESTADO_RECLAMO_OPTIONS, TIPO_ALCANCE_FIDELIZACION_OPTIONS, TIPO_PROBLEMA_OPTIONS, TIPO_RECLAMACION_OPTIONS, TIPO_RULETA_OPTIONS } from "../models/common/select.option.model";
+import { ConfiguracionFiltro } from "../models/ruleta/ruleta-configuracion.model";
+import { FidelizacionReglaFiltro } from "../models/fidelizacion/regla.model";
 import { ReclamoFiltro } from "../models/operaciones/reclamos-model/reclamo.filtro.model";
 import { RuletaFiltro } from "../models/ruleta/ruleta.model";
 import { VentaFiltro } from "../models/ventas/venta.model";
+import { FidelizacionTarjetaFiltro } from "../models/fidelizacion/tarjeta.model";
 
 export const FILTROS_CATEGORIA: FilterField<CategoriaFiltro>[] = [
     { key: 'nombre', label: 'Nombre', type: 'text', placeholder: 'Buscar categoría' },
@@ -100,5 +102,19 @@ export const FILTROS_RULETA: FilterField<RuletaFiltro>[] = [
     { key: 'tipo', label: 'Tipo', type: 'select', options: TIPO_RULETA_OPTIONS, placeholder: 'Seleccione tipo' },
     { key: 'activa', label: 'Activa', type: 'select', options: BOOLEAN_FILTERS.activo, placeholder: 'Seleccione estado' },
 ];
+
+export const FILTROS_REGLA: FilterField<FidelizacionReglaFiltro>[] = [
+    { key: 'categoriaId', label: 'Categoría', type: 'treeselect', placeholder: 'Seleccione categoría', treeSelectionMode: 'single' },
+    { key: 'tipoAlcance', label: 'Tipo de alcance', type: 'select', options: TIPO_ALCANCE_FIDELIZACION_OPTIONS, placeholder: 'Seleccione tipo de alcance' },
+    { key: 'activo', label: 'Activo', type: 'select', options: BOOLEAN_FILTERS.activo, placeholder: 'Seleccione estado' },
+];
+
+export const FILTROS_TARJETA: FilterField<FidelizacionTarjetaFiltro>[] = [
+    { key: 'clienteId', label: 'Cliente', type: 'select', placeholder: 'Seleccione cliente', options: [] },
+    { key: 'categoriaId', label: 'Categoría', type: 'treeselect', placeholder: 'Seleccione categoría', treeSelectionMode: 'single' },
+    { key: 'activo', label: 'Activo', type: 'select', options: BOOLEAN_FILTERS.activo, placeholder: 'Seleccione estado' },
+    { key: 'cicloActivo', label: 'Ciclo activo', type: 'select', options: BOOLEAN_FILTERS.activo, placeholder: 'Seleccione estado' },
+];
+    
 
 

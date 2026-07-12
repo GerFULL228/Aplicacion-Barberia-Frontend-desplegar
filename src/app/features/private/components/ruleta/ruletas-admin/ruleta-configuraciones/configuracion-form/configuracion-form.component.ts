@@ -7,7 +7,7 @@ import { MessageModule } from 'primeng/message';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TreeSelectModule } from 'primeng/treeselect';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { ConfiguracionResponse, ConfiguracionRequest } from '@/app/core/models/fidelizacion/configuracion.model';
+import { ConfiguracionResponse, ConfiguracionRequest } from '@/app/core/models/ruleta/ruleta-configuracion.model';
 import { Categoria } from '@/app/core/models/catalogos/categorias.model';
 import { campoInvalido, marcarFormulario } from '@/app/shared/utils/form-utils.component';
 import { RuletaResponse } from '@/app/core/models/ruleta/ruleta.model';
@@ -57,6 +57,7 @@ export class ConfiguracionFormComponent implements OnChanges, OnInit {
     this.configuracionForm = this.fb.group({
       categoriaId: [null, Validators.required],
       meta: [1, [Validators.required, Validators.min(1)]],
+      girosPorMeta: [1, [Validators.required, Validators.min(1)]],
       activa: [true],
       mostrarSiempre: [false],
       crearTarjetaAutomatica: [true],
@@ -92,6 +93,7 @@ export class ConfiguracionFormComponent implements OnChanges, OnInit {
     this.configuracionForm.reset({
       categoriaId: null,
       meta: 1,
+      girosPorMeta: 1,
       activa: true,
       mostrarSiempre: false,
       crearTarjetaAutomatica: true,
@@ -110,6 +112,7 @@ export class ConfiguracionFormComponent implements OnChanges, OnInit {
     if (this.configuracion) {
       this.configuracionForm.patchValue({
         meta: this.configuracion.meta,
+        girosPorMeta: this.configuracion.girosPorMeta,
         activa: this.configuracion.activa,
         mostrarSiempre: this.configuracion.mostrarSiempre,
         crearTarjetaAutomatica: this.configuracion.crearTarjetaAutomatica,
@@ -144,14 +147,13 @@ export class ConfiguracionFormComponent implements OnChanges, OnInit {
   onGuardar(): void {
     this.formSubmitted = true;
     if (this.configuracionForm.invalid) { marcarFormulario(this.configuracionForm); return; }
-
-    // getRawValue() porque categoriaId queda disabled al editar (ver template) y .value lo excluiría.
     const raw = this.configuracionForm.getRawValue();
-    const categoriaSeleccionada = raw.categoriaId;
+    const categoriaId = this.configuracion? this.configuracion.categoriaId : Number(raw.categoriaId.key);
     const data: ConfiguracionRequest = {
-      categoriaId: Number(categoriaSeleccionada.key),
+      categoriaId,
       activa: raw.activa,
       meta: raw.meta,
+      girosPorMeta: raw.girosPorMeta,
       mostrarSiempre: raw.mostrarSiempre,
       crearTarjetaAutomatica: raw.crearTarjetaAutomatica,
       ruletaId: raw.ruletaId ?? null,

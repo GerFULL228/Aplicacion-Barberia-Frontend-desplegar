@@ -1,7 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { environment } from "@/environments/environment.development";
 import { HttpClient } from "@angular/common/http";
-import { ConfiguracionFiltro, ConfiguracionPatchRequest, ConfiguracionRequest, ConfiguracionResponse } from "../../models/fidelizacion/configuracion.model";
+import { ConfiguracionFiltro, ConfiguracionPatchRequest, ConfiguracionRequest, ConfiguracionResponse } from "../../models/ruleta/ruleta-configuracion.model";
 import { buildHttpParamsComponent } from "@/app/shared/utils/build-http-params.component";
 import { ApiResponse, PageResponse } from "../../models/common/index.model";
 

@@ -139,12 +139,6 @@ export const ADMIN_MENU = [
         permission: "FIDELIZACION_READ"
       },
 
-      {
-        label: "Tarjetas",
-        icon: "pi pi-id-card",
-        routerLink: ["fidelizacion/tarjetas"],
-        permission: "FIDELIZACION_READ"
-      },
 
       {
         label: "Reglas",
@@ -152,14 +146,6 @@ export const ADMIN_MENU = [
         routerLink: ["fidelizacion/reglas"],
         permission: "FIDELIZACION_READ"
       },
-
-      {
-        label: "Configuración",
-        icon: "pi pi-cog",
-        routerLink: ["fidelizacion/configuracion"],
-        permission: "FIDELIZACION_READ"
-      }
-
     ]
   },
   {

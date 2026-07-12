@@ -71,7 +71,7 @@ export const routes: Routes = [
       },
       {
         path: 'fidelizacion', children: [
-          { path: 'configuracion', loadComponent: () => import('./features/private/components/fidelizacion/configuraciones/configuraciones.component').then(m => m.ConfiguracionesComponent) },
+          { path: 'reglas', loadComponent: () => import('./features/private/components/fidelizacion/fidelizacion.component').then(m => m.FidelizacionAdminComponent) },
         ]
       },
       {

@@ -1,0 +1,29 @@
+export interface FidelizacionTarjetaRequest {
+    clienteId: number;
+    categoriaId: number;
+}
+
+export interface FidelizacionTarjetaPatchRequest {
+    campo: 'activo' | 'cicloActivo';
+    valor: boolean;
+}
+
+export interface FidelizacionTarjetaResponse {
+    id: number;
+    clienteId: number;
+    clienteNombre: string;
+    categoriaId: number;
+    categoriaNombre: string;
+    progreso: number;
+    girosDisponibles: number;
+    totalGiros: number;
+    activo: boolean;
+    cicloActivo: boolean;
+}
+
+export interface FidelizacionTarjetaFiltro {
+    clienteId?: number;
+    categoriaId?: number;
+    activo?: boolean;
+    cicloActivo?: boolean;
+}

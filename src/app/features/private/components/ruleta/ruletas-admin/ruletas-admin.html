@@ -1,10 +1,7 @@
 <div class="flex flex-col gap-6 mt-5">
     <aside
         class="flex flex-col gap-4 rounded-xl border border-brand-gold-soft bg-brand-black px-6 py-4 md:flex-row md:items-center md:justify-between">
-        <h1 class="text-center text-lg font-semibold text-brand-gold md:text-start">
-            <i class="pi" [class]="icono"></i>
-            Ruletas
-        </h1>
+        <h1 class="text-center text-lg font-semibold text-brand-gold md:text-start"><i class="pi" [class]="icono"></i>Ruletas</h1>
         @if (ruletaSeleccionada) {
         <span class="text-sm text-text-tertiary">Trabajando sobre: <strong class="text-brand-gold">{{ ruletaSeleccionada.nombre }}</strong></span>
         }
@@ -24,7 +21,7 @@
             </p-tablist>
 
             <p-tabpanels class="overflow-hidden bg-ui-card p-4 md:p-6">
-                <p-tabpanel value="general">
+                <p-tabpanel value="ruletas">
                     <div class="flex flex-col gap-4">
                         <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                             <app-search-bar placeholder="Buscar ruleta" (search)="buscarRuletas($event)" />
@@ -33,8 +30,13 @@
                         <app-ruleta-admin-table [ruletas]="ruletas" [cargado]="cargadoRuletas" [totalRecords]="totalRuletas" [rows]="rows" [seleccionadaId]="ruletaSeleccionada?.ruletaId ?? null" (lazyLoad)="onLazyLoadRuletas($event)" (estado)="onCambiarEstadoRuleta($event)" (editar)="abrirEditarRuleta($event)" (eliminar)="eliminarRuleta($event)" (seleccionar)="seleccionarRuletaParaPremios($event)" />
                     </div>
                 </p-tabpanel>
+                <p-tabpanel value="configuracion">
+                    <div class="flex flex-col gap-4">
+                        <app-ruleta-configuraciones/>
+                    </div>
+                </p-tabpanel>
 
-                <p-tabpanel value="premios">
+                <p-tabpanel value="items">
                     @if (!ruletaSeleccionada) {
                     <div class="flex flex-col items-center gap-3 py-16 text-center text-text-tertiary">
                         <i class="pi pi-info-circle text-3xl"></i>

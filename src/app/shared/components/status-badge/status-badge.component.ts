@@ -1,4 +1,5 @@
 import { CategoriaTipo } from '@/app/core/models/catalogos/categorias.model';
+import { TipoAlcanceFidelizacion } from '@/app/core/models/fidelizacion/regla.model';
 import { EstadoReclamo, TipoReclamacion } from '@/app/core/models/operaciones/reclamos-model/reclamo.enum.model';
 import { TipoPremio } from '@/app/core/models/ruleta/ruleta-item.model';
 import { CommonModule } from '@angular/common';
@@ -47,6 +48,11 @@ export class StatusBadgeComponent {
           [TipoPremio.DESCUENTO.toLowerCase()]: 'estado-descuento',
           [TipoPremio.CUPON.toLowerCase()]: 'estado-cupon',
           [TipoPremio.SIN_PREMIO.toLowerCase()]: 'estado-sin-premio',
+
+          [TipoAlcanceFidelizacion.CATEGORIA.toLowerCase()]: 'estado-categoria',
+          [TipoAlcanceFidelizacion.SERVICIO.toLowerCase()]: 'estado-servicio',
+          [TipoAlcanceFidelizacion.PRODUCTO.toLowerCase()]: 'estado-producto',
+          [TipoAlcanceFidelizacion.COMBO.toLowerCase()]: 'estado-combo',
 
           confirmada: 'estado-confirmada',
           finalizada: 'estado-finalizada',

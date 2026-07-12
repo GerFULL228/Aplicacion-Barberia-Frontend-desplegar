@@ -1,4 +1,5 @@
 import { CategoriaTipo } from "../catalogos/categorias.model";
+import { TipoAlcanceFidelizacion } from "../fidelizacion/regla.model";
 import { CausaReclamo, EstadoReclamo, SolucionReclamo, TipoProblema, TipoReclamacion } from "../operaciones/reclamos-model/reclamo.enum.model";
 import { TipoPremio } from "../ruleta/ruleta-item.model";
 import { TipoRuleta } from "../ruleta/ruleta.model";
@@ -125,5 +126,12 @@ export const TIPO_PREMIO_OPTIONS: SelectOption<string>[] = [
     { label: 'Producto', value: TipoPremio.PRODUCTO },
     { label: 'Cupón', value: TipoPremio.CUPON },
     { label: 'Sin premio', value: TipoPremio.SIN_PREMIO },
+];
+
+export const TIPO_ALCANCE_FIDELIZACION_OPTIONS: SelectOption<TipoAlcanceFidelizacion>[] = [
+    { label: 'Categoría', value: TipoAlcanceFidelizacion.CATEGORIA },
+    { label: 'Servicio', value: TipoAlcanceFidelizacion.SERVICIO },
+    { label: 'Producto', value: TipoAlcanceFidelizacion.PRODUCTO },
+    { label: 'Combo', value: TipoAlcanceFidelizacion.COMBO },
 ];
     

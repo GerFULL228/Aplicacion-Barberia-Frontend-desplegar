@@ -92,7 +92,7 @@
             </div>
             <div class="resultado-media">
                 <div class="resultado-imagen" *ngIf="premioGanador()?.imagen">
-                <img [src]="premioGanador()?.imagen" [alt]="premioGanador()?.label">
+                <img [src]="premioGanador()?.imagen | safeImageUrl" [alt]="premioGanador()?.label">
             </div>
             <div class="resultado-icono" *ngIf="!premioGanador()?.imagen">
                 <i class="pi" [ngClass]="obtenerIcono(premioGanador()?.tipoPremio)"></i>

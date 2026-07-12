@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { ConfirmPopoverComponent } from '@/app/shared/components/confirm-popover/confirm-popover.component';
 import { StatusBadgeComponent } from '@/app/shared/components/status-badge/status-badge.component';
-import { ConfiguracionResponse } from '@/app/core/models/fidelizacion/configuracion.model';
+import { ConfiguracionResponse } from '@/app/core/models/ruleta/ruleta-configuracion.model';
 
 @Component({
   selector: 'app-configuracion-table',

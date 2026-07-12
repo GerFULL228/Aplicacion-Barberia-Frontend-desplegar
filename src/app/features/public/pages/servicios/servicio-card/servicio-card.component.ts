@@ -3,11 +3,12 @@ import { Servicio } from '@/app/core/models/catalogos/servicios.model';
 import { SafeImageUrlPipe } from '@/app/shared/pipes/safe-image-url.pipe';
 import { StatusBadgeComponent } from '@/app/shared/components/status-badge/status-badge.component';
 import { SolesPipe } from '@/app/shared/pipes/moneda.pipe';
+import { ImageModule } from 'primeng/image';
 
 @Component({
   standalone: true,
   selector: 'app-servicio-card',
-  imports: [SolesPipe, SafeImageUrlPipe,StatusBadgeComponent],
+  imports: [SolesPipe, SafeImageUrlPipe,StatusBadgeComponent, ImageModule],
   templateUrl: './servicio-card.html',
 })
 export class ServicioCardComponent {
