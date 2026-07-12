@@ -18,6 +18,18 @@ export class IaService {
     formData.append('id_cliente', idCliente.toString());
     return this.http.post(`${this.API}/analizar`, formData);
   }
+  
+  obtenerCortesRecomendados(
+  idCliente: number,
+  pagina: number = 1,
+  porPagina: number = 10
+): Observable<any> {
+  const params = new HttpParams()
+    .set('pagina', pagina.toString())
+    .set('por_pagina', porPagina.toString());
+
+  return this.http.get(`${this.API}/cortes/recomendados/${idCliente}`, { params });
+}
 
   enviarFeedback(clientId: number, haircutId: number, liked: boolean, rating: number): Observable<any> {
     const params = new HttpParams()
