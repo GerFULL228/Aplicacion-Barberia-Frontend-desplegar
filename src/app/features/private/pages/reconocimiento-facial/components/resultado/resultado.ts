@@ -3,15 +3,15 @@ import {
   Component,
   ElementRef,
   Input,
+  OnInit,
   ViewChild
 } from '@angular/core';
 
 import { CorteModal } from '../corte-modal/corte-modal';
-
 import { CommonModule, KeyValuePipe } from '@angular/common';
-
-import { AnalisisResponse } from '@core/models/reconocimiento-facial/Ia.model';
+import { AnalisisResponse, CorteRecomendado } from '@core/models/reconocimiento-facial/Ia.model';
 import { CorteCard } from '../corte-card/corte-card';
+import { IaService } from '@core/services/reconocimiento-facial/reconocimiento-facial.service';
 
 @Component({
   selector: 'app-resultado',
@@ -24,14 +24,12 @@ import { CorteCard } from '../corte-card/corte-card';
   templateUrl: './resultado.html',
   styleUrl: './resultado.css'
 })
-export class Resultado implements AfterViewInit {
+export class Resultado implements AfterViewInit, OnInit {
 
   @Input()
   fotoPreview = '';
 
   @Input() clienteId: number = 0;
-
-
 
   @ViewChild('overlayCanvas')
   overlayCanvas!: ElementRef<HTMLCanvasElement>;
@@ -42,12 +40,87 @@ export class Resultado implements AfterViewInit {
   @ViewChild('graficoCanvas')
   graficoCanvas!: ElementRef<HTMLCanvasElement>;
 
+  // ── Paginación de cortes recomendados ──────────────────────
+
+  cortesPagina: CorteRecomendado[] = [];
+
+  paginaActual = 1;
+
+  porPagina = 10;
+
+  totalCortes = 0;
+
+  totalPaginas = 1;
+
+  cargandoCortes = false;
+
+  constructor(private iaService: IaService) { }
+
+  ngOnInit(): void {
+
+    // La página 1 ya viene incluida en la respuesta de /analizar,
+    // así que la usamos directo sin volver a pegarle al backend.
+
+    this.cortesPagina = this.resultado.cortes_recomendados ?? [];
+
+    this.totalCortes = this.resultado.total_cortes ?? this.cortesPagina.length;
+
+    this.porPagina = this.resultado.por_pagina ?? 10;
+
+    this.totalPaginas = Math.max(1, Math.ceil(this.totalCortes / this.porPagina));
+
+  }
+
   ngAfterViewInit(): void {
 
     setTimeout(() => {
       this.dibujarGraficoRostro();
     });
 
+  }
+
+  irAPagina(pagina: number): void {
+
+    if (pagina < 1 || pagina > this.totalPaginas || pagina === this.paginaActual) {
+      return;
+    }
+
+    // La página 1 ya la tenemos en memoria desde el análisis inicial
+    if (pagina === 1 && this.resultado.cortes_recomendados) {
+
+      this.paginaActual = 1;
+      this.cortesPagina = this.resultado.cortes_recomendados;
+      return;
+
+    }
+
+    this.cargandoCortes = true;
+
+    this.iaService
+      .obtenerCortesRecomendados(this.clienteId, pagina, this.porPagina)
+      .subscribe({
+        next: (res) => {
+
+          this.cortesPagina = res.cortes_recomendados;
+          this.totalCortes = res.total_cortes;
+          this.totalPaginas = res.total_paginas;
+          this.paginaActual = res.pagina;
+          this.cargandoCortes = false;
+
+        },
+        error: () => {
+          this.cargandoCortes = false;
+        }
+      });
+
+  }
+
+  paginaAnterior(): void {
+    this.irAPagina(this.paginaActual - 1);
+  }
+
+  paginaSiguiente(): void {
+    this.irAPagina(this.paginaActual + 1);
   }
 
   private dibujarGraficoRostro(): void {
