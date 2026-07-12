@@ -601,11 +601,24 @@ p-colorpicker {
 	@apply bg-green-500 text-white border border-green-500/30;
 }
 
+.boton-ver-tabla .p-button:not(:disabled):active,
+.boton-ver-tabla .p-button:not(:disabled):focus,
+.boton-ver-tabla .p-button:not(:disabled):focus-visible {
+	@apply bg-green-500 text-white border border-green-500/30;
+}
+
 .boton-agregar .p-button {
 	@apply boton-tabla text-emerald-500 border border-emerald-500/30 bg-emerald-500/10;
 }
 
 .boton-agregar .p-button:not(:disabled):hover {
+	@apply bg-emerald-500 text-white border border-emerald-500/30;
+}
+
+.boton-agregar-texto .p-button {
+	@apply font-bold py-3 px-6 w-auto rounded-xl transition-all duration-300 cursor-pointer hover:scale-105 text-emerald-500 border border-emerald-500/30 bg-emerald-500/10;
+}
+.boton-agregar-texto .p-button:not(:disabled):hover {
 	@apply bg-emerald-500 text-white border border-emerald-500/30;
 }
 
@@ -706,6 +719,23 @@ p-colorpicker {
 	@apply badge-base bg-purple-500/10 text-purple-400 border border-purple-500/30;
 }
 
+.estado-descuento{
+	@apply badge-base bg-green-500/10 text-green-400 border border-green-500/30;
+}
+
+.estado-cupon{
+    @apply badge-base bg-indigo-500/10 text-indigo-400 border border-indigo-500/30;
+}
+
+.estado-sin-premio{
+    @apply badge-base bg-gray-500/10 text-gray-400 border border-gray-500/30;
+}
+
+.estado-sin-premio{
+    background:#f3f4f6;
+    color:#6b7280;
+    border:1px solid #d1d5db;
+}
 
 /* EstadoReclamo */
 .estado-reclamo-abierto {
@@ -909,6 +939,10 @@ app-footer i {
 
 .dialog-header-anular {
 	@apply bg-amber-500/10 text-amber-400 border border-amber-500/30;
+}
+
+.dialog-header-ver {
+	@apply bg-green-500/10 text-green-400 border border-green-500/30;
 }
 
 .p-galleria {

@@ -4,8 +4,10 @@ import { CategoriaFiltro } from "../models/catalogos/categorias.model";
 import { ProductoFiltro } from "../models/catalogos/productos.model";
 import { ServicioFiltro } from "../models/catalogos/servicios.model";
 import { FilterField } from "../models/common/filtro.model";
-import { BOOLEAN_FILTERS, CATEGORIA_OPTIONS, CAUSA_RECLAMO_OPTIONS, ESTADO_RECLAMO_OPTIONS, TIPO_PROBLEMA_OPTIONS, TIPO_RECLAMACION_OPTIONS } from "../models/common/select.option.model";
+import { BOOLEAN_FILTERS, CATEGORIA_OPTIONS, CAUSA_RECLAMO_OPTIONS, ESTADO_RECLAMO_OPTIONS, TIPO_PROBLEMA_OPTIONS, TIPO_RECLAMACION_OPTIONS, TIPO_RULETA_OPTIONS } from "../models/common/select.option.model";
+import { ConfiguracionFiltro } from "../models/fidelizacion/configuracion.model";
 import { ReclamoFiltro } from "../models/operaciones/reclamos-model/reclamo.filtro.model";
+import { RuletaFiltro } from "../models/ruleta/ruleta.model";
 import { VentaFiltro } from "../models/ventas/venta.model";
 
 export const FILTROS_CATEGORIA: FilterField<CategoriaFiltro>[] = [
@@ -82,3 +84,21 @@ export const FILTROS_VENTA: FilterField<VentaFiltro>[] = [
     { key: 'fechaInicio', label: 'Fecha de inicio', type: 'date', placeholder: 'Desde' },
     { key: 'fechaFin', label: 'Fecha de fin', type: 'date', placeholder: 'Hasta', endOfDay: true }
 ];
+
+export const FILTROS_CONFIGURACION: FilterField<ConfiguracionFiltro>[] = [
+    { key: 'activa', label: 'Activa', type: 'select', options: BOOLEAN_FILTERS.activo, placeholder: 'Seleccione estado' },
+    { key: 'categoriaId', label: 'Categoría', type: 'treeselect', placeholder: 'Seleccione categoría', treeSelectionMode: 'single' },
+    { key: 'ruletaId', label: 'Ruleta', type: 'select', placeholder: 'Seleccione ruleta', options: [] },
+    { key: 'categoriaNombre', label: 'Nombre de categoría', type: 'text', placeholder: 'Buscar por nombre de categoría' },
+    { key: 'ruletaNombre', label: 'Nombre de ruleta', type: 'text', placeholder: 'Buscar por nombre de ruleta' },
+    { key: 'metaDesde', label: 'Meta desde', type: 'number', placeholder: 'Ingrese meta mínima' },
+    { key: 'metaHasta', label: 'Meta hasta', type: 'number', placeholder: 'Ingrese meta máxima' },
+]
+
+export const FILTROS_RULETA: FilterField<RuletaFiltro>[] = [
+    { key: 'nombre', label: 'Nombre', type: 'text', placeholder: 'Buscar ruleta' },
+    { key: 'tipo', label: 'Tipo', type: 'select', options: TIPO_RULETA_OPTIONS, placeholder: 'Seleccione tipo' },
+    { key: 'activa', label: 'Activa', type: 'select', options: BOOLEAN_FILTERS.activo, placeholder: 'Seleccione estado' },
+];
+
+

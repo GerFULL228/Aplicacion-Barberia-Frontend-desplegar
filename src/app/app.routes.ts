@@ -53,19 +53,8 @@ export const routes: Routes = [
       {
         path: 'sueldos',
         children: [
-          {
-            path: '',
-            loadComponent: () =>
-              import('./features/private/components/sueldos/sueldos')
-                .then(m => m.Sueldos)
-          },
-           {
-            path: ':id',
-            loadComponent: () =>
-              import('./features/private/components/sueldos/mi-sueldo-analisis/mi-sueldo-analisis')
-                .then(m => m.MiSueldoAnalisis)
-          }
-         
+          { path: '', loadComponent: () => import('./features/private/components/sueldos/sueldos').then(m => m.Sueldos) },
+          { path: ':id', loadComponent: () => import('./features/private/components/sueldos/mi-sueldo-analisis/mi-sueldo-analisis').then(m => m.MiSueldoAnalisis) }
         ]
       },
       {
@@ -81,30 +70,25 @@ export const routes: Routes = [
         ]
       },
       {
+        path: 'fidelizacion', children: [
+          { path: 'configuracion', loadComponent: () => import('./features/private/components/fidelizacion/configuraciones/configuraciones.component').then(m => m.ConfiguracionesComponent) },
+        ]
+      },
+      {
+        path: 'ruleta', children: [
+          { path: 'ruletas', loadComponent: () => import('./features/private/components/ruleta/ruletas-admin/ruletas-admin.component').then(m => m.RuletasAdminComponent) }
+        ]
+      },
+      {
         path: 'sistema', children: [
           { path: 'configuracion', loadComponent: () => import('./features/private/components/sistema/configuracion').then(m => m.Configuracion) },
         ]
       },
       {
         path: 'analisis', children: [
-          {
-            path: 'metricas',
-            loadComponent: () =>
-              import('./features/private/components/analisis/metricas/metricas')
-                .then(m => m.MetricasComponent),
-          },
-          {
-            path: 'reportes',
-            loadComponent: () =>
-              import('./features/private/components/analisis/reportes/reportes')
-                .then(m => m.ReportesComponent),
-          },
-          {
-  path: 'predicciones',
-  loadComponent: () =>
-    import('./features/private/components/analisis/predicciones/predicciones')
-      .then(m => m.Predicciones),
-},
+          {path: 'metricas',loadComponent: () =>import('./features/private/components/analisis/metricas/metricas').then(m => m.MetricasComponent),},
+          {path: 'reportes',loadComponent: () =>import('./features/private/components/analisis/reportes/reportes').then(m => m.ReportesComponent),},
+          {path: 'predicciones',loadComponent: () =>import('./features/private/components/analisis/predicciones/predicciones').then(m => m.Predicciones),},
           { path: '', redirectTo: 'metricas', pathMatch: 'full' },
         ]
       },

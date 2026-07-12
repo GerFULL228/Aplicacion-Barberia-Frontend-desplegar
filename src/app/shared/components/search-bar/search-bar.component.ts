@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 export class SearchBarComponent implements OnChanges {
   @Input() placeholder: string = 'Buscar...';
   @Input() value: string = '';
+  @Output() valueChange = new EventEmitter<string>();
   @Output() search = new EventEmitter<string>();
   valor: string = '';
 
@@ -19,6 +20,14 @@ export class SearchBarComponent implements OnChanges {
     }
   }
 
-  onSearch() { this.search.emit(this.valor); }
-  clearSearch() { this.valor = '';this.search.emit('');}
+  onSearch() {
+    this.valueChange.emit(this.valor);
+    this.search.emit(this.valor);
+  }
+
+  clearSearch() {
+    this.valor = '';
+    this.valueChange.emit('');
+    this.search.emit('');
+  }
 }
