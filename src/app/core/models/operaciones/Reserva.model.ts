@@ -1,7 +1,7 @@
 import { TipoReserva } from "./TipoRserva";
 import { EstadoReserva } from './EstadoReserva';
 
-export interface Reserva{
+export interface Reserva {
     id: number;
     reservaId: number;
     clienteNombre: string;
@@ -13,4 +13,5 @@ export interface Reserva{
     tipoReserva: TipoReserva;
     total: number;
     estadoReserva: EstadoReserva;
+    recordatorioEnviado?: boolean; 
 }
