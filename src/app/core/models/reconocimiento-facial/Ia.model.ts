@@ -52,6 +52,9 @@ export interface AnalisisResponse {
   contorno_grafico?: string[];
   cortes_recomendados?: CorteRecomendado[];
   features_avanzadas?: FeaturesAvanzadas;
+  total_cortes: number;
+  pagina: number;
+  por_pagina: number;
 }
 
 export interface HaircutFeaturesRequestDTO {
