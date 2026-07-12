@@ -14,7 +14,7 @@ import { DialogModule } from 'primeng/dialog';
   selector: 'app-reserva-list',
   standalone: true,
   imports: [CommonModule, FormsModule, ButtonModule, TableModule, DialogModule],
-  templateUrl: './reserva-list.html',
+  templateUrl: './reserva-list.html', 
   styleUrls: ['./reserva-list.css'],
 })
 export class ReservaList implements OnInit {
