@@ -17,8 +17,9 @@
     </h2>
 
     <img
-      [src]="corte.imagen_url"
-      [alt]="corte.nombre">
+      [src]="corte.imagen_url | safeImageUrl"
+      [alt]="corte.nombre"
+      (error)="img.src='/assets/cortebarba.jpg'" #img>
 
     <p>
       {{ corte.descripcion }}
