@@ -11,7 +11,7 @@ export interface FidelizacionTarjetaPatchRequest {
 export interface FidelizacionTarjetaResponse {
     id: number;
     clienteId: number;
-    clienteNombre: string;
+    clienteNombreCompleto: string;
     categoriaId: number;
     categoriaNombre: string;
     progreso: number;
@@ -26,4 +26,12 @@ export interface FidelizacionTarjetaFiltro {
     categoriaId?: number;
     activo?: boolean;
     cicloActivo?: boolean;
+}
+
+export interface TarjetaPorCategoria {
+    categoriaId: number;
+    categoriaNombre: string;
+    totalTarjetas: number;
+    tarjetasConGiroDisponible: number;
+    girosDisponibles: number;
 }

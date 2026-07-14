@@ -1,6 +1,8 @@
 import { CategoriaTipo } from '@/app/core/models/catalogos/categorias.model';
+import { Origen } from '@/app/core/models/fidelizacion/movimiento.model';
 import { TipoAlcanceFidelizacion } from '@/app/core/models/fidelizacion/regla.model';
 import { EstadoReclamo, TipoReclamacion } from '@/app/core/models/operaciones/reclamos-model/reclamo.enum.model';
+import { EstadoRecompensa } from '@/app/core/models/ruleta/recompensa.model';
 import { TipoPremio } from '@/app/core/models/ruleta/ruleta-item.model';
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
@@ -42,6 +44,15 @@ export class StatusBadgeComponent {
         const clases: Record<string, string> = {
           producto: 'estado-producto',
           servicio: 'estado-servicio',
+          
+          [EstadoRecompensa.PENDIENTE.toLowerCase()]: 'estado-pendiente',
+          [EstadoRecompensa.CANJEADO.toLowerCase()]: 'estado-ajuste',
+          [EstadoRecompensa.VENCIDO.toLowerCase()]: 'estado-reclamo-cerrado',
+          [EstadoRecompensa.ANULADO.toLowerCase()]: 'estado-reclamo-anulado',
+
+          [Origen.VENTA.toLowerCase()]: 'estado-venta',
+          [Origen.RESERVA.toLowerCase()]: 'estado-reserva',
+          [Origen.AJUSTE.toLowerCase()]: 'estado-ajuste',
           
           [TipoPremio.PRODUCTO.toLowerCase()]: 'estado-producto',
           [TipoPremio.SERVICIO.toLowerCase()]: 'estado-servicio',

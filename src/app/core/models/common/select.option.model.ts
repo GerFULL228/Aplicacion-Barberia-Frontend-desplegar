@@ -1,6 +1,8 @@
 import { CategoriaTipo } from "../catalogos/categorias.model";
+import { Origen } from "../fidelizacion/movimiento.model";
 import { TipoAlcanceFidelizacion } from "../fidelizacion/regla.model";
 import { CausaReclamo, EstadoReclamo, SolucionReclamo, TipoProblema, TipoReclamacion } from "../operaciones/reclamos-model/reclamo.enum.model";
+import { EstadoRecompensa } from "../ruleta/recompensa.model";
 import { TipoPremio } from "../ruleta/ruleta-item.model";
 import { TipoRuleta } from "../ruleta/ruleta.model";
 
@@ -134,4 +136,16 @@ export const TIPO_ALCANCE_FIDELIZACION_OPTIONS: SelectOption<TipoAlcanceFideliza
     { label: 'Producto', value: TipoAlcanceFidelizacion.PRODUCTO },
     { label: 'Combo', value: TipoAlcanceFidelizacion.COMBO },
 ];
-    
+
+export const ORIGEN_MOVIMIENTO_OPTIONS: SelectOption<Origen>[] = [
+    { label: 'Reserva', value: Origen.RESERVA },
+    { label: 'Venta', value: Origen.VENTA },
+    { label: 'Ajuste', value: Origen.AJUSTE },
+];
+
+export const ESTADO_RECOMPENSA_OPTIONS: SelectOption<EstadoRecompensa>[] = [
+    { label: 'Pendiente', value: EstadoRecompensa.PENDIENTE },
+    { label: 'Canjeada', value: EstadoRecompensa.CANJEADO },
+    { label: 'Vencida', value: EstadoRecompensa.VENCIDO },
+    { label: 'Anulado', value: EstadoRecompensa.ANULADO },
+];

@@ -133,12 +133,18 @@ export const ADMIN_MENU = [
     items: [
 
       {
-        label: "Movimientos",
+        label: "Seguimiento",
         icon: "pi pi-history",
-        routerLink: ["fidelizacion/movimientos"],
+        routerLink: ["fidelizacion/seguimiento"],
         permission: "FIDELIZACION_READ"
       },
 
+      {
+        label: "Ruletas",
+        icon: "pi pi-spin pi-sync",
+        routerLink: ["fidelizacion/ruletas"],
+        permission: "RULETA_READ"
+      },
 
       {
         label: "Reglas",
@@ -146,41 +152,6 @@ export const ADMIN_MENU = [
         routerLink: ["fidelizacion/reglas"],
         permission: "FIDELIZACION_READ"
       },
-    ]
-  },
-  {
-    label: "Ruleta",
-    icon: "pi pi-spin pi-sync",
-    items: [
-
-      {
-        label: "Ruletas",
-        icon: "pi pi-circle",
-        routerLink: ["ruleta/ruletas"],
-        permission: "RULETA_READ"
-      },
-
-      {
-        label: "Premios",
-        icon: "pi pi-gift",
-        routerLink: ["ruleta/premios"],
-        permission: "RULETA_READ"
-      },
-
-      {
-        label: "Giros",
-        icon: "pi pi-refresh",
-        routerLink: ["ruleta/giros"],
-        permission: "RULETA_READ"
-      },
-
-      {
-        label: "Recompensas",
-        icon: "pi pi-ticket",
-        routerLink: ["ruleta/recompensas"],
-        permission: "RECOMPENSA_READ"
-      }
-
     ]
   },
 

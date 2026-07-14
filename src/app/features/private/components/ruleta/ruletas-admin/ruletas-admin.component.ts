@@ -7,7 +7,7 @@ import { NotificationService } from '@/app/core/services/common/notification.ser
 import { RuletaService } from '@/app/core/services/ruleta/ruleta.service';
 import { RuletaItemService } from '@/app/core/services/ruleta/ruleta-item.service';
 import { RuletaResponse, RuletaRequest, RuletaFiltro } from '@/app/core/models/ruleta/ruleta.model';
-import { RuletaItemResponse, RuletaItemRequest } from '@/app/core/models/ruleta/ruleta-item.model';
+import { RuletaItemResponse, RuletaItemRequest, RuletaItemFiltro } from '@/app/core/models/ruleta/ruleta-item.model';
 import { DialogHeaderComponent } from '@/app/shared/components/dialog-header/dialog-header.component';
 import { SearchBarComponent } from '@/app/shared/components/search-bar/search-bar.component';
 import { TableLazyLoadEvent } from 'primeng/table';
@@ -20,13 +20,16 @@ import { RuletaItemTableComponent } from './ruleta-item/ruleta-item-table/ruleta
 import { RULETA_TABS } from '@/app/core/config/tabs.config';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RuletaConfiguracionesComponent } from './ruleta-configuraciones/ruleta-configuraciones.component';
+import { ConfiguracionFiltro } from '@/app/core/models/ruleta/ruleta-configuracion.model';
+import { FILTROS_ITEM, FILTROS_RULETA } from '@/app/core/config/filtros.config';
+import { FiltrosComponent } from '@/app/shared/components/filtros/filtros.component';
 
 
 @Component({
   selector: 'app-ruletas-admin',
   standalone: true,
   imports: [CommonModule, FormsModule, ButtonModule, DialogModule, RuletaPreviewComponent, TabsModule, RuletaAdminFormComponent, RuletaConfiguracionesComponent,
-    RuletaAdminTableComponent, RuletaItemFormComponent, RuletaItemTableComponent, DialogHeaderComponent, SearchBarComponent],
+    RuletaAdminTableComponent, RuletaItemFormComponent, RuletaItemTableComponent, DialogHeaderComponent, SearchBarComponent,FiltrosComponent],
   templateUrl: './ruletas-admin.html',
   styleUrl: './ruletas-admin.css',
 })
@@ -50,6 +53,7 @@ export class RuletasAdminComponent implements OnInit {
   rows = 20;
   resetRuletaFormTrigger = 0;
   filtroRuleta: Partial<RuletaFiltro> = {};
+  filtroItem: Partial<RuletaItemFiltro> = {};
 
   items: RuletaItemResponse[] = [];
   itemEnEdicion: RuletaItemResponse | null = null;
@@ -57,11 +61,12 @@ export class RuletasAdminComponent implements OnInit {
   cargadoItems = false;
   resetItemFormTrigger = 0;
   tabs = RULETA_TABS;
+  filtrosFields = [...FILTROS_RULETA];
+  FILTROS_ITEM = [...FILTROS_ITEM];
+  texto = 'Ruletas';
 
   constructor() {
-    this.route.queryParams.subscribe(params => {
-      this.activeTab = params['tab'] || 'ruletas';
-    });
+    this.route.queryParams.subscribe(params => {this.activeTab = params['tab'] || 'ruletas';});
   }
 
   ngOnInit(): void {
@@ -254,5 +259,15 @@ export class RuletasAdminComponent implements OnInit {
       },
       error: (err) => this.notify.showHttpError(err.message),
     });
+  }
+
+  onBuscar(filtros: Partial<RuletaFiltro>) {
+    this.filtroRuleta = { ...this.filtroRuleta, ...filtros };
+    this.cargarRuletas(0, this.rows);
+  }
+
+  onLimpiar() {
+    this.filtroRuleta = {};
+    this.cargarRuletas(0, this.rows);
   }
 }

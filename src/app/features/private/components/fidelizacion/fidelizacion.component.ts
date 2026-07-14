@@ -4,12 +4,13 @@ import { TabsModule } from 'primeng/tabs';
 import { ReglasComponent } from './reglas/reglas.component';
 import { FIDELIZACION_ADMIN_TABS } from '@/app/core/config/tabs.config';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TarjetasComponent } from './tarjetas/tarjetas.component';
 
 @Component({
     selector: 'app-fidelizacion-admin',
     standalone: true,
-    imports: [CommonModule, TabsModule, ReglasComponent],
-    templateUrl: './fidelizacion.html',
+    imports: [CommonModule, TabsModule, ReglasComponent, TarjetasComponent],
+    templateUrl: './fidelizacion.html', 
 })
 export class FidelizacionAdminComponent {
     private route = inject(ActivatedRoute);

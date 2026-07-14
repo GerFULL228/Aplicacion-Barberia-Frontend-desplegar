@@ -1,0 +1,157 @@
+<div class="flex flex-col gap-5">
+
+    <app-stats [items]="statsCards"></app-stats>
+
+    <div *ngIf="cargando" class="flex justify-center py-20">
+
+        Cargando...
+
+    </div>
+
+    <ng-container *ngIf="!cargando">
+
+        <!-- Tarjetas -->
+
+        <div class="bg-ui-card rounded-2xl border border-ui-borderSoft p-5">
+
+            <h2 class="font-semibold text-lg mb-4">
+
+                Mis tarjetas
+
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+
+                <div *ngFor="let tarjeta of data.tarjetas" class="rounded-xl border border-ui-border p-4">
+
+                    <div class="flex justify-between">
+
+                        <div>
+
+                            <div class="font-semibold">
+
+                                {{ tarjeta.categoriaNombre }}
+
+                            </div>
+
+                            <div class="text-sm text-text-secondary">
+
+                                {{ tarjeta.progreso }} puntos
+
+                            </div>
+
+                        </div>
+
+                        <span class="text-sm font-bold text-brand-gold">
+
+                            {{ tarjeta.girosDisponibles }}
+
+                            giro(s)
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Movimientos -->
+
+        <div class="bg-ui-card rounded-2xl border border-ui-borderSoft p-5">
+
+            <h2 class="font-semibold text-lg mb-4">
+
+                Últimos movimientos
+
+            </h2>
+
+            <table class="w-full">
+
+                <tbody>
+
+                    <tr *ngFor="let m of data.movimientosRecientes">
+
+                        <td>{{m.descripcion}}</td>
+
+                        <td>{{m.puntos}}</td>
+
+                        <td>{{m.createdAt | date:'dd/MM HH:mm'}}</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- Giros -->
+
+        <div class="bg-ui-card rounded-2xl border border-ui-borderSoft p-5">
+
+            <h2 class="font-semibold text-lg mb-4">
+
+                Últimos giros
+
+            </h2>
+
+            <table class="w-full">
+
+                <tbody>
+
+                    <tr *ngFor="let g of data.ultimosGiros">
+
+                        <td>
+
+                            {{g.premio}}
+
+                        </td>
+
+                        <td>
+
+                            {{g.fecha | date:'dd/MM/yyyy HH:mm'}}
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- Recompensas -->
+
+        <div class="bg-ui-card rounded-2xl border border-ui-borderSoft p-5">
+
+            <h2 class="font-semibold text-lg mb-4">
+
+                Recompensas pendientes
+
+            </h2>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+                <div *ngFor="let r of data.recompensas" class="border rounded-xl p-3">
+
+                    <img [src]="r.itemImagen" class="w-full h-28 object-contain">
+
+                    <div class="mt-2 font-semibold">
+
+                        {{r.itemNombre}}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </ng-container>
+
+</div>

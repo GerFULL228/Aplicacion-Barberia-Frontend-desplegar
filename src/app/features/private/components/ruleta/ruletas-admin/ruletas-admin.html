@@ -26,7 +26,9 @@
                         <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                             <app-search-bar placeholder="Buscar ruleta" (search)="buscarRuletas($event)" />
                             <button pButton label="Nueva ruleta" icon="pi pi-plus" class="p-button-sm boton-primary" (click)="abrirCrearRuleta()"></button>
+                            
                         </div>
+                        <app-filtros [fields]="filtrosFields" [titulo]="texto" [text]="texto" [acordeon]="true" (buscar)="onBuscar($event)" (limpiar)="onLimpiar()"/>
                         <app-ruleta-admin-table [ruletas]="ruletas" [cargado]="cargadoRuletas" [totalRecords]="totalRuletas" [rows]="rows" [seleccionadaId]="ruletaSeleccionada?.ruletaId ?? null" (lazyLoad)="onLazyLoadRuletas($event)" (estado)="onCambiarEstadoRuleta($event)" (editar)="abrirEditarRuleta($event)" (eliminar)="eliminarRuleta($event)" (seleccionar)="seleccionarRuletaParaPremios($event)" />
                     </div>
                 </p-tabpanel>
@@ -48,6 +50,7 @@
                             <h2 class="font-semibold text-brand-white">Premios de "{{ ruletaSeleccionada.nombre }}"</h2>
                             <button pButton label="Nuevo premio" icon="pi pi-plus" class="p-button-sm boton-primary" (click)="abrirCrearItem()"></button>
                         </div>
+                        <app-filtros [fields]="FILTROS_ITEM" [titulo]="texto" [text]="texto" [acordeon]="true" (buscar)="onBuscar($event)" (limpiar)="onLimpiar()"/>
                         <app-ruleta-item-table [items]="items" [cargado]="cargadoItems" [icono]="icono" (editar)="abrirEditarItem($event)" (eliminar)="eliminarItem($event)" (estado)="onCambiarEstadoItem($event)"/> 
                     </div>
                     }

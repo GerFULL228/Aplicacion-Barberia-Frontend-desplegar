@@ -12,16 +12,18 @@ import { FidelizacionReglaService } from '@/app/core/services/fidelizacion/regla
 import { FidelizacionReglaResponse, FidelizacionReglaRequest, FidelizacionReglaFiltro } from '@/app/core/models/fidelizacion/regla.model';
 import { Categoria, CategoriaTipo } from '@/app/core/models/catalogos/categorias.model';
 import { DialogHeaderComponent } from '@/app/shared/components/dialog-header/dialog-header.component';
+import { FILTROS_REGLA } from '@/app/core/config/filtros.config';
+import { FiltrosComponent } from '@/app/shared/components/filtros/filtros.component';
+import { buildCategoryTree } from '@/app/shared/utils/buildCategoryTree.component';
 
 @Component({
     standalone: true,
     selector: 'app-reglas',
-    imports: [ReglaFormComponent, ReglaTableComponent, DialogModule, ButtonModule, CommonModule, FormsModule, DialogHeaderComponent],
+    imports: [ReglaFormComponent, ReglaTableComponent, DialogModule, ButtonModule, CommonModule, FormsModule, DialogHeaderComponent, FiltrosComponent],
     templateUrl: './reglas.html',
     styleUrl: './reglas.css',
 })
 export class ReglasComponent implements OnInit {
-
     private cd = inject(ChangeDetectorRef);
     private notify = inject(NotificationService);
     private reglaService = inject(FidelizacionReglaService);
@@ -31,6 +33,7 @@ export class ReglasComponent implements OnInit {
     filtro: Partial<FidelizacionReglaFiltro> = {};
     categorias: Categoria[] = [];
     reglas: FidelizacionReglaResponse[] = [];
+    filtrosFields = [...FILTROS_REGLA];
 
     rows = 20;
     cargado = false;
@@ -38,6 +41,7 @@ export class ReglasComponent implements OnInit {
     resetFormTrigger = 0;
     mostrarFormulario = false;
     icono = 'pi-percentage';
+    texto = 'Reglas de puntos';
 
     ngOnInit(): void {
         this.cargarCategorias();
@@ -110,7 +114,7 @@ export class ReglasComponent implements OnInit {
         if (!regla) return;
         const estadoAnterior = regla.activo;
         regla.activo = event.activo;
-        this.reglaService.actualizarParcial(event.id, {campo: 'activo',valor: event.activo}).subscribe({
+        this.reglaService.actualizarParcial(event.id, { campo: 'activo', valor: event.activo }).subscribe({
             next: (resp) => {
                 Object.assign(regla, resp.data);
                 this.notify.showSuccess(resp.message);
@@ -126,6 +130,8 @@ export class ReglasComponent implements OnInit {
         this.categoriaService.obtenerCategoriasPorTipo(CategoriaTipo.SERVICIO).subscribe({
             next: (resp) => {
                 this.categorias = resp.data.content;
+                const nodos = buildCategoryTree(this.categorias);
+                this.filtrosFields = this.filtrosFields.map(field => field.key === 'categoriaId' ? { ...field, treeOptions: nodos } : field);
                 this.cd.detectChanges();
             },
             error: (err) => this.notify.showHttpError(err.message),
@@ -134,5 +140,19 @@ export class ReglasComponent implements OnInit {
 
     onDialogHide() {
         this.reglaSeleccionada = null;
+    }
+
+    onBuscar(filtros: Partial<FidelizacionReglaFiltro>) {
+        if (filtros.categoriaId && typeof filtros.categoriaId === 'object') {
+            const nodo = filtros.categoriaId as any;
+            filtros.categoriaId = nodo.key ?? nodo.data?.id ?? undefined;
+        }
+        this.filtro = { ...this.filtro, ...filtros };
+        this.cargarReglas(0, this.rows);
+    }
+
+    onLimpiar() {
+        this.filtro = {};
+        this.cargarReglas(0, this.rows);
     }
 }

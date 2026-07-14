@@ -4,13 +4,17 @@ import { CategoriaFiltro } from "../models/catalogos/categorias.model";
 import { ProductoFiltro } from "../models/catalogos/productos.model";
 import { ServicioFiltro } from "../models/catalogos/servicios.model";
 import { FilterField } from "../models/common/filtro.model";
-import { BOOLEAN_FILTERS, CATEGORIA_OPTIONS, CAUSA_RECLAMO_OPTIONS, ESTADO_RECLAMO_OPTIONS, TIPO_ALCANCE_FIDELIZACION_OPTIONS, TIPO_PROBLEMA_OPTIONS, TIPO_RECLAMACION_OPTIONS, TIPO_RULETA_OPTIONS } from "../models/common/select.option.model";
+import { BOOLEAN_FILTERS, CATEGORIA_OPTIONS, CAUSA_RECLAMO_OPTIONS, ESTADO_RECLAMO_OPTIONS, ESTADO_RECOMPENSA_OPTIONS, ORIGEN_MOVIMIENTO_OPTIONS, TIPO_ALCANCE_FIDELIZACION_OPTIONS, TIPO_PREMIO_OPTIONS, TIPO_PROBLEMA_OPTIONS, TIPO_RECLAMACION_OPTIONS, TIPO_RULETA_OPTIONS } from "../models/common/select.option.model";
 import { ConfiguracionFiltro } from "../models/ruleta/ruleta-configuracion.model";
 import { FidelizacionReglaFiltro } from "../models/fidelizacion/regla.model";
 import { ReclamoFiltro } from "../models/operaciones/reclamos-model/reclamo.filtro.model";
 import { RuletaFiltro } from "../models/ruleta/ruleta.model";
 import { VentaFiltro } from "../models/ventas/venta.model";
 import { FidelizacionTarjetaFiltro } from "../models/fidelizacion/tarjeta.model";
+import { RuletaItemFiltro } from "../models/ruleta/ruleta-item.model";
+import { MovimientoFiltro } from "../models/fidelizacion/movimiento.model";
+import { GiroFiltro } from "../models/ruleta/giro.model";
+import { RecompensaFiltro } from "../models/ruleta/recompensa.model";
 
 export const FILTROS_CATEGORIA: FilterField<CategoriaFiltro>[] = [
     { key: 'nombre', label: 'Nombre', type: 'text', placeholder: 'Buscar categoría' },
@@ -90,11 +94,11 @@ export const FILTROS_VENTA: FilterField<VentaFiltro>[] = [
 export const FILTROS_CONFIGURACION: FilterField<ConfiguracionFiltro>[] = [
     { key: 'activa', label: 'Activa', type: 'select', options: BOOLEAN_FILTERS.activo, placeholder: 'Seleccione estado' },
     { key: 'categoriaId', label: 'Categoría', type: 'treeselect', placeholder: 'Seleccione categoría', treeSelectionMode: 'single' },
-    { key: 'ruletaId', label: 'Ruleta', type: 'select', placeholder: 'Seleccione ruleta', options: [] },
+    // { key: 'ruletaId', label: 'Ruleta', type: 'select', placeholder: 'Seleccione ruleta', options: [] },
     { key: 'categoriaNombre', label: 'Nombre de categoría', type: 'text', placeholder: 'Buscar por nombre de categoría' },
     { key: 'ruletaNombre', label: 'Nombre de ruleta', type: 'text', placeholder: 'Buscar por nombre de ruleta' },
-    { key: 'metaDesde', label: 'Meta desde', type: 'number', placeholder: 'Ingrese meta mínima' },
-    { key: 'metaHasta', label: 'Meta hasta', type: 'number', placeholder: 'Ingrese meta máxima' },
+    { key: 'metaDesde', label: 'Meta desde', type: 'date', placeholder: 'Desde' },
+    { key: 'metaHasta', label: 'Meta hasta', type: 'date', placeholder: 'Hasta', endOfDay: true },
 ]
 
 export const FILTROS_RULETA: FilterField<RuletaFiltro>[] = [
@@ -102,6 +106,13 @@ export const FILTROS_RULETA: FilterField<RuletaFiltro>[] = [
     { key: 'tipo', label: 'Tipo', type: 'select', options: TIPO_RULETA_OPTIONS, placeholder: 'Seleccione tipo' },
     { key: 'activa', label: 'Activa', type: 'select', options: BOOLEAN_FILTERS.activo, placeholder: 'Seleccione estado' },
 ];
+
+export const FILTROS_ITEM: FilterField<RuletaItemFiltro>[] = [
+    // { key: 'ruletaId', label: 'Ruleta', type: 'select', placeholder: 'Seleccione ruleta', options: [] },
+    { key: 'nombre', label: 'Nombre', type: 'text', placeholder: 'Buscar item' },
+    { key: 'tipoPremio', label: 'Tipo de premio', type: 'select', options: TIPO_PREMIO_OPTIONS, placeholder: 'Seleccione tipo' },
+    { key: 'activo', label: 'Activo', type: 'select', options: BOOLEAN_FILTERS.activo, placeholder: 'Seleccione estado' },
+]
 
 export const FILTROS_REGLA: FilterField<FidelizacionReglaFiltro>[] = [
     { key: 'categoriaId', label: 'Categoría', type: 'treeselect', placeholder: 'Seleccione categoría', treeSelectionMode: 'single' },
@@ -111,10 +122,29 @@ export const FILTROS_REGLA: FilterField<FidelizacionReglaFiltro>[] = [
 
 export const FILTROS_TARJETA: FilterField<FidelizacionTarjetaFiltro>[] = [
     { key: 'clienteId', label: 'Cliente', type: 'select', placeholder: 'Seleccione cliente', options: [] },
-    { key: 'categoriaId', label: 'Categoría', type: 'treeselect', placeholder: 'Seleccione categoría', treeSelectionMode: 'single' },
+    // { key: 'categoriaId', label: 'Categoría', type: 'treeselect', placeholder: 'Seleccione categoría', treeSelectionMode: 'single' },
     { key: 'activo', label: 'Activo', type: 'select', options: BOOLEAN_FILTERS.activo, placeholder: 'Seleccione estado' },
     { key: 'cicloActivo', label: 'Ciclo activo', type: 'select', options: BOOLEAN_FILTERS.activo, placeholder: 'Seleccione estado' },
 ];
-    
 
+export const FILTROS_MOVIMIENTO: FilterField<MovimientoFiltro>[] = [
+    { key: 'clienteId', label: 'Cliente', type: 'select', placeholder: 'Seleccione cliente', options: [] },
+    { key: 'tarjetaId', label: 'Tarjeta', type: 'select', placeholder: 'Seleccione tarjeta', options: [] },
+    { key: 'origen', label: 'Origen', type: 'select', options: ORIGEN_MOVIMIENTO_OPTIONS, placeholder: 'Seleccione origen' },
+    { key: 'fechaInicio', label: 'Fecha de inicio', type: 'date', placeholder: 'Desde' },
+    { key: 'fechaFin', label: 'Fecha de fin', type: 'date', placeholder: 'Hasta', endOfDay: true }
+]
 
+export const FILTROS_GIRO: FilterField<GiroFiltro>[] = [
+    { key: 'clienteId', label: 'Cliente', type: 'select', placeholder: 'Seleccione cliente', options: [] },
+    { key: 'tarjetaId', label: 'Tarjeta', type: 'select', placeholder: 'Seleccione tarjeta', options: [] },
+    { key: 'ruletaId', label: 'Ruleta', type: 'select', placeholder: 'Seleccione ruleta', options: [] },
+    { key: 'fechaInicio', label: 'Fecha de inicio', type: 'date', placeholder: 'Desde' },
+    { key: 'fechaFin', label: 'Fecha de fin', type: 'date', placeholder: 'Hasta', endOfDay: true }
+]   
+
+export const FILTROS_RECOMPENSA: FilterField<RecompensaFiltro>[] = [
+    { key: 'clienteId', label: 'Cliente', type: 'select', placeholder: 'Seleccione cliente', options: [] },
+    { key: 'estado', label: 'Estado Recompensa', type: 'select', options: ESTADO_RECOMPENSA_OPTIONS, placeholder: 'Seleccione estado' },
+    { key: 'itemId', label: 'Item', type: 'select', placeholder: 'Seleccione item', options: [] },
+]

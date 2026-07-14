@@ -9,7 +9,13 @@ export const RULETA_TABS: RuletaTab[] = [
 ];
 
 export const FIDELIZACION_ADMIN_TABS = [
-    // { label: 'Configuraciones', value: 'configuracion', icon: 'pi pi-cog' },
     { label: 'Reglas', value: 'reglas', icon: 'pi pi-list-check' },
     { label: 'Tarjetas', value: 'tarjetas', icon: 'pi pi-id-card' }
 ];
+
+export const FIDELIZACION_SEGUIMIENTO_TABS = [
+    { label: 'Dashboard', value: 'dashboard', icon: 'pi pi-chart-bar' },
+    { label: 'Movimientos', value: 'movimientos', icon: 'pi pi-list' },
+    { label: 'Giros', value: 'giros', icon: 'pi pi-refresh' },
+    { label: 'Recompensas', value: 'recompensas', icon: 'pi pi-gift' }
+]

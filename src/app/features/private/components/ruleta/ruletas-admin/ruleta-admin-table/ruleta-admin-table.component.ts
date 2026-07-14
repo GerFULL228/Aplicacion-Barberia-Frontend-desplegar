@@ -7,7 +7,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { ConfirmPopoverComponent } from '@/app/shared/components/confirm-popover/confirm-popover.component';
 import { StatusBadgeComponent } from '@/app/shared/components/status-badge/status-badge.component';
-import { RuletaResponse } from '@/app/core/models/ruleta/ruleta.model';
+import { RuletaFiltro, RuletaResponse } from '@/app/core/models/ruleta/ruleta.model';
 
 @Component({
   selector: 'app-ruleta-admin-table',
@@ -29,6 +29,7 @@ export class RuletaAdminTableComponent {
   @Input() totalRecords = 0;
   @Input() rows = 20;
 
+  filtro: Partial<RuletaFiltro> = {};
   mostrarConfirmacion = false;
   ruletaAEliminar: RuletaResponse | null = null;
 
@@ -56,4 +57,5 @@ export class RuletaAdminTableComponent {
   get mensajeConfirmacion(): string {
     return this.ruletaAEliminar ? `¿Seguro que deseas eliminar la ruleta "${this.ruletaAEliminar.nombre}"?` : '';
   }
+
 }
