@@ -41,6 +41,7 @@ export const routes: Routes = [
       },
       {
         path: 'operaciones', children: [
+          { path: 'pos', loadComponent: () => import('./features/private/components/operaciones/ventas/pos/pos.component').then(m => m.PosComponent) }, 
           { path: 'ventas', loadComponent: () => import('./features/private/components/operaciones/ventas/ventas.component').then(m => m.VentasComponent) },
           { path: 'reservas', loadComponent: () => import('./features/private/components/operaciones/reservas/reserva-list/reserva-list').then(m => m.ReservaList) },
           { path: 'reservas/nueva', loadComponent: () => import('./features/private/components/operaciones/reservas/reserva-create/create-reserva/create-reserva').then(m => m.CreateReserva) },
@@ -53,19 +54,8 @@ export const routes: Routes = [
       {
         path: 'sueldos',
         children: [
-          {
-            path: '',
-            loadComponent: () =>
-              import('./features/private/components/sueldos/sueldos')
-                .then(m => m.Sueldos)
-          },
-           {
-            path: ':id',
-            loadComponent: () =>
-              import('./features/private/components/sueldos/mi-sueldo-analisis/mi-sueldo-analisis')
-                .then(m => m.MiSueldoAnalisis)
-          }
-         
+          { path: '', loadComponent: () => import('./features/private/components/sueldos/sueldos').then(m => m.Sueldos) },
+          { path: ':id', loadComponent: () => import('./features/private/components/sueldos/mi-sueldo-analisis/mi-sueldo-analisis').then(m => m.MiSueldoAnalisis) }
         ]
       },
       {
@@ -81,30 +71,23 @@ export const routes: Routes = [
         ]
       },
       {
+        path: 'fidelizacion', children: [
+          { path: 'seguimiento', loadComponent: () => import('./features/private/components/fidelizacion/seguimiento/seguimiento.component').then(m => m.SeguimientoComponent) },
+          { path: 'reglas', loadComponent: () => import('./features/private/components/fidelizacion/fidelizacion.component').then(m => m.FidelizacionAdminComponent) },
+          { path: 'ruletas', loadComponent: () => import('./features/private/components/ruleta/ruletas-admin/ruletas-admin.component').then(m => m.RuletasAdminComponent) }
+        ]
+      },
+
+      {
         path: 'sistema', children: [
           { path: 'configuracion', loadComponent: () => import('./features/private/components/sistema/configuracion').then(m => m.Configuracion) },
         ]
       },
       {
         path: 'analisis', children: [
-          {
-            path: 'metricas',
-            loadComponent: () =>
-              import('./features/private/components/analisis/metricas/metricas')
-                .then(m => m.MetricasComponent),
-          },
-          {
-            path: 'reportes',
-            loadComponent: () =>
-              import('./features/private/components/analisis/reportes/reportes')
-                .then(m => m.ReportesComponent),
-          },
-          {
-  path: 'predicciones',
-  loadComponent: () =>
-    import('./features/private/components/analisis/predicciones/predicciones')
-      .then(m => m.Predicciones),
-},
+          { path: 'metricas', loadComponent: () => import('./features/private/components/analisis/metricas/metricas').then(m => m.MetricasComponent), },
+          { path: 'reportes', loadComponent: () => import('./features/private/components/analisis/reportes/reportes').then(m => m.ReportesComponent), },
+          { path: 'predicciones', loadComponent: () => import('./features/private/components/analisis/predicciones/predicciones').then(m => m.Predicciones), },
           { path: '', redirectTo: 'metricas', pathMatch: 'full' },
         ]
       },
@@ -122,6 +105,7 @@ export const routes: Routes = [
       { path: 'cortes', loadComponent: () => import('./features/private/components/cortes/cortes').then(m => m.CortesComponent) },
       {
         path: 'operaciones', children: [
+          { path: 'pos', loadComponent: () => import('./features/private/components/operaciones/ventas/pos/pos.component').then(m => m.PosComponent) }, 
           { path: 'ventas', loadComponent: () => import('./features/private/components/operaciones/ventas/ventas.component').then(m => m.VentasComponent) },
           { path: 'reservas', loadComponent: () => import('./features/private/components/operaciones/reservas/reserva-list/reserva-list').then(m => m.ReservaList) },
           { path: 'pagos', loadComponent: () => import('./features/private/components/operaciones/pagos/pagos.component').then(m => m.PagosComponent) },
@@ -167,7 +151,13 @@ export const routes: Routes = [
           { path: 'reservas/mis-reservas', loadComponent: () => import('./features/private/pages/mis-reservas/mis-reservas').then(m => m.MisReservasComponent) },
           { path: 'ia/analisis-facial', loadComponent: () => import('./features/private/pages/reconocimiento-facial/reconocimiento-facial').then(m => m.ReconocimientoFacial) },
           { path: 'historial', loadComponent: () => import('./features/private/pages/historial/historial.component').then(m => m.ClienteHistorialComponent) },
-          { path: 'rewards', loadComponent: () => import('./features/private/pages/rewards/rewards.component').then(m => m.RewardsComponent) },
+
+          {
+            path: 'fidelizacion', children: [
+              { path: '', loadComponent: () => import('./features/private/pages/fidelizacion/fidelizacion.component').then(m => m.FidelizacionComponent) }
+            ]
+          },
+
           { path: 'perfil', loadComponent: () => import('./features/private/pages/perfil/perfil.component').then(m => m.PerfilComponent) },
           {path: 'checkout/:reservaId', loadComponent: () => import('./features/private/pages/checkout/checkout').then(m => m.CheckoutComponent)},
           { path: '**', loadComponent: () => import('./shared/components/error404/error404.component').then(m => m.Error404Component) }

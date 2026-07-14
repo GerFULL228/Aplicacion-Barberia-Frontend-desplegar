@@ -113,10 +113,19 @@
   margin-right: .5rem;
 }
 
-:host ::ng-deep .custom-panelmenu .p-panelmenu-item-link {
-  width: 100%;
-  display: flex;
-  justify-content: center;
+/* Items principales */
+:host ::ng-deep .custom-panelmenu > .p-panelmenu-panel 
+.p-panelmenu-header-link {
+  justify-content: flex-start;
+}
+
+
+/* Subitems dentro de un panel */
+:host ::ng-deep .custom-panelmenu 
+.p-panelmenu-content .p-panelmenu-item-link {
+  margin-left: 1rem !important;
+  width: calc(100% - 1rem);
+  justify-content: flex-start;
 }
 
 :host ::ng-deep .custom-panelmenu .p-panelmenu-item-content,

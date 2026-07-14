@@ -8,10 +8,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { TextareaModule } from 'primeng/textarea';
 import { ReclamoResponse, ReclamoSolucionRequest } from '@/app/core/models/operaciones/reclamos-model/reclamo.model';
 import { campoInvalido, marcarFormulario } from '@/app/shared/utils/form-utils.component';
-import {
-  ESTADO_RECLAMO_OPTIONS,
-  SOLUCION_RECLAMO_OPTIONS,
-} from '@/app/core/models/common/select.option.model';
+import { ESTADO_RECLAMO_OPTIONS,SOLUCION_RECLAMO_OPTIONS,} from '@/app/core/models/common/select.option.model';
 import { SolesPipe } from '@/app/shared/pipes/moneda.pipe';
 
 @Component({
@@ -55,6 +52,7 @@ export class ReclamoActualizarComponent implements OnInit, OnChanges {
       solucionReclamo: [null],
       notasInternas:   [''],
       montoCompensado: [null, Validators.min(0)],
+      detalleSolucion: [''],
     });
   }
 
@@ -65,6 +63,7 @@ export class ReclamoActualizarComponent implements OnInit, OnChanges {
       solucionReclamo: this.reclamo.solucionReclamo ?? null,
       notasInternas:   this.reclamo.notasInternas   ?? '',
       montoCompensado: this.reclamo.montoCompensado ?? null,
+      detalleSolucion: this.reclamo.detalleSolucion ?? '',
     });
     this.actualizarForm.markAsPristine();
     this.actualizarForm.markAsUntouched();
@@ -81,6 +80,7 @@ export class ReclamoActualizarComponent implements OnInit, OnChanges {
       solucionReclamo: v.solucionReclamo ?? undefined,
       notasInternas:   v.notasInternas   || undefined,
       montoCompensado: v.montoCompensado ?? undefined,
+      detalleSolucion: v.detalleSolucion || undefined,
     };
     this.guardar.emit(request);
   }
