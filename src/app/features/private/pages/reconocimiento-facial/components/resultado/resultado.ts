@@ -12,6 +12,8 @@ import { CommonModule, KeyValuePipe } from '@angular/common';
 import { AnalisisResponse, CorteRecomendado } from '@core/models/reconocimiento-facial/Ia.model';
 import { CorteCard } from '../corte-card/corte-card';
 import { IaService } from '@core/services/reconocimiento-facial/reconocimiento-facial.service';
+import { ServicioService } from '@core/services/catalogos/servicio.service';
+import { Servicio } from '@core/models/catalogos/servicios.model';
 
 @Component({
   selector: 'app-resultado',
@@ -54,7 +56,13 @@ export class Resultado implements AfterViewInit, OnInit {
 
   cargandoCortes = false;
 
-  constructor(private iaService: IaService) { }
+  // ── Mapa nombre-servicio para resolver la imagen cuando el corte no trae imagen_url ──
+  private mapaServiciosPorNombre = new Map<string, Servicio>();
+
+  constructor(
+    private iaService: IaService,
+    private servicioService: ServicioService
+  ) { }
 
   ngOnInit(): void {
 
@@ -69,6 +77,8 @@ export class Resultado implements AfterViewInit, OnInit {
 
     this.totalPaginas = Math.max(1, Math.ceil(this.totalCortes / this.porPagina));
 
+    this.cargarCatalogoServicios();
+
   }
 
   ngAfterViewInit(): void {
@@ -77,6 +87,36 @@ export class Resultado implements AfterViewInit, OnInit {
       this.dibujarGraficoRostro();
     });
 
+  }
+
+  private cargarCatalogoServicios(): void {
+    this.servicioService.obtenerServicioPublicos({ size: 1000 }).subscribe({
+      next: (resp) => {
+        const servicios = resp.data.content ?? [];
+        this.mapaServiciosPorNombre = new Map(
+          servicios.map(s => [this.normalizarNombre(s.nombre), s])
+        );
+        this.resolverImagenesCortes(this.cortesPagina);
+      },
+      error: () => {
+        // Si falla, los cortes se quedan sin imagen (fallback del <img>)
+      }
+    });
+  }
+
+  private normalizarNombre(nombre: string | undefined | null): string {
+    return (nombre ?? '').trim().toLowerCase();
+  }
+
+  private resolverImagenesCortes(cortes: CorteRecomendado[]): void {
+    cortes.forEach(corte => {
+      if (!corte.imagen_url) {
+        const servicio = this.mapaServiciosPorNombre.get(this.normalizarNombre(corte.nombre));
+        if (servicio?.urlsMultimedia?.length) {
+          corte.imagen_url = servicio.urlsMultimedia[0];
+        }
+      }
+    });
   }
 
   irAPagina(pagina: number): void {
@@ -90,6 +130,7 @@ export class Resultado implements AfterViewInit, OnInit {
 
       this.paginaActual = 1;
       this.cortesPagina = this.resultado.cortes_recomendados;
+      this.resolverImagenesCortes(this.cortesPagina);
       return;
 
     }
@@ -102,6 +143,7 @@ export class Resultado implements AfterViewInit, OnInit {
         next: (res) => {
 
           this.cortesPagina = res.cortes_recomendados;
+          this.resolverImagenesCortes(this.cortesPagina);
           this.totalCortes = res.total_cortes;
           this.totalPaginas = res.total_paginas;
           this.paginaActual = res.pagina;
