@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ApiResponse } from '../../models/common/index.model';
-import { environment } from '@/environments/environment.development';
+import { environment } from '@/environments/environment';
 import { Venta } from '../../models/ventas/venta.model';
 import { VentaFiltro } from '../../models/ventas/venta.model';
 import { buildHttpParamsComponent } from '@/app/shared/utils/build-http-params.component'; 
@@ -19,6 +19,10 @@ export class VentaService {
       this.apiUrl,
       { params: buildHttpParamsComponent(filtros) }
     );
+  }
+
+  obtenerMisVentas(barberoId: number) {
+    return this.http.get<ApiResponse<Venta[]>>(`${this.apiUrl}/barbero/${barberoId}`);
   }
 
   buscarVentaPorId(id: number) {

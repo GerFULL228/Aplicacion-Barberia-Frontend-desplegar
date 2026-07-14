@@ -41,6 +41,7 @@ export const routes: Routes = [
       },
       {
         path: 'operaciones', children: [
+          { path: 'pos', loadComponent: () => import('./features/private/components/operaciones/ventas/pos/pos.component').then(m => m.PosComponent) }, 
           { path: 'ventas', loadComponent: () => import('./features/private/components/operaciones/ventas/ventas.component').then(m => m.VentasComponent) },
           { path: 'reservas', loadComponent: () => import('./features/private/components/operaciones/reservas/reserva-list/reserva-list').then(m => m.ReservaList) },
           { path: 'reservas/nueva', loadComponent: () => import('./features/private/components/operaciones/reservas/reserva-create/create-reserva/create-reserva').then(m => m.CreateReserva) },
@@ -101,8 +102,10 @@ export const routes: Routes = [
       { path: '', redirectTo: 'resumen', pathMatch: 'full' },
       { path: 'resumen', loadComponent: () => import('./features/private/components/resumen/resumen-barbero').then(m => m.ResumenBarbero) },
       { path: 'reservas', loadComponent: () => import('./features/private/components/reserva/reserva').then(m => m.ReservaComponent) },
+      { path: 'cortes', loadComponent: () => import('./features/private/components/cortes/cortes').then(m => m.CortesComponent) },
       {
         path: 'operaciones', children: [
+          { path: 'pos', loadComponent: () => import('./features/private/components/operaciones/ventas/pos/pos.component').then(m => m.PosComponent) }, 
           { path: 'ventas', loadComponent: () => import('./features/private/components/operaciones/ventas/ventas.component').then(m => m.VentasComponent) },
           { path: 'reservas', loadComponent: () => import('./features/private/components/operaciones/reservas/reserva-list/reserva-list').then(m => m.ReservaList) },
           { path: 'pagos', loadComponent: () => import('./features/private/components/operaciones/pagos/pagos.component').then(m => m.PagosComponent) },
@@ -156,6 +159,7 @@ export const routes: Routes = [
           },
 
           { path: 'perfil', loadComponent: () => import('./features/private/pages/perfil/perfil.component').then(m => m.PerfilComponent) },
+          {path: 'checkout/:reservaId', loadComponent: () => import('./features/private/pages/checkout/checkout').then(m => m.CheckoutComponent)},
           { path: '**', loadComponent: () => import('./shared/components/error404/error404.component').then(m => m.Error404Component) }
         ]
       },

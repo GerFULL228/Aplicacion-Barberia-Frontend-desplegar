@@ -3,15 +3,17 @@ import {
   Component,
   ElementRef,
   Input,
+  OnInit,
   ViewChild
 } from '@angular/core';
 
 import { CorteModal } from '../corte-modal/corte-modal';
-
 import { CommonModule, KeyValuePipe } from '@angular/common';
-
-import { AnalisisResponse } from '@core/models/reconocimiento-facial/Ia.model';
+import { AnalisisResponse, CorteRecomendado } from '@core/models/reconocimiento-facial/Ia.model';
 import { CorteCard } from '../corte-card/corte-card';
+import { IaService } from '@core/services/reconocimiento-facial/reconocimiento-facial.service';
+import { ServicioService } from '@core/services/catalogos/servicio.service';
+import { Servicio } from '@core/models/catalogos/servicios.model';
 
 @Component({
   selector: 'app-resultado',
@@ -24,14 +26,12 @@ import { CorteCard } from '../corte-card/corte-card';
   templateUrl: './resultado.html',
   styleUrl: './resultado.css'
 })
-export class Resultado implements AfterViewInit {
+export class Resultado implements AfterViewInit, OnInit {
 
   @Input()
   fotoPreview = '';
 
   @Input() clienteId: number = 0;
-
-
 
   @ViewChild('overlayCanvas')
   overlayCanvas!: ElementRef<HTMLCanvasElement>;
@@ -42,12 +42,127 @@ export class Resultado implements AfterViewInit {
   @ViewChild('graficoCanvas')
   graficoCanvas!: ElementRef<HTMLCanvasElement>;
 
+  // ── Paginación de cortes recomendados ──────────────────────
+
+  cortesPagina: CorteRecomendado[] = [];
+
+  paginaActual = 1;
+
+  porPagina = 10;
+
+  totalCortes = 0;
+
+  totalPaginas = 1;
+
+  cargandoCortes = false;
+
+  // ── Mapa nombre-servicio para resolver la imagen cuando el corte no trae imagen_url ──
+  private mapaServiciosPorNombre = new Map<string, Servicio>();
+
+  constructor(
+    private iaService: IaService,
+    private servicioService: ServicioService
+  ) { }
+
+  ngOnInit(): void {
+
+    // La página 1 ya viene incluida en la respuesta de /analizar,
+    // así que la usamos directo sin volver a pegarle al backend.
+
+    this.cortesPagina = this.resultado.cortes_recomendados ?? [];
+
+    this.totalCortes = this.resultado.total_cortes ?? this.cortesPagina.length;
+
+    this.porPagina = this.resultado.por_pagina ?? 10;
+
+    this.totalPaginas = Math.max(1, Math.ceil(this.totalCortes / this.porPagina));
+
+    this.cargarCatalogoServicios();
+
+  }
+
   ngAfterViewInit(): void {
 
     setTimeout(() => {
       this.dibujarGraficoRostro();
     });
 
+  }
+
+  private cargarCatalogoServicios(): void {
+    this.servicioService.obtenerServicioPublicos({ size: 1000 }).subscribe({
+      next: (resp) => {
+        const servicios = resp.data.content ?? [];
+        this.mapaServiciosPorNombre = new Map(
+          servicios.map(s => [this.normalizarNombre(s.nombre), s])
+        );
+        this.resolverImagenesCortes(this.cortesPagina);
+      },
+      error: () => {
+        // Si falla, los cortes se quedan sin imagen (fallback del <img>)
+      }
+    });
+  }
+
+  private normalizarNombre(nombre: string | undefined | null): string {
+    return (nombre ?? '').trim().toLowerCase();
+  }
+
+  private resolverImagenesCortes(cortes: CorteRecomendado[]): void {
+    cortes.forEach(corte => {
+      if (!corte.imagen_url) {
+        const servicio = this.mapaServiciosPorNombre.get(this.normalizarNombre(corte.nombre));
+        if (servicio?.urlsMultimedia?.length) {
+          corte.imagen_url = servicio.urlsMultimedia[0];
+        }
+      }
+    });
+  }
+
+  irAPagina(pagina: number): void {
+
+    if (pagina < 1 || pagina > this.totalPaginas || pagina === this.paginaActual) {
+      return;
+    }
+
+    // La página 1 ya la tenemos en memoria desde el análisis inicial
+    if (pagina === 1 && this.resultado.cortes_recomendados) {
+
+      this.paginaActual = 1;
+      this.cortesPagina = this.resultado.cortes_recomendados;
+      this.resolverImagenesCortes(this.cortesPagina);
+      return;
+
+    }
+
+    this.cargandoCortes = true;
+
+    this.iaService
+      .obtenerCortesRecomendados(this.clienteId, pagina, this.porPagina)
+      .subscribe({
+        next: (res) => {
+
+          this.cortesPagina = res.cortes_recomendados;
+          this.resolverImagenesCortes(this.cortesPagina);
+          this.totalCortes = res.total_cortes;
+          this.totalPaginas = res.total_paginas;
+          this.paginaActual = res.pagina;
+          this.cargandoCortes = false;
+
+        },
+        error: () => {
+          this.cargandoCortes = false;
+        }
+      });
+
+  }
+
+  paginaAnterior(): void {
+    this.irAPagina(this.paginaActual - 1);
+  }
+
+  paginaSiguiente(): void {
+    this.irAPagina(this.paginaActual + 1);
   }
 
   private dibujarGraficoRostro(): void {

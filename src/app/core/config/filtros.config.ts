@@ -15,6 +15,9 @@ import { RuletaItemFiltro } from "../models/ruleta/ruleta-item.model";
 import { MovimientoFiltro } from "../models/fidelizacion/movimiento.model";
 import { GiroFiltro } from "../models/ruleta/giro.model";
 import { RecompensaFiltro } from "../models/ruleta/recompensa.model";
+import { HistorialClienteFiltro } from "../models/operaciones/historial-cliente.model";
+import { HistorialBarberFiltro } from "../models/operaciones/historial-barbero.model";
+
 
 export const FILTROS_CATEGORIA: FilterField<CategoriaFiltro>[] = [
     { key: 'nombre', label: 'Nombre', type: 'text', placeholder: 'Buscar categoría' },
@@ -148,3 +151,49 @@ export const FILTROS_RECOMPENSA: FilterField<RecompensaFiltro>[] = [
     { key: 'estado', label: 'Estado Recompensa', type: 'select', options: ESTADO_RECOMPENSA_OPTIONS, placeholder: 'Seleccione estado' },
     { key: 'itemId', label: 'Item', type: 'select', placeholder: 'Seleccione item', options: [] },
 ]
+export const FILTROS_HISTORIAL: FilterField<HistorialClienteFiltro>[] = [
+    {
+        key: 'estado',
+        label: 'Estado',
+        type: 'select',
+        placeholder: 'Seleccione estado',
+        options: Object.values(EstadoReserva).map(e => ({
+            label: e,
+            value: e
+        }))
+    },
+    {
+        key: 'desde',
+        label: 'Desde',
+        type: 'date',
+        placeholder: 'Fecha inicio'
+    },
+    {
+        key: 'hasta',
+        label: 'Hasta',
+        type: 'date',
+        placeholder: 'Fecha fin',
+        endOfDay: true
+    }
+];
+export const FILTROS_HISTORIAL_BARBERO: FilterField<HistorialBarberFiltro>[] = [
+    {
+        key: 'clienteNombre',
+        label: 'Cliente',
+        type: 'text',
+        placeholder: 'Buscar por nombre del cliente'
+    },
+    {
+        key: 'desde',
+        label: 'Desde',
+        type: 'date',
+        placeholder: 'Fecha inicio'
+    },
+    {
+        key: 'hasta',
+        label: 'Hasta',
+        type: 'date',
+        placeholder: 'Fecha fin',
+        endOfDay: true
+    }
+];

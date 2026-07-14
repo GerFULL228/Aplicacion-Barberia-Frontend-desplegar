@@ -133,17 +133,56 @@
 <!-- ── Cortes recomendados (ancho completo abajo) ── -->
 <div class="cortes-container">
   <h2>Cortes recomendados</h2>
-  <div class="cortes-grid">          <!-- ← añade este wrapper -->
-    @for(corte of resultado.cortes_recomendados; track corte.id){
 
-  <app-corte-card
-    [corte]="corte"
-    [clienteId]="clienteId"
-    (ver)="abrirModal($event)">
-  </app-corte-card>
+  @if(cargandoCortes){
 
-}
-  </div>
+    <div class="cortes-loading">
+      <div class="spinner"></div>
+      <p>Cargando más cortes...</p>
+    </div>
+
+  } @else {
+
+    <div class="cortes-grid">
+      @for(corte of cortesPagina; track corte.id){
+
+        <app-corte-card
+          [corte]="corte"
+          [clienteId]="clienteId"
+          [fotoPreview]="fotoPreview"
+          (ver)="abrirModal($event)">
+        </app-corte-card>
+
+      }
+    </div>
+
+    <!-- Paginación -->
+    @if(totalPaginas > 1){
+      <div class="paginacion">
+
+        <button
+          class="btn-pag"
+          [disabled]="paginaActual === 1"
+          (click)="paginaAnterior()">
+          Anterior
+        </button>
+
+        <span class="pag-info">
+          Página {{ paginaActual }} de {{ totalPaginas }}
+        </span>
+
+        <button
+          class="btn-pag"
+          [disabled]="paginaActual === totalPaginas"
+          (click)="paginaSiguiente()">
+          Siguiente
+        </button>
+
+      </div>
+    }
+
+  }
+
 </div>
 
 @if(corteSeleccionado){
@@ -154,6 +193,3 @@
   </app-corte-modal>
 
 }
-
-<app-corte-modal [corte]="corteSeleccionado" (cerrar)="cerrarModal()">
-</app-corte-modal>
