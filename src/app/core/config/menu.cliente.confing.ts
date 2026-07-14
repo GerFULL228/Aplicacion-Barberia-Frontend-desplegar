@@ -20,7 +20,7 @@ export const CLIENTE_MENU = [
             },
             {
                 label: "Mis Reservas",
-                icon: "pi pi-clock",    
+                icon: "pi pi-clock",
                 routerLink: ["reservas/mis-reservas"],
                 permission: "RESERVA_READ_OWN"
             }
@@ -28,9 +28,9 @@ export const CLIENTE_MENU = [
     },
 
     {
-    label: "Análisis Facial",
-    icon: "pi pi-camera",
-    routerLink: ["ia/analisis-facial"],
+        label: "Análisis Facial",
+        icon: "pi pi-camera",
+        routerLink: ["ia/analisis-facial"],
     },
 
     {
@@ -43,8 +43,8 @@ export const CLIENTE_MENU = [
     {
         label: "Fidelización",
         icon: "pi pi-star",
-        routerLink: ["rewards"],
-        permission: "REWARD_READ"
+        routerLink: ["fidelizacion"],
+        permission: "FIDELIZACION_READ"
     },
 
     {

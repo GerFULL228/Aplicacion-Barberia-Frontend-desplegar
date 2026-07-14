@@ -8,7 +8,7 @@ export interface Servicio {
     descripcion?: string;
     publicado: boolean;
     estado: boolean;
-    urlsMultimedia?: string[];
+    urlsMultimedia: string[];
 }
 
 export interface ServicioRequest {

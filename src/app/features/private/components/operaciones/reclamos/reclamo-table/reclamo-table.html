@@ -24,19 +24,15 @@
                     <tr>    
                         <td class="px-4 py-2 whitespace-nowrap">
                             <div class="inline-flex items-center gap-2">
-                                <p-button type="button" [pRowToggler]="reclamo"
-                                    [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-                                    class="boton-expandir-tabla" />
+                                <p-button type="button" [pRowToggler]="reclamo" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" class="boton-expandir-tabla" />
                                 <span class="font-mono text-sm">{{ reclamo.numeroReclamo }}</span>
                             </div>
                         </td>
                 
-                        <!-- Fecha reclamo -->
-                        <td class="whitespace-nowrap text-center text-sm">
+                        <td class="whitespace-nowrap text-center text-sm text-brand-white">
                             {{ reclamo.fechaReclamo || '—' | date:'dd/MM/yyyy HH:mm'  }}
                         </td>
 
-                        <!-- Cliente -->
                         <td class="whitespace-nowrap text-center">
                             <div class="flex flex-col leading-tight">
                                 <span>{{ reclamo.nombreCliente }}</span>
@@ -46,17 +42,14 @@
                             </div>
                         </td>
 
-                        <!-- Tipo reclamación -->
                         <td class="whitespace-nowrap text-center">
                             <app-status-badge type="text" [value]="formatearTexto(reclamo.tipoReclamacion)" />
                         </td>
 
-                        <!-- Tipo problema -->
                         <td class="whitespace-nowrap text-center">
                             <app-status-badge type="text" [value]="formatearTexto(reclamo.tipoProblema)" />
                         </td>
-
-                        <!-- Monto reclamado -->
+                        
                         <td class="whitespace-nowrap text-center">
                             {{ reclamo.montoReclamado != null ? ((reclamo.montoReclamado | soles)) : '—' }}
                         </td>
@@ -65,12 +58,10 @@
                             <app-status-badge type="boolean" [value]="reclamo.esPublico" trueLabel='Público' falseLabel='Interno' />
                         </td>
 
-                        <!-- Estado -->
                         <td class="whitespace-nowrap text-center">
                             <app-status-badge type="text" [value]="formatearTexto(reclamo.estadoReclamo)" />
                         </td>
 
-                        <!-- Acciones -->
                         <td class="whitespace-nowrap text-center">
                             <div class="flex flex-row justify-center">
                                 <p-button icon="pi pi-pencil" class="boton-editar-tabla" (click)="actualizarReclamo(reclamo)" />
@@ -81,108 +72,70 @@
                     </tr>
                 </ng-template>
 
-                <!-- Fila expandida: descripción + notas internas -->
                 <ng-template #expandedrow let-reclamo>
                     <tr>
                         <td colspan="9">
-                            <div class="rounded-xl border border-default bg-neutral-primary p-6 space-y-6">
+                            <div class="rounded-xl border border-brand-gold-soft  bg-neutral-primary-lighter p-6 space-y-6">
 
-                                <!-- Resumen -->
                                 <div>
-                                    <h3 class="text-lg font-semibold mb-4">
-                                        Detalle del reclamo
-                                    </h3>
-
+                                    <h3 class="text-lg font-semibold mb-4">Detalle del reclamo</h3>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                                        <div class="rounded-lg border border-default p-4">
-                                            <span class="text-xs text-text-secondary uppercase">
-                                                Causa
-                                            </span>
-
+                                        <div class="rounded-lg border border-brand-gold-soft  bg-neutral-primary-lighter p-4">
+                                            <span class="text-xs text-text-secondary uppercase">Causa</span>
                                             <div class="mt-2">
                                                 @if (reclamo.causaReclamo) {
-                                                    <app-status-badge
-                                                        type="text"
-                                                        [value]="formatearTexto(reclamo.causaReclamo)" />
+                                                    <app-status-badge type="text" [value]="formatearTexto(reclamo.causaReclamo)" />
                                                 } @else {
-                                                    <span class="italic text-gray-500">
-                                                        Sin causa especificada
-                                                    </span>
+                                                    <span class="italic text-gray-500">Sin causa especificada</span>
                                                 }
                                             </div>
                                         </div>
 
-                                        <div class="rounded-lg border border-default p-4">
-                                            <span class="text-xs text-text-secondary uppercase">
-                                                Estado
-                                            </span>
-
+                                        <div class="rounded-lg border border-brand-gold-soft  bg-neutral-primary-lighter p-4">
+                                            <span class="text-xs text-text-secondary uppercase">Estado</span>
                                             <div class="mt-2">
-                                                <app-status-badge
-                                                    type="text"
-                                                    [value]="formatearTexto(reclamo.estadoReclamo)" />
+                                                <app-status-badge type="text" [value]="formatearTexto(reclamo.estadoReclamo)" />
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
 
-                                <!-- Descripción -->
-                                <div class="rounded-xl border border-default p-5">
+                                <div class="rounded-xl border border-brand-gold-soft  bg-neutral-primary-lighter p-5">
                                     <div class="flex items-center gap-2 mb-3">
                                         <i class="pi pi-file-edit"></i>
                                         <h4 class="font-semibold">Descripción</h4>
                                     </div>
 
                                     @if (reclamo.descripcion) {
-                                        <p class="leading-relaxed">
-                                            {{ reclamo.descripcion }}
-                                        </p>
+                                        <p class="leading-relaxed">{{ reclamo.descripcion }}</p>
                                     } @else {
-                                        <p class="italic text-gray-500">
-                                            Sin descripción.
-                                        </p>
+                                        <p class="italic text-gray-500">Sin descripción.</p>
                                     }
                                 </div>
 
-                                <!-- Notas internas -->
-                                <div class="rounded-xl border border-default p-5">
+                                <div class="rounded-xl border border-brand-gold-soft  bg-neutral-primary-lighter p-5">
                                     <div class="flex items-center gap-2 mb-3">
                                         <i class="pi pi-lock"></i>
-                                        <h4 class="font-semibold">
-                                            Notas internas
-                                        </h4>
+                                        <h4 class="font-semibold">Notas internas</h4>
                                     </div>
 
                                     @if (reclamo.notasInternas) {
-                                        <p class="leading-relaxed">
-                                            {{ reclamo.notasInternas }}
-                                        </p>
+                                        <p class="leading-relaxed">{{ reclamo.notasInternas }}</p>
                                     } @else {
-                                        <p class="italic text-gray-500">
-                                            Sin notas internas.
-                                        </p>
+                                        <p class="italic text-gray-500">Sin notas internas.</p>
                                     }
                                 </div>
 
-                                <!-- detalle solucion -->
-                                <div class="rounded-xl border border-default p-5">
+                                <div class="rounded-xl border border-brand-gold-soft  bg-neutral-primary-lighter p-5">
                                     <div class="flex items-center gap-2 mb-3">
                                         <i class="pi pi-lock"></i>
-                                        <h4 class="font-semibold">
-                                            Detalle Solucion 
-                                        </h4>
+                                        <h4 class="font-semibold">Detalle Solucion </h4>
                                     </div>
 
                                     @if (reclamo.detalleSolucion) {
-                                        <p class="leading-relaxed">
-                                            {{ reclamo.detalleSolucion }}
-                                        </p>
+                                        <p class="leading-relaxed">{{ reclamo.detalleSolucion }}</p>
                                     } @else {
-                                        <p class="italic text-gray-500">
-                                            Sin detalle de solución.
-                                        </p>
+                                        <p class="italic text-gray-500">Sin detalle de solución.</p>
                                     }
                                 </div>
 
@@ -204,7 +157,7 @@
             </ng-template>
             <ng-template #thumbnail let-item>
                 @if (item) {
-                <img [src]="item?.thumbnailImageSrc" style="width:70px; height:50px; object-fit:cover" />
+                    <img [src]="item?.thumbnailImageSrc" style="width:70px; height:50px; object-fit:cover" />
                 }
             </ng-template>
         </p-galleria>

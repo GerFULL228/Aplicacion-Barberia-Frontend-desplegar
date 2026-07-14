@@ -10,5 +10,5 @@
   },
   "include": [
     "src/**/*.ts"
-  ]
+, "src/app/features/private/pages/fidelizacion/mi-ruleta/mi-ruleta.component.ts"  ]
 }
