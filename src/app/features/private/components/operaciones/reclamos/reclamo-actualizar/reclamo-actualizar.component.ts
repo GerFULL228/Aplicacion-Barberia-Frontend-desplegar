@@ -8,10 +8,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { TextareaModule } from 'primeng/textarea';
 import { ReclamoResponse, ReclamoSolucionRequest } from '@/app/core/models/operaciones/reclamos-model/reclamo.model';
 import { campoInvalido, marcarFormulario } from '@/app/shared/utils/form-utils.component';
-import {
-  ESTADO_RECLAMO_OPTIONS,
-  SOLUCION_RECLAMO_OPTIONS,
-} from '@/app/core/models/common/select.option.model';
+import { ESTADO_RECLAMO_OPTIONS,SOLUCION_RECLAMO_OPTIONS,} from '@/app/core/models/common/select.option.model';
 import { SolesPipe } from '@/app/shared/pipes/moneda.pipe';
 
 @Component({

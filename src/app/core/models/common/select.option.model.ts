@@ -1,5 +1,10 @@
 import { CategoriaTipo } from "../catalogos/categorias.model";
+import { Origen } from "../fidelizacion/movimiento.model";
+import { TipoAlcanceFidelizacion } from "../fidelizacion/regla.model";
 import { CausaReclamo, EstadoReclamo, SolucionReclamo, TipoProblema, TipoReclamacion } from "../operaciones/reclamos-model/reclamo.enum.model";
+import { EstadoRecompensa } from "../ruleta/recompensa.model";
+import { TipoPremio } from "../ruleta/ruleta-item.model";
+import { TipoRuleta } from "../ruleta/ruleta.model";
 
 export interface SelectOption<T = string | number> {
     label: string;
@@ -40,10 +45,10 @@ export const PRODUCTO_BOOLEAN_FILTERS = {
 
 export const RECLAMO_BOOLEAN_FILTERS = {
     publico: BOOLEAN_FILTERS.publico,
-}   
+}
 
 //Ejemplo de filtro específico para reclamos, se pueden crear otros para cada módulo o usar genéricos
-export const  CATEGORIA_OPTIONS: SelectOption<CategoriaTipo>[] = [
+export const CATEGORIA_OPTIONS: SelectOption<CategoriaTipo>[] = [
     { value: CategoriaTipo.PRODUCTO, label: 'Producto' },
     { value: CategoriaTipo.SERVICIO, label: 'Servicio' }
 ];
@@ -109,4 +114,38 @@ export const TIPO_DOCUMENTO_OPTIONS: SelectOption<string>[] = [
     { label: 'Carné de Extranjería', value: 'CE' },
     { label: 'Pasaporte', value: 'PASAPORTE' },
     // { label: 'RUC', value: 'RUC' },
+];
+
+export const TIPO_RULETA_OPTIONS: SelectOption<string>[] = [
+    { label: 'General', value: TipoRuleta.GENERAL },
+    { label: 'Fidelización', value: TipoRuleta.FIDELIZACION },
+    { label: 'Evento', value: TipoRuleta.EVENTO },
+];
+
+export const TIPO_PREMIO_OPTIONS: SelectOption<string>[] = [
+    { label: 'Descuento', value: TipoPremio.DESCUENTO },
+    { label: 'Servicio', value: TipoPremio.SERVICIO },
+    { label: 'Producto', value: TipoPremio.PRODUCTO },
+    { label: 'Cupón', value: TipoPremio.CUPON },
+    { label: 'Sin premio', value: TipoPremio.SIN_PREMIO },
+];
+
+export const TIPO_ALCANCE_FIDELIZACION_OPTIONS: SelectOption<TipoAlcanceFidelizacion>[] = [
+    { label: 'Categoría', value: TipoAlcanceFidelizacion.CATEGORIA },
+    { label: 'Servicio', value: TipoAlcanceFidelizacion.SERVICIO },
+    { label: 'Producto', value: TipoAlcanceFidelizacion.PRODUCTO },
+    { label: 'Combo', value: TipoAlcanceFidelizacion.COMBO },
+];
+
+export const ORIGEN_MOVIMIENTO_OPTIONS: SelectOption<Origen>[] = [
+    { label: 'Reserva', value: Origen.RESERVA },
+    { label: 'Venta', value: Origen.VENTA },
+    { label: 'Ajuste', value: Origen.AJUSTE },
+];
+
+export const ESTADO_RECOMPENSA_OPTIONS: SelectOption<EstadoRecompensa>[] = [
+    { label: 'Pendiente', value: EstadoRecompensa.PENDIENTE },
+    { label: 'Canjeada', value: EstadoRecompensa.CANJEADO },
+    { label: 'Vencida', value: EstadoRecompensa.VENCIDO },
+    { label: 'Anulado', value: EstadoRecompensa.ANULADO },
 ];

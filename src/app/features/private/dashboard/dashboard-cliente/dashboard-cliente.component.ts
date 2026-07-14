@@ -9,9 +9,7 @@ import { SidebarComponent } from '@/app/shared/components/sidebar/sidebar.compon
   template: `
   <div class="relative flex h-screen overflow-hidden bg-brand-black">
 
-    <aside class="hidden h-screen overflow-hidden border-r border-ui-border transition-all duration-300 md:flex md:flex-col flex-shrink-0"
-      [class.w-72]="!sidebarCollapsed"
-      [class.w-20]="sidebarCollapsed">
+    <aside class="hidden h-screen overflow-hidden border-r border-ui-border transition-all duration-300 md:flex md:flex-col flex-shrink-0" [class.w-72]="!sidebarCollapsed" [class.w-20]="sidebarCollapsed">
       <app-sidebar class="flex flex-col h-full" [(collapsed)]="sidebarCollapsed" />
     </aside>
 

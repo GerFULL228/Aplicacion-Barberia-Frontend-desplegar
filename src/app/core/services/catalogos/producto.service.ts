@@ -4,6 +4,7 @@ import { ApiResponse, Page } from '../../models/common/index.model';
 import { environment } from '@/environments/environment';
 import { buildHttpParamsComponent } from '@/app/shared/utils/build-http-params.component';
 import { Producto, ProductoFiltro, ProductoRequest } from '../../models/catalogos/productos.model';
+import { buildFormData } from '@/app/shared/utils/build-form-data.component';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +21,7 @@ export class ProductoService {
         return this.http.get<ApiResponse<Producto>>(`${this.apiUrl}/publicados/${id}`);
     }
 
-    obtenerProductoId(id:number){
+    obtenerProductoId(id: number) {
         return this.http.get<ApiResponse<Producto>>(`${this.apiUrl}/${id}`);
     }
 
@@ -41,11 +42,11 @@ export class ProductoService {
     }
 
     crearProducto(data: ProductoRequest, imagenes?: File[]) {
-        return this.http.post<ApiResponse<Producto>>(this.apiUrl, this.construirFormData(data, imagenes));
+        return this.http.post<ApiResponse<Producto>>(this.apiUrl, buildFormData('producto', data, imagenes));
     }
 
     actualizarProducto(id: number, data: ProductoRequest, imagenes?: File[]) {
-        return this.http.put<ApiResponse<Producto>>(`${this.apiUrl}/${id}`, this.construirFormData(data, imagenes));
+        return this.http.put<ApiResponse<Producto>>(`${this.apiUrl}/${id}`, buildFormData('producto', data, imagenes));
     }
 
     cambiarEstado(id: number, estado: boolean) {
@@ -58,12 +59,5 @@ export class ProductoService {
 
     eliminarProducto(id: number) {
         return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`);
-    }
-
-    private construirFormData(data: ProductoRequest, imagenes?: File[]): FormData {
-        const formData = new FormData();
-        formData.append('producto', new Blob([JSON.stringify(data)], { type: 'application/json' }));
-        if (imagenes && imagenes.length > 0) { imagenes.forEach(img => { formData.append('archivos', img); }); }
-        return formData;
     }
 }

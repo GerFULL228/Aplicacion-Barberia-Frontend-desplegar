@@ -1,5 +1,9 @@
 import { CategoriaTipo } from '@/app/core/models/catalogos/categorias.model';
+import { Origen } from '@/app/core/models/fidelizacion/movimiento.model';
+import { TipoAlcanceFidelizacion } from '@/app/core/models/fidelizacion/regla.model';
 import { EstadoReclamo, TipoReclamacion } from '@/app/core/models/operaciones/reclamos-model/reclamo.enum.model';
+import { EstadoRecompensa } from '@/app/core/models/ruleta/recompensa.model';
+import { TipoPremio } from '@/app/core/models/ruleta/ruleta-item.model';
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
@@ -40,6 +44,26 @@ export class StatusBadgeComponent {
         const clases: Record<string, string> = {
           producto: 'estado-producto',
           servicio: 'estado-servicio',
+          
+          [EstadoRecompensa.PENDIENTE.toLowerCase()]: 'estado-pendiente',
+          [EstadoRecompensa.CANJEADO.toLowerCase()]: 'estado-ajuste',
+          [EstadoRecompensa.VENCIDO.toLowerCase()]: 'estado-reclamo-cerrado',
+          [EstadoRecompensa.ANULADO.toLowerCase()]: 'estado-reclamo-anulado',
+
+          [Origen.VENTA.toLowerCase()]: 'estado-venta',
+          [Origen.RESERVA.toLowerCase()]: 'estado-reserva',
+          [Origen.AJUSTE.toLowerCase()]: 'estado-ajuste',
+          
+          [TipoPremio.PRODUCTO.toLowerCase()]: 'estado-producto',
+          [TipoPremio.SERVICIO.toLowerCase()]: 'estado-servicio',
+          [TipoPremio.DESCUENTO.toLowerCase()]: 'estado-descuento',
+          [TipoPremio.CUPON.toLowerCase()]: 'estado-cupon',
+          [TipoPremio.SIN_PREMIO.toLowerCase()]: 'estado-sin-premio',
+
+          [TipoAlcanceFidelizacion.CATEGORIA.toLowerCase()]: 'estado-categoria',
+          [TipoAlcanceFidelizacion.SERVICIO.toLowerCase()]: 'estado-servicio',
+          [TipoAlcanceFidelizacion.PRODUCTO.toLowerCase()]: 'estado-producto',
+          [TipoAlcanceFidelizacion.COMBO.toLowerCase()]: 'estado-combo',
 
           confirmada: 'estado-confirmada',
           finalizada: 'estado-finalizada',
@@ -52,16 +76,16 @@ export class StatusBadgeComponent {
           emitido: 'estado-emitido',
           emitida: 'estado-emitido',
 
-           // EstadoReclamo
-          [EstadoReclamo.ABIERTO.toLowerCase()]:    'estado-reclamo-abierto',
+          // EstadoReclamo
+          [EstadoReclamo.ABIERTO.toLowerCase()]: 'estado-reclamo-abierto',
           [EstadoReclamo.EN_PROCESO.toLowerCase()]: 'estado-reclamo-en-proceso',
-          [EstadoReclamo.RESUELTO.toLowerCase()]:   'estado-reclamo-resuelto',
-          [EstadoReclamo.CERRADO.toLowerCase()]:    'estado-reclamo-cerrado',
-          [EstadoReclamo.ANULADO.toLowerCase()]:    'estado-reclamo-anulado',
+          [EstadoReclamo.RESUELTO.toLowerCase()]: 'estado-reclamo-resuelto',
+          [EstadoReclamo.CERRADO.toLowerCase()]: 'estado-reclamo-cerrado',
+          [EstadoReclamo.ANULADO.toLowerCase()]: 'estado-reclamo-anulado',
 
           // TipoReclamacion
           [TipoReclamacion.RECLAMO.toLowerCase()]: 'tipo-reclamacion-reclamo',
-          [TipoReclamacion.QUEJA.toLowerCase()]:   'tipo-reclamacion-queja',
+          [TipoReclamacion.QUEJA.toLowerCase()]: 'tipo-reclamacion-queja',
         };
 
         return `badge-text ${clases[estado] || 'estado-default'}`;

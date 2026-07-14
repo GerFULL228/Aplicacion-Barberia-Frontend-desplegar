@@ -15,7 +15,7 @@ import { Component, Input } from '@angular/core';
 export class DialogHeaderComponent {
   @Input() title: string = '';
   @Input() icono: string = 'pi-user-edit';
-  @Input() mode: 'crear' | 'editar' | 'eliminar' | 'anular' = 'crear';
+@Input() mode: 'ver' | 'crear' | 'editar' | 'eliminar' | 'anular' = 'crear';
   getIconClass(): string {
     let icon = this.icono?.trim() || '';
     if (!icon.startsWith('pi-')) {icon = 'pi-' + icon;}
@@ -24,6 +24,7 @@ export class DialogHeaderComponent {
 
   get headerClass(): string {
     switch (this.mode) {
+      case 'ver': return 'dialog-header-ver';
       case 'editar': return 'dialog-header-editar';
       case 'eliminar': return 'dialog-header-eliminar';
       case 'anular': return 'dialog-header-anular';
