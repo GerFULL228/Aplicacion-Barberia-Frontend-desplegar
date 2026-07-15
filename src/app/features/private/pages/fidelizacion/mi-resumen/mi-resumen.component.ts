@@ -1,93 +1,214 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Chart, registerables } from 'chart.js';
+import { FidelizacionDashboardService } from '@/app/core/services/fidelizacion/dashboard.service';
+import { FidelizacionDashboardClienteResponse } from '@/app/core/models/fidelizacion/dashboard.model';
+import { NotificationService } from '@/app/core/services/common/notification.service';
 import { StatsComponent } from '@/app/shared/components/stats/stats.component';
 import { StatsCard } from '@/app/core/models/common/card.model';
-import { FidelizacionDashboardClienteResponse } from '@/app/core/models/fidelizacion/dashboard.model';
-import { FidelizacionDashboardService } from '@/app/core/services/fidelizacion/dashboard.service';
-import { NotificationService } from '@/app/core/services/common/notification.service';
+import { FidelizacionTarjetaResponse } from '@/app/core/models/fidelizacion/tarjeta.model';
+Chart.register(...registerables);
+type TarjetaConMeta = FidelizacionTarjetaResponse & { meta: number; girosPorMeta: number };
 
 @Component({
-  standalone: true,
   selector: 'app-mi-resumen',
-  imports: [CommonModule,
-    StatsComponent],
+  standalone: true,
+  imports: [CommonModule, StatsComponent],
   templateUrl: './mi-resumen.html',
-  styleUrl: './mi-resumen.css',
 })
-
-
-export class MiResumenComponent implements OnInit {
+export class MiResumenComponent implements OnInit, OnDestroy {
   private dashboardService = inject(FidelizacionDashboardService);
   private notify = inject(NotificationService);
   private cd = inject(ChangeDetectorRef);
-  cargando = true;
-  data!: FidelizacionDashboardClienteResponse;
+
+  @ViewChild('progresoChart') progresoRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('girosChart') girosRef!: ElementRef<HTMLCanvasElement>;
+
+  private charts: Chart[] = [];
+
+  // expuesto para usarlo en el template ([style.height.px]="Math.max(...)")
+  readonly Math = Math;
+
+  cargando = false;
+  data: FidelizacionDashboardClienteResponse | null = null;
   statsCards: StatsCard[] = [];
 
+  // control de secciones colapsables
+  secciones = {
+    categoria: true,
+    movimientos: true,
+    recompensas: false,
+  };
+
+  // tab activo dentro de la sección "categoria"
+  tabCategoria: 'progreso' | 'giros' = 'progreso';
+
+  private readonly gold = '#c9a84c';
+  private readonly textColor = 'rgba(255,255,255,0.55)';
+  private readonly gridColor = 'rgba(255,255,255,0.06)';
+  private readonly colors = ['#c9a84c', '#8a7a5c', '#e2c074', '#6b4f25', '#d4af37', '#b8964b', '#a07840', '#f0d080'];
+
   ngOnInit(): void {
-    this.cargarDashboard();
+    this.cargar();
   }
 
-  cargarDashboard() {
+  ngOnDestroy(): void {
+    this.charts.forEach((c) => c.destroy());
+  }
 
+  toggleSeccion(seccion: keyof typeof this.secciones): void {
+    this.secciones[seccion] = !this.secciones[seccion];
+
+    if (seccion === 'categoria' && this.secciones.categoria && this.data) {
+      setTimeout(() => this.renderTabActivo());
+    }
+  }
+
+  cambiarTabCategoria(tab: 'progreso' | 'giros'): void {
+    if (this.tabCategoria === tab) return;
+    this.tabCategoria = tab;
+    setTimeout(() => this.renderTabActivo());
+  }
+
+  get tarjetasConGirosDisponibles() {
+    return this.data?.tarjetas.filter((t) => t.girosDisponibles > 0) ?? [];
+  }
+
+  get nombresSinMeta(): string {
+    return this.tarjetasSinMeta.map((t) => t.categoriaNombre).join(', ');
+  }
+
+  // solo tarjetas con configuración activa (meta definida) pueden mostrar % de progreso
+  get tarjetasConMeta(): TarjetaConMeta[] {
+    return (this.data?.tarjetas.filter((t): t is TarjetaConMeta => t.meta !== null && t.meta !== undefined) ?? []);
+  }
+
+  get tarjetasSinMeta() {
+    return this.data?.tarjetas.filter((t) => !t.meta) ?? [];
+  }
+
+  private cargar(): void {
     this.cargando = true;
     this.dashboardService.obtenerDashboardCliente().subscribe({
       next: (resp) => {
         this.data = resp.data;
-        this.generarCards();
+        this.buildStatsCards(resp.data);
         this.cargando = false;
         this.cd.detectChanges();
+        if (this.secciones.categoria) {
+          setTimeout(() => this.renderTabActivo());
+        }
       },
-
       error: (err) => {
         this.notify.showHttpError(err);
         this.cargando = false;
-      }
+        this.cd.detectChanges();
+      },
     });
-
   }
 
-  generarCards() {
+  private buildStatsCards(d: FidelizacionDashboardClienteResponse): void {
     this.statsCards = [
-
-      {
-        title: 'Tarjetas',
-        value: this.data.totalTarjetas,
-        icon: 'pi pi-id-card',
-        accentClass: 'bg-blue-500',
-        accentTextClass: 'text-blue-400',
-        iconBgClass: 'bg-blue-500/15'
-      },
-
-      {
-        title: 'Giros',
-        value: this.data.girosDisponibles,
-        icon: 'pi pi-sync',
-        accentClass: 'bg-yellow-500',
-        accentTextClass: 'text-yellow-400',
-        iconBgClass: 'bg-yellow-500/15'
-      },
-
-      {
-        title: 'Tarjetas listas',
-        value: this.data.tarjetasConGiroDisponible,
-        icon: 'pi pi-check-circle',
-        accentClass: 'bg-green-500',
-        accentTextClass: 'text-green-400',
-        iconBgClass: 'bg-green-500/15'
-      },
-
-      {
-        title: 'Premios',
-        value: this.data.recompensasPendientes,
-        icon: 'pi pi-gift',
-        accentClass: 'bg-pink-500',
-        accentTextClass: 'text-pink-400',
-        iconBgClass: 'bg-pink-500/15'
-      }
-
+      { title: 'Tarjetas activas', value: d.totalTarjetas, icon: 'pi pi-id-card' },
+      { title: 'Giros disponibles', value: d.girosDisponibles, icon: 'pi pi-ticket', accentClass: 'bg-green-400', accentTextClass: 'text-green-400' },
+      { title: 'Tarjetas con giro', value: d.tarjetasConGiroDisponible, icon: 'pi pi-star' },
+      { title: 'Recompensas pendientes', value: d.recompensasPendientes, icon: 'pi pi-gift' },
     ];
-
   }
 
+  private renderTabActivo(): void {
+    if (!this.data) return;
+    this.charts.forEach((c) => c.destroy());
+    this.charts = [];
+
+    if (this.tabCategoria === 'progreso') {
+      this.buildProgresoChart(this.data);
+    } else {
+      this.buildGirosChart(this.data);
+    }
+  }
+
+  private buildProgresoChart(d: FidelizacionDashboardClienteResponse): void {
+    if (!this.progresoRef) return;
+
+    const conMeta = this.tarjetasConMeta;
+    if (!conMeta.length) return;
+
+    const ctx = this.progresoRef.nativeElement.getContext('2d')!;
+    this.charts.push(
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: conMeta.map((t) => t.categoriaNombre),
+          datasets: [
+            {
+              label: 'Progreso',
+              data: conMeta.map((t) => Math.round((t.progreso / t.meta) * 100)),
+              backgroundColor: this.gold,
+              borderRadius: 6,
+              barPercentage: 0.5,
+              categoryPercentage: 0.6,
+            },
+          ],
+        },
+        options: {
+          indexAxis: 'y' as const,
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => {
+                  const t = conMeta[ctx.dataIndex];
+                  return ` ${t.progreso} / ${t.meta} servicios (${ctx.parsed.x}%)`;
+                },
+              },
+            },
+          },
+          scales: {
+            x: {
+              min: 0,
+              max: 100,
+              ticks: { color: this.textColor, font: { size: 11 }, callback: (v) => v + '%' },
+              grid: { color: this.gridColor },
+            },
+            y: { ticks: { color: this.textColor, font: { size: 11 } }, grid: { display: false } },
+          },
+        },
+      })
+    );
+  }
+
+  private buildGirosChart(d: FidelizacionDashboardClienteResponse): void {
+    if (!this.girosRef) return;
+
+    const conGiros = this.tarjetasConGirosDisponibles;
+    if (!conGiros.length) return;
+
+    const ctx = this.girosRef.nativeElement.getContext('2d')!;
+    this.charts.push(
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: conGiros.map((t) => t.categoriaNombre),
+          datasets: [
+            {
+              data: conGiros.map((t) => t.girosDisponibles),
+              backgroundColor: this.colors.slice(0, conGiros.length),
+              borderColor: 'rgba(0,0,0,0)',
+              borderWidth: 2,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'right', labels: { color: this.textColor, font: { size: 11 }, padding: 12 } },
+          },
+        },
+      })
+    );
+  }
 }

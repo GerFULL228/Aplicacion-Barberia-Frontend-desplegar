@@ -19,3 +19,11 @@ export const FIDELIZACION_SEGUIMIENTO_TABS = [
     { label: 'Giros', value: 'giros', icon: 'pi pi-refresh' },
     { label: 'Recompensas', value: 'recompensas', icon: 'pi pi-gift' }
 ]
+
+export const FIDELIZACION_CLIENTE_TABS = [
+    { label: 'Mi progreso', value: 'resumen', icon: 'pi pi-chart-line' },
+    { label: 'Mis tarjetas', value: 'mis-tarjetas', icon: 'pi pi-id-card' },
+    // { label: 'Ruleta', value: 'mi-ruleta', icon: 'pi pi-spin pi-sync' },
+    { label: 'Mi historial', value: 'mi-historial', icon: 'pi pi-history' },
+    //{ label: 'Mis recompensas', value: 'mis-recompensas', icon: 'pi pi-gift' }
+]

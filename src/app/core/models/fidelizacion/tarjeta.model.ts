@@ -15,6 +15,8 @@ export interface FidelizacionTarjetaResponse {
     categoriaId: number;
     categoriaNombre: string;
     progreso: number;
+    meta: number | null;
+    girosPorMeta: number | null;
     girosDisponibles: number;
     totalGiros: number;
     activo: boolean;

@@ -20,7 +20,11 @@ export class RuletaGraficoComponent implements OnChanges, OnDestroy {
   @Input() interactiva = true;
   @Input() reproducirMusica = false;
   @Input() textoBoton = 'Girar la ruleta';
+  /** true = el backend decide el premio (mi-ruleta real); false = sorteo local (preview de admin) */
+  @Input() modoServidor = false;
   @Output() premioGanado = new EventEmitter<RuletaSegmento>();
+  /** Se emite cuando el usuario pulsa girar en modoServidor; el padre debe resolver el premio y llamar a girarHaciaResultado() */
+  @Output() girarSolicitado = new EventEmitter<void>();
   readonly audioService = inject(AudioService);
 
   girando = signal(false);
@@ -39,6 +43,10 @@ export class RuletaGraficoComponent implements OnChanges, OnDestroy {
     if (!this.audioService.enabled) return 'pi pi-volume-off';
     if (this.volumen <= 20) return 'pi pi-volume-down';
     return 'pi pi-volume-up';
+  }
+
+  get mostrarControlesAudio(): boolean {
+    return this.reproducirMusica;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -106,16 +114,28 @@ export class RuletaGraficoComponent implements OnChanges, OnDestroy {
     return { premio: this.premios[this.premios.length - 1], index: this.premios.length - 1 };
   }
 
-  girar(): void {
-    if (this.girando() || !this.interactiva || !this.premios.length) return;
-    this.girando.set(true);
-    this.mostrarResultado.set(false);
-    const { premio, index } = this.elegirPremio();
+  private animarHacia(index: number): void {
     const centro = this.anguloSegmento(index) + this.gradosPorSegmento / 2;
     const offset = (Math.random() - 0.5) * this.gradosPorSegmento * 0.30;
     const vueltas = 5;
     const nuevaRotacion = this.rotacionActual() + vueltas * 360 - centro - offset;
     this.rotacionActual.set(nuevaRotacion);
+  }
+
+  /** Click del botón: en modoServidor solo avisa al padre; si no, sortea localmente (preview) */
+  onClickGirar(): void {
+    if (this.girando() || !this.interactiva || !this.premios.length) return;
+
+    this.girando.set(true);
+    this.mostrarResultado.set(false);
+
+    if (this.modoServidor) {
+      this.girarSolicitado.emit();
+      return;
+    }
+
+    const { premio, index } = this.elegirPremio();
+    this.animarHacia(index);
 
     setTimeout(() => {
       this.girando.set(false);
@@ -123,6 +143,24 @@ export class RuletaGraficoComponent implements OnChanges, OnDestroy {
       this.mostrarResultado.set(true);
       this.premioGanado.emit(premio);
     }, 4200);
+  }
+
+  /** Llamado por el padre (modoServidor) una vez el backend ya resolvió el premio real */
+  girarHaciaResultado(segmentoGanador: RuletaSegmento): void {
+    const index = this.premios.findIndex(p => p.id === segmentoGanador.id);
+    this.animarHacia(index >= 0 ? index : 0);
+
+    setTimeout(() => {
+      this.girando.set(false);
+      this.premioGanador.set(segmentoGanador);
+      this.mostrarResultado.set(true);
+      this.premioGanado.emit(segmentoGanador);
+    }, 4200);
+  }
+
+  /** Llamado por el padre si el backend falla, para reactivar el botón */
+  cancelarGiro(): void {
+    this.girando.set(false);
   }
 
   cerrarResultado() {

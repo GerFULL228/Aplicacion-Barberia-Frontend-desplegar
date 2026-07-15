@@ -150,9 +150,8 @@ export const routes: Routes = [
           { path: 'historial', loadComponent: () => import('./features/private/pages/historial/historial.component').then(m => m.ClienteHistorialComponent) },
 
           {
-            path: 'rewards', children: [
-              { path: 'resumen', loadComponent: () => import('./features/private/pages/fidelizacion/mi-resumen/mi-resumen.component').then(m => m.MiResumenComponent) },
-
+            path: 'fidelizacion', children: [
+              { path: '', loadComponent: () => import('./features/private/pages/fidelizacion/fidelizacion.component').then(m => m.FidelizacionComponent) }
             ]
           },
 

@@ -40,4 +40,8 @@ export class RuletaService {
     eliminarRuleta(id: number) {
         return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`);
     }
+
+    obternerMisRuletas() {
+        return this.http.get<ApiResponse<RuletaResponse>>(`${this.apiUrl}/mi-ruleta`);
+    }
 }

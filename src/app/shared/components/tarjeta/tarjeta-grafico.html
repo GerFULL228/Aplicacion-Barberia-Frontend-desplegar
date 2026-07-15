@@ -7,7 +7,43 @@
     </div>
     }
 
-    <!-- ===================== VARIANTE DASHBOARD ===================== -->
+    <!-- TOGGLE TARJETAS / GRÁFICO (solo admin y cliente) -->
+    @if (variante === 'admin' || variante === 'cliente') {
+    <div class="flex gap-1 bg-black/20 rounded-lg p-1 w-fit">
+        <button type="button" (click)="cambiarVista('tarjetas')"
+            class="boton-primary text-xs px-3 py-1.5 rounded-md transition-colors flex items-center gap-1.5"
+            [ngClass]="vista === 'tarjetas' ? 'hover:bg-brand-gold' : 'bg-brand-gold text-black font-semibold'">
+            <i class="pi pi-id-card text-xs"></i> Tarjetas
+        </button>
+        <button type="button" (click)="cambiarVista('grafico')"
+            class="boton-primary text-xs px-3 py-1.5 rounded-md transition-colors flex items-center gap-1.5"
+            [ngClass]="vista === 'grafico' ? 'bg-brand-gold text-black font-semibold' : 'text-text-tertiary'">
+            <i class="pi pi-chart-bar text-xs"></i> Gráfico
+        </button>
+    </div>
+    }
+
+    <!-- VISTA: GRÁFICO (reemplaza todo, admin y cliente) -->
+    @if ((variante === 'admin' || variante === 'cliente') && vista === 'grafico') {
+    <div class="bg-ui-card border border-ui-borderSoft rounded-2xl p-5">
+        <div *ngIf="tarjetasConMeta.length; else sinDatosGrafico"
+            class="relative" [style.height.px]="Math.max(140, tarjetasConMeta.length * 55)">
+            <canvas #progresoChart></canvas>
+        </div>
+        <ng-template #sinDatosGrafico>
+            <div class="flex flex-col items-center justify-center gap-2 py-10 text-text-tertiary">
+                <i class="pi pi-chart-bar text-2xl opacity-40"></i>
+                <p class="text-xs">Ninguna categoría tiene meta configurada aún.</p>
+            </div>
+        </ng-template>
+
+        <p *ngIf="tarjetasSinMeta.length" class="text-[11px] text-text-tertiary mt-3">
+            Sin meta configurada: <span class="text-text-secondary">{{ nombresSinMeta }}</span>
+        </p>
+    </div>
+    }
+
+    <!-- ===================== VARIANTE DASHBOARD (sin cambios) ===================== -->
     @if (variante === 'dashboard') {
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
@@ -53,8 +89,9 @@
                             </div>
                         </div>
                         <span class="text-[11px] font-semibold flex-shrink-0"
-                            [ngClass]="t.girosDisponibles > 0 ? 'text-brand-gold' : 'text-text-tertiary'">{{ t.progreso
-                            }}/{{ metaPorCategoria }}</span>
+                            [ngClass]="t.girosDisponibles > 0 ? 'text-brand-gold' : 'text-text-tertiary'">
+                            {{ tieneMeta(t) ? (t.progreso + '/' + t.meta) : 'Sin meta' }}
+                        </span>
                     </div>
                     } @empty {
                     <p class="text-xs text-text-tertiary text-center py-4">No tienes tarjetas activas.</p>
@@ -116,6 +153,9 @@
     </div>
     }
 
+    <!-- ===================== VISTA: TARJETAS (admin / cliente) ===================== -->
+    @if ((variante === 'admin' || variante === 'cliente') && vista === 'tarjetas') {
+
     @for (t of tarjetas; track t.id) {
 
     <!-- ===================== VARIANTE ADMIN ===================== -->
@@ -123,13 +163,11 @@
     <div class="tg-textura group relative rounded-2xl border overflow-hidden transition-all duration-300"
         [ngClass]="t.cicloActivo ? 'border-brand-gold/30 shadow-[0_0_35px_-15px_rgba(212,175,55,0.55)]' : 'border-ui-border'">
 
-        <!-- glow decorativo de fondo -->
         <div class="pointer-events-none absolute -top-16 -right-16 w-56 h-56 rounded-full bg-brand-gold/10 blur-3xl">
         </div>
         <div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-ui-card via-ui-card to-ui-cardHover/60">
         </div>
 
-        <!-- esquinas tipo carnet -->
         <div class="tg-esquina top-2.5 left-2.5 border-t-2 border-l-2 rounded-tl-md"></div>
         <div class="tg-esquina top-2.5 right-2.5 border-t-2 border-r-2 rounded-tr-md"></div>
         <div class="tg-esquina bottom-2.5 left-2.5 border-b-2 border-l-2 rounded-bl-md"></div>
@@ -164,22 +202,22 @@
                 </div>
 
                 <div class="mt-4 rounded-xl border border-brand-gold/15 bg-black/25 px-3.5 py-3">
-                    <div class="flex items-end justify-between mb-1.5">
-                        <span class="text-[11px] text-text-tertiary uppercase tracking-wide">Progreso · meta {{
-                            metaPorCategoria }} pts</span>
-                        <span class="text-brand-gold font-bold text-xl leading-none">{{ progresoPct(t) | number:'1.0-0'
-                            }}<span class="text-xs align-top">%</span></span>
-                    </div>
-                    <div class="relative w-full h-2 rounded-full tg-barra-track overflow-hidden">
-                        <div class="relative h-full bg-gradient-to-r from-[#8a6a15] via-brand-gold to-[#f4dd9a] rounded-full transition-all duration-700 overflow-hidden"
-                            [style.width.%]="progresoPct(t)">
-                            <div
-                                class="absolute inset-0 bg-white/25 w-1/3 skew-x-[-20deg] animate-[shine_2.2s_ease-in-out_infinite]">
+                    <ng-container *ngIf="tieneMeta(t); else sinMetaAdmin">
+                        <div class="flex items-end justify-between mb-1.5">
+                            <span class="text-[11px] text-text-tertiary uppercase tracking-wide">Progreso · meta {{ t.meta }} pts</span>
+                            <span class="text-brand-gold font-bold text-xl leading-none">{{ progresoPct(t) | number:'1.0-0' }}<span class="text-xs align-top">%</span></span>
+                        </div>
+                        <div class="relative w-full h-2 rounded-full tg-barra-track overflow-hidden">
+                            <div class="relative h-full bg-gradient-to-r from-[#8a6a15] via-brand-gold to-[#f4dd9a] rounded-full transition-all duration-700 overflow-hidden"
+                                [style.width.%]="progresoPct(t)">
+                                <div class="absolute inset-0 bg-white/25 w-1/3 skew-x-[-20deg] animate-[shine_2.2s_ease-in-out_infinite]"></div>
                             </div>
                         </div>
-                    </div>
-                    <p class="text-[11px] text-text-secondary mt-1.5">{{ t.progreso }} de {{ metaPorCategoria }} pts
-                        acumulados</p>
+                        <p class="text-[11px] text-text-secondary mt-1.5">{{ t.progreso }} de {{ t.meta }} pts acumulados</p>
+                    </ng-container>
+                    <ng-template #sinMetaAdmin>
+                        <p class="text-[11px] text-text-tertiary italic py-2">Categoría sin meta configurada.</p>
+                    </ng-template>
                 </div>
 
                 <div class="flex justify-between items-center mt-3">
@@ -244,47 +282,116 @@
     }
 
     <!-- ===================== VARIANTE CLIENTE ===================== -->
+   <!-- ===================== VARIANTE CLIENTE ===================== -->
     @else if (variante === 'cliente') {
-    <div class="rounded-2xl border border-brand-gold/20 bg-ui-card p-6 relative overflow-hidden">
-        <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full border border-brand-gold/10"></div>
-        <div class="absolute -top-16 -right-16 w-56 h-56 rounded-full border border-brand-gold/5"></div>
 
-        <div class="flex justify-between items-start mb-5 relative">
-            <div>
-                <p class="text-brand-gold font-medium tracking-wide">{{ t.categoriaNombre }}</p>
-                <p class="text-brand-gold/50 text-xs tracking-widest uppercase mt-0.5">Tarjeta Fidelización</p>
+    <div class="tg-textura group relative rounded-2xl border overflow-hidden transition-all duration-300"
+        [ngClass]="t.cicloActivo ? 'border-brand-gold/30 shadow-[0_0_35px_-15px_rgba(212,175,55,0.55)]' : 'border-brand-gold/20'">
+
+        <div class="pointer-events-none absolute -top-10 -right-10 w-40 h-40 rounded-full border border-brand-gold/10"></div>
+        <div class="pointer-events-none absolute -top-16 -right-16 w-56 h-56 rounded-full border border-brand-gold/5"></div>
+
+        <button type="button" class="relative w-full text-left p-6 cursor-pointer" (click)="toggleExpandir(t)">
+            <div class="flex justify-between items-start mb-5">
+                <div>
+                    <p class="text-brand-gold font-medium tracking-wide">{{ t.categoriaNombre }}</p>
+                    <p class="text-brand-gold/50 text-xs tracking-widest uppercase mt-0.5">Tarjeta Fidelización</p>
+                </div>
+                <span
+                    class="text-xs tracking-wide uppercase border border-brand-gold/30 text-brand-gold px-3 py-1 rounded-full bg-brand-gold/10 whitespace-nowrap">
+                    {{ t.girosDisponibles }} giro{{ t.girosDisponibles === 1 ? '' : 's' }}
+                </span>
             </div>
-            <span
-                class="text-xs tracking-wide uppercase border border-brand-gold/30 text-brand-gold px-3 py-1 rounded-full bg-brand-gold/10 whitespace-nowrap">
-                {{ t.girosDisponibles }} giro{{ t.girosDisponibles === 1 ? '' : 's' }}
-            </span>
+
+            <ng-container *ngIf="tieneMeta(t); else sinMetaCliente">
+                <div class="flex items-end justify-between mb-2">
+                    <span class="text-[11px] text-text-tertiary uppercase tracking-wide">Progreso · meta {{ t.meta }} pts</span>
+                    <span class="text-brand-gold font-bold text-xl leading-none">{{ progresoPct(t) | number:'1.0-0' }}<span class="text-xs align-top">%</span></span>
+                </div>
+                <div class="relative w-full h-2 rounded-full tg-barra-track overflow-hidden mb-5">
+                    <div class="relative h-full bg-gradient-to-r from-[#8a6a15] via-brand-gold to-[#f4dd9a] rounded-full transition-all duration-700 overflow-hidden"
+                        [style.width.%]="progresoPct(t)">
+                        <div class="absolute inset-0 bg-white/25 w-1/3 skew-x-[-20deg] animate-[shine_2.2s_ease-in-out_infinite]"></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-5 gap-2 mb-5">
+                    @for (n of slots(t); track n) {
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-lg border transition-all"
+                            [ngClass]="n <= t.progreso ? 'bg-brand-gold/10 border-brand-gold/50 text-brand-gold shadow-[0_0_10px_-2px_rgba(212,175,55,0.6)]' : 'bg-white/5 border-white/10 text-white/10'">
+                            <i class="pi pi-crown text-lg"></i>
+                        </div>
+                        <span class="text-[10px]" [ngClass]="n <= t.progreso ? 'text-brand-gold/60' : 'text-white/20'">{{ n }}</span>
+                    </div>
+                    }
+                </div>
+
+                <p class="text-sm text-text-secondary pt-4 border-t border-white/10">
+                    <span class="text-brand-gold font-medium">{{ t.progreso }} / {{ t.meta }}</span> cortes
+                </p>
+            </ng-container>
+            <ng-template #sinMetaCliente>
+                <div class="flex flex-col items-center justify-center gap-2 py-6 text-text-tertiary border-t border-white/10 pt-4">
+                    <i class="pi pi-id-card text-xl opacity-40"></i>
+                    <p class="text-xs">Esta categoría aún no tiene una meta configurada.</p>
+                </div>
+            </ng-template>
+        </button>
+
+        <!-- Barra de acciones: una sola vez, aplica con o sin meta -->
+        <div class="relative flex items-center justify-between px-6 pb-5">
+            <button type="button"
+                class="boton-primary"
+                (click)="verRuleta.emit(t)">
+                <i class="pi pi-sparkles"></i> Ver ruleta
+            </button>
+            <div class="flex items-center gap-3">
+                <button pButton label="Canjear" class="p-button-sm boton-primary" [disabled]="!puedeCanjear(t)"
+                    (click)="canjear.emit(t)"></button>
+                <i class="pi pi-chevron-down text-text-tertiary text-xs transition-transform cursor-pointer"
+                    [class.rotate-180]="estaExpandida(t)" (click)="toggleExpandir(t)"></i>
+            </div>
         </div>
 
-        <div class="grid grid-cols-5 gap-2 mb-5 relative">
-            @for (n of slots(); track n) {
-            <div class="flex flex-col items-center gap-1">
-                <div class="w-11 h-11 rounded-xl flex items-center justify-center text-lg border transition-all"
-                    [ngClass]="n <= t.progreso ? 'bg-brand-gold/10 border-brand-gold/50 text-brand-gold shadow-[0_0_10px_-2px_rgba(212,175,55,0.6)]' : 'bg-white/5 border-white/10 text-white/10'">
-                    <i class="pi pi-crown text-lg"></i>
+        @if (estaExpandida(t)) {
+        <div class="relative border-t border-brand-gold/10 px-5 py-4 bg-black/20">
+            <p class="text-[11px] uppercase tracking-widest text-brand-gold/70 font-semibold mb-3 flex items-center gap-1.5">
+                <i class="pi pi-history text-[10px]"></i>Movimientos recientes
+            </p>
+            @if (estaCargando(t)) {
+            <div class="flex items-center justify-center gap-2 py-6 text-xs text-text-tertiary">
+                <i class="pi pi-spin pi-spinner"></i> Cargando movimientos...
+            </div>
+            } @else if (movimientosDe(t).length === 0) {
+            <p class="text-xs text-text-tertiary py-6 text-center">Sin movimientos registrados.</p>
+            } @else {
+            <div class="flex flex-col gap-3 max-h-72 overflow-y-auto pr-1">
+                @for (m of movimientosDe(t); track m.id) {
+                <div class="flex items-center gap-3">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-full flex-shrink-0 border"
+                        [ngClass]="m.puntos >= 0 ? 'bg-green-500/10 border-green-500/30' : 'bg-red-500/10 border-red-500/30'">
+                        <i class="pi text-xs" [ngClass]="[iconoOrigen(m.origen), m.puntos >= 0 ? 'text-green-400' : 'text-red-400']"></i>
+                    </div>
+                    <div class="flex-1 min-w-0 flex items-center justify-between gap-3 rounded-xl bg-ui-card border border-ui-border px-3 py-2.5">
+                        <div class="min-w-0">
+                            <p class="text-sm text-white truncate font-medium">{{ m.descripcion || labelOrigen(m.origen) }}</p>
+                            <p class="text-[11px] text-text-tertiary mt-0.5">{{ m.createdAt | date:'dd/MM/yy HH:mm' }} · {{ labelOrigen(m.origen) }}</p>
+                        </div>
+                        <span class="text-sm font-bold flex-shrink-0" [ngClass]="m.puntos >= 0 ? 'text-green-400' : 'text-red-400'">
+                            {{ m.puntos >= 0 ? '+' : '' }}{{ m.puntos }}
+                        </span>
+                    </div>
                 </div>
-                <span class="text-[10px]" [ngClass]="n <= t.progreso ? 'text-brand-gold/60' : 'text-white/20'">{{ n
-                    }}</span>
+                }
             </div>
             }
         </div>
-
-        <div class="flex justify-between items-center pt-4 border-t border-white/10 relative">
-            <p class="text-sm text-text-secondary">
-                <span class="text-brand-gold font-medium">{{ t.progreso }} / {{ metaPorCategoria }}</span> cortes
-            </p>
-            <button pButton label="Canjear" class="p-button-sm boton-primary" [disabled]="!puedeCanjear(t)"
-                (click)="canjear.emit(t)"></button>
-        </div>
+        }
     </div>
     }
 
     } @empty {
-    @if (variante !== 'dashboard') {
     <p class="text-sm text-text-tertiary text-center py-6">No hay tarjetas para mostrar.</p>
     }
     }

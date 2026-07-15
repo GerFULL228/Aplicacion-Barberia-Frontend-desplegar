@@ -1,5 +1,5 @@
 <div class="ruleta-wrap rounded-xl">
-    <div class="controles-audio" *ngIf="interactiva">
+    <div class="controles-audio" *ngIf="mostrarControlesAudio">
         <button pButton type="button" class="p-button-rounded p-button-text" [icon]="iconoVolumen" (click)="toggleMusica()"></button>
         <p-slider [(ngModel)]="volumen" [min]="0" [max]="100" (onChange)="cambiarVolumen($event.value)" styleClass="slider-volumen"></p-slider>
     </div>
@@ -71,20 +71,11 @@
             </div>
         </div>
     </div>
-    <button pButton class="boton-primary" (click)="girar()" [disabled]="girando() || !interactiva" *ngIf="interactiva">
+    <button pButton class="boton-primary" (click)="onClickGirar()" [disabled]="girando() || !interactiva" *ngIf="interactiva">
         <i class="pi pi-spin pi-sync" *ngIf="girando()"></i> {{ girando() ? 'Girando…' : textoBoton }}
     </button>
     <p class="etiqueta-solo-vista" *ngIf="!interactiva">Vista previa (no interactiva)</p>
 
-    <div class="resultado-overlay" *ngIf="mostrarResultado()" (click)="cerrarResultado()">
-        <div class="resultado-card" (click)="$event.stopPropagation()">
-            <p class="resultado-eyebrow">¡Felicidades!</p>
-            <h3 class="resultado-titulo">{{ premioGanador()?.label }}</h3>
-            <p class="resultado-sub" *ngIf="premioGanador()?.sublabel">{{ premioGanador()?.sublabel }}</p>
-            <button class="boton-cerrar" (click)="cerrarResultado()">Aceptar</button>
-        </div>
-    </div>
-    
     <div class="resultado-overlay" *ngIf="mostrarResultado()" (click)="cerrarResultado()">
         <div class="resultado-card" (click)="$event.stopPropagation()">
             <div class="resultado-header">
@@ -92,19 +83,20 @@
             </div>
             <div class="resultado-media">
                 <div class="resultado-imagen" *ngIf="premioGanador()?.imagen">
-                <img [src]="premioGanador()?.imagen | safeImageUrl" [alt]="premioGanador()?.label">
+                    <img [src]="premioGanador()?.imagen | safeImageUrl" [alt]="premioGanador()?.label">
+                </div>
+                <div class="resultado-icono" *ngIf="!premioGanador()?.imagen">
+                    <i class="pi" [ngClass]="obtenerIcono(premioGanador()?.tipoPremio)"></i>
+                </div>
             </div>
-            <div class="resultado-icono" *ngIf="!premioGanador()?.imagen">
-                <i class="pi" [ngClass]="obtenerIcono(premioGanador()?.tipoPremio)"></i>
+            <h2 class="resultado-titulo">{{ premioGanador()?.label }}</h2>
+            <p class="resultado-sub" *ngIf="premioGanador()?.descripcion">{{ premioGanador()?.descripcion }}</p>
+            <div class="resultado-info">
+                <div class="resultado-chip">
+                    <i class="pi icono" [ngClass]="obtenerIcono(premioGanador()?.tipoPremio)"></i>{{ premioGanador()?.tipoPremio }}
+                </div>
             </div>
+            <button pButton class="boton-primary" (click)="cerrarResultado()">Reclamar premio</button>
         </div>
-        <h2 class="resultado-titulo">{{ premioGanador()?.label }}</h2>
-        <p class="resultado-sub" *ngIf="premioGanador()?.descripcion">{{ premioGanador()?.descripcion }}</p>
-        <div class="resultado-info">
-            <div class="resultado-chip">
-                <i class="pi icono" [ngClass]="obtenerIcono(premioGanador()?.tipoPremio)"></i>{{ premioGanador()?.tipoPremio }}
-            </div>
-        </div>
-        <button pButton class="boton-primary" (click)="cerrarResultado()">Reclamar premio</button>
     </div>
 </div>
