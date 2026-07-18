@@ -25,5 +25,5 @@ export const FIDELIZACION_CLIENTE_TABS = [
     { label: 'Mis tarjetas', value: 'mis-tarjetas', icon: 'pi pi-id-card' },
     // { label: 'Ruleta', value: 'mi-ruleta', icon: 'pi pi-spin pi-sync' },
     { label: 'Mi historial', value: 'mi-historial', icon: 'pi pi-history' },
-    //{ label: 'Mis recompensas', value: 'mis-recompensas', icon: 'pi pi-gift' }
+    { label: 'Mis premios', value: 'mis-premios', icon: 'pi pi-gift' }
 ]

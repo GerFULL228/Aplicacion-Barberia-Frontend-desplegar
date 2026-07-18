@@ -1,7 +1,11 @@
-export class DateFormatHelper {
-    static format(fecha: string | null | undefined): string {
-        if (!fecha) { return '-'; }
-        const date = new Date(fecha);
-        return new Intl.DateTimeFormat('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).format(date);
+import { Pipe, PipeTransform } from '@angular/core';
+import { DateHelper } from '../utils/date-normalize.component';
+@Pipe({
+    name: 'dateHelper',
+    standalone: true
+})
+export class DateFormatPipe implements PipeTransform {
+    transform(fecha: string | Date | null | undefined): string {
+        return DateHelper.format(fecha);
     }
 }

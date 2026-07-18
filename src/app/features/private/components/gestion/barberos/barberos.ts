@@ -19,6 +19,8 @@ export class Barberos implements OnInit {
   inhabilitadosMode: boolean = false;
   private filtrosActuales: FiltroBarberoBusqueda = {};
 
+  readonly pageSize = 10;
+
   barberos: any[] = [];
   totalElements: number = 0;
   currentPage: number = 0;
@@ -77,7 +79,7 @@ export class Barberos implements OnInit {
     this.totalPages   = p.totalPages || 0;
   }
 
-  loadPage(page: number = 0, size: number = 10, filtros: FiltroBarberoBusqueda = this.filtrosActuales): void {
+  loadPage(page: number = 0, size: number = this.pageSize, filtros: FiltroBarberoBusqueda = this.filtrosActuales): void {
     const useFilters = Boolean(filtros.estado || filtros.ordenarPor || filtros.direccion);
     const request$ = useFilters
       ? this.barberoService.buscar(filtros, page, size)
@@ -98,7 +100,7 @@ export class Barberos implements OnInit {
       }
 
       // Campo vacío → volver al listado normal con filtros activos
-      this.loadPage(0, 10, this.filtrosActuales);
+      this.loadPage(0, this.pageSize, this.filtrosActuales);
     }
   }
 
@@ -110,25 +112,25 @@ export class Barberos implements OnInit {
       ordenarPor: parsed.ordenarPor,
       direccion: parsed.direccion
     };
-    this.loadPage(0, 10, this.filtrosActuales);
+    this.loadPage(0, this.pageSize, this.filtrosActuales);
   }
 
   onClearFilters(): void {
     this.inhabilitadosMode = false;
     this.filtrosActuales = {};
-    this.loadPage(0, 10, {});
+    this.loadPage(0, this.pageSize, {});
   }
 
   onShowInhabilitados(): void {
     this.searchTerm = '';
     this.inhabilitadosMode = true;
     this.filtrosActuales = {};
-    this.barberoService.listarInhabilitados(0, 10).subscribe((res: any) => this.aplicarPagina(res));
+    this.barberoService.listarInhabilitados(0, this.pageSize).subscribe((res: any) => this.aplicarPagina(res));
   }
 
   onDisableBarbero(id: number): void {
     this.barberoService.deshabilitar(id).subscribe({
-      next: () => this.inhabilitadosMode ? this.onShowInhabilitados() : this.loadPage(this.currentPage, 10, this.filtrosActuales),
+      next: () => this.inhabilitadosMode ? this.onShowInhabilitados() : this.loadPage(this.currentPage, this.pageSize, this.filtrosActuales),
       error: (error) => console.error('Error al deshabilitar barbero', error),
     });
   }
@@ -142,8 +144,8 @@ export class Barberos implements OnInit {
 
   private buscarBarberosPorNombre(termino: string): void {
     forkJoin({
-      activos: this.barberoService.buscarPorNombre(termino, 0, 10),
-      inhabilitados: this.barberoService.listarInhabilitados(0, 10),
+      activos: this.barberoService.buscarPorNombre(termino, 0, this.pageSize),
+      inhabilitados: this.barberoService.listarInhabilitados(0, this.pageSize),
     }).subscribe({
       next: ({ activos, inhabilitados }) => {
         const texto = termino.toLowerCase();
@@ -188,11 +190,18 @@ export class Barberos implements OnInit {
 
   abrirCrear(): void { }
 
-  onPrev(): void {
-    if (this.currentPage > 0) this.loadPage(this.currentPage - 1, 10, this.filtrosActuales);
-  }
+  onPageChange(page: number): void {
+    if (this.inhabilitadosMode) {
+      this.barberoService.listarInhabilitados(page, this.pageSize).subscribe((res: any) => this.aplicarPagina(res));
+      return;
+    }
 
-  onNext(): void {
-    if (this.currentPage < this.totalPages - 1) this.loadPage(this.currentPage + 1, 10, this.filtrosActuales);
+    if (this.searchTerm) {
+      // La búsqueda combinada (activos + inhabilitados) trae todo en una sola "página" (totalPages: 1),
+      // así que no hay nada que paginar mientras el buscador esté activo.
+      return;
+    }
+
+    this.loadPage(page, this.pageSize, this.filtrosActuales);
   }
 }

@@ -1,51 +1,34 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule, AsyncPipe } from '@angular/common';
-import {
-  FormBuilder,
-  ReactiveFormsModule,
-  Validators,
-  AbstractControl,
-  ValidationErrors
-} from '@angular/forms';
-
-import { map, Observable, of, Subject, takeUntil, debounceTime, switchMap, catchError, finalize } from 'rxjs';
-
+import { Component, EventEmitter, inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Subject, finalize, debounceTime, distinctUntilChanged, switchMap, takeUntil, of, catchError } from 'rxjs';
+import { AutoCompleteModule, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
-
 import { Cliente } from '@/app/core/models/gestion/cliente/cliente.model';
 import { ClienteService } from '@/app/core/services/gestion/cliente.service';
 import { Barbero } from '@/app/core/models/gestion/barbero/barbero.model';
 import { BarberoService } from '@/app/core/services/gestion/barbero.service';
-import { Servicio } from '@/app/core/models/catalogos/servicios.model';
+import { Servicio, ServicioFiltro } from '@/app/core/models/catalogos/servicios.model';
 import { ServicioService } from '@/app/core/services/catalogos/servicio.service';
-import { Router } from '@angular/router';
 import { ReservaService } from '@/app/core/services/operaciones/reserva.service';
 import { ReservaRequest } from '@/app/core/models/reserva/reservaRequest';
-import { ServicioFiltro } from '@/app/core/models/catalogos/servicios.model';
 
 @Component({
   selector: 'app-create-reserva',
   standalone: true,
   imports: [
-    CommonModule,
-    AsyncPipe,
-    ReactiveFormsModule,
-    SelectModule,
-    DatePickerModule,
-    ButtonModule,
-    ToastModule,
-    DialogModule
+    CommonModule, FormsModule, ReactiveFormsModule, AutoCompleteModule, SelectModule, DatePickerModule, ButtonModule, ToastModule, DialogModule
   ],
   providers: [MessageService],
   templateUrl: './create-reserva.html',
   styleUrl: './create-reserva.css'
 })
-export class CreateReserva implements OnInit, OnDestroy {
+export class CreateReserva implements OnInit, OnDestroy, OnChanges {
 
   private fb = inject(FormBuilder);
   private clienteService = inject(ClienteService);
@@ -53,24 +36,32 @@ export class CreateReserva implements OnInit, OnDestroy {
   private servicioService = inject(ServicioService);
   private reservaService = inject(ReservaService);
   private messageService = inject(MessageService);
-  private router = inject(Router);
 
   private destroy$ = new Subject<void>();
+  private buscarClienteSubject = new Subject<string>();
+  private buscarBarberoSubject = new Subject<string>();
+  private buscarServicioSubject = new Subject<string>();
 
-  clientes$!: Observable<Cliente[]>;
-  barberos$!: Observable<Barbero[]>;
-  servicios$!: Observable<Servicio[]>;
+  @Input() resetTrigger = 0;
+  @Output() guardar = new EventEmitter<any>();
+  @Output() cancelarEvento = new EventEmitter<void>();
 
   isLoading = false;
-  checkingDisponibility = false;
   showConfirmDialog = false;
   reservaPreview: any = null;
   today = new Date();
 
-  clientesCache: any[] = [];
-  barberosCache: any[] = [];
-  serviciosCache: Servicio[] = [];
-  servicioFiltro: ServicioFiltro = { page: 0, size: 1000 };
+  clientesSugeridos: Cliente[] = [];
+  barberosSugeridos: Barbero[] = [];
+  serviciosSugeridos: Servicio[] = [];
+
+  clienteSeleccionado: Cliente | null = null;
+  barberoSeleccionado: Barbero | null = null;
+  servicioSeleccionado: Servicio | null = null;
+
+  buscandoCliente = false;
+  buscandoBarbero = false;
+  buscandoServicio = false;
 
   get horarios() {
     const todosLosHorarios = [
@@ -116,20 +107,45 @@ export class CreateReserva implements OnInit, OnDestroy {
       if (hh === horaActual && mm <= minActual) return false;
       return true;
     });
-  } onFechaChange(): void {
+  }
+
+  onFechaChange(): void {
     this.reservaForm.get('hora')?.reset();
   }
+
   reservaForm = this.fb.group({
-    clienteId: [null, [Validators.required]],
-    barberoId: [null, [Validators.required]],
-    servicioId: [null, [Validators.required]],
-    fecha: [null, [Validators.required, this.fechaValida.bind(this)]],
-    hora: [null, [Validators.required]],
-    observacion: ['', [Validators.maxLength(500)]]
+    clienteId: this.fb.control<number | null>(null, [Validators.required]),
+    barberoId: this.fb.control<number | null>(null, [Validators.required]),
+    servicioId: this.fb.control<number | null>(null, [Validators.required]),
+    fecha: this.fb.control<Date | null>(null, [Validators.required, this.fechaValida.bind(this)]),
+    hora: this.fb.control<string | null>(null, [Validators.required]),
+    observacion: this.fb.control<string>('', [Validators.maxLength(500)])
   });
 
   ngOnInit(): void {
-    this.cargarDatos();
+    this.configurarBusquedas();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['resetTrigger'] && !changes['resetTrigger'].firstChange) {
+      this.reservaForm.reset({
+        clienteId: null,
+        barberoId: null,
+        servicioId: null,
+        fecha: null,
+        hora: null,
+        observacion: ''
+      });
+      this.clienteSeleccionado = null;
+      this.barberoSeleccionado = null;
+      this.servicioSeleccionado = null;
+      this.clientesSugeridos = [];
+      this.barberosSugeridos = [];
+      this.serviciosSugeridos = [];
+      this.reservaPreview = null;
+      this.showConfirmDialog = false;
+      this.isLoading = false;
+    }
   }
 
   ngOnDestroy(): void {
@@ -137,53 +153,99 @@ export class CreateReserva implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private cargarDatos(): void {
-    // Cargar clientes
-    this.clientes$ = this.clienteService.listar(0, 1000).pipe(
-      map(response => {
-        if (response?.data?.content) {
-          this.clientesCache = response.data.content.map((cliente: Cliente) => ({
-            ...cliente,
-            nombreCompleto: `${cliente.persona.nombre} ${cliente.persona.apellido}`,
-            email: cliente.persona.email,
-            telefono: cliente.persona.telefono
-          }));
+  private configurarBusquedas(): void {
+    this.buscarClienteSubject.pipe(
+      debounceTime(350),
+      distinctUntilChanged(),
+      switchMap(texto => {
+        this.buscandoCliente = true;
+        return this.clienteService.buscarPorNombre(texto, 0, 10).pipe(
+          catchError(() => of(null))
+        );
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe(response => {
+      this.buscandoCliente = false;
+      this.clientesSugeridos = (response?.data?.content ?? []).map((cliente: Cliente) => ({
+        ...cliente,
+        nombreCompleto: `${cliente.persona?.nombre ?? ''} ${cliente.persona?.apellido ?? ''}`.trim()
+      }));
+    });
 
-          return this.clientesCache;
-        }
+    this.buscarBarberoSubject.pipe(
+      debounceTime(350),
+      distinctUntilChanged(),
+      switchMap(texto => {
+        this.buscandoBarbero = true;
+        return this.barberoService.buscarPorNombre(texto, 0, 10).pipe(
+          catchError(() => of(null))
+        );
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe(response => {
+      this.buscandoBarbero = false;
+      this.barberosSugeridos = (response?.data?.content ?? []).map((barbero: Barbero) => ({
+        ...barbero,
+        nombreCompleto: `${barbero.persona?.nombre ?? ''} ${barbero.persona?.apellido ?? ''}`.trim()
+      }));
+    });
 
-        return [];
-      })
-    );
-
-    // Cargar barberos
-    this.barberos$ = this.barberoService.listar(0, 1000).pipe(
-      map(response => {
-        if (response?.data?.content) {
-
-          this.barberosCache = response.data.content.map((barbero: Barbero) => ({
-            ...barbero,
-            nombreCompleto: `${barbero.persona?.nombre ?? ''} ${barbero.persona?.apellido ?? ''}`.trim()
-          } as Barbero & { nombreCompleto: string }));
-
-          return this.barberosCache;
-        }
-
-        return [];
-      })
-    );
-
-    // Cargar servicios
-    this.servicios$ = this.servicioService.obtenerServiciosConFiltro(this.servicioFiltro).pipe(
-      map(servicios => {
-        if (servicios?.data?.content) {
-          this.serviciosCache = servicios.data.content;
-        }
-        return this.serviciosCache;
-      })
-    );
+    this.buscarServicioSubject.pipe(
+      debounceTime(350),
+      distinctUntilChanged(),
+      switchMap(texto => {
+        this.buscandoServicio = true;
+        const filtro: Partial<ServicioFiltro> = { page: 0, size: 10, nombre: texto };
+        return this.servicioService.obtenerServiciosConFiltro(filtro).pipe(
+          catchError(() => of(null))
+        );
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe(response => {
+      this.buscandoServicio = false;
+      this.serviciosSugeridos = response?.data?.content ?? [];
+    });
   }
 
+  buscarCliente(event: AutoCompleteCompleteEvent): void {
+    this.buscarClienteSubject.next(event.query);
+  }
+
+  buscarBarbero(event: AutoCompleteCompleteEvent): void {
+    this.buscarBarberoSubject.next(event.query);
+  }
+
+  buscarServicio(event: AutoCompleteCompleteEvent): void {
+    this.buscarServicioSubject.next(event.query);
+  }
+
+  // ---- Handlers al seleccionar un item del autocomplete ----
+  onSeleccionarCliente(event: AutoCompleteSelectEvent): void {
+    const cliente = event.value as Cliente;
+    this.reservaForm.get('clienteId')?.setValue(cliente?.clienteId ?? null);
+  }
+
+  onSeleccionarBarbero(event: AutoCompleteSelectEvent): void {
+    const barbero = event.value as Barbero;
+    this.reservaForm.get('barberoId')?.setValue(barbero?.barberoId ?? null);
+  }
+
+  onSeleccionarServicio(event: AutoCompleteSelectEvent): void {
+    const servicio = event.value as Servicio;
+    this.reservaForm.get('servicioId')?.setValue(servicio?.servicioId ?? null);
+  }
+
+  onLimpiarCliente(): void {
+    this.reservaForm.get('clienteId')?.setValue(null);
+  }
+
+  onLimpiarBarbero(): void {
+    this.reservaForm.get('barberoId')?.setValue(null);
+  }
+
+  onLimpiarServicio(): void {
+    this.reservaForm.get('servicioId')?.setValue(null);
+  }
 
   fechaValida(control: AbstractControl): ValidationErrors | null {
     const fecha = control.value;
@@ -252,8 +314,6 @@ export class CreateReserva implements OnInit, OnDestroy {
       observacion: form.observacion ?? ''
     };
 
-    console.log('Payload enviado:', reservaRequest);
-
     this.reservaService.guardarReserva(reservaRequest)
       .pipe(
         finalize(() => {
@@ -262,8 +322,6 @@ export class CreateReserva implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (response: any) => {
-          console.log('Respuesta crear reserva:', response);
-
           this.messageService.add({
             severity: 'success',
             summary: '¡Reserva creada!',
@@ -271,14 +329,10 @@ export class CreateReserva implements OnInit, OnDestroy {
             life: 3000
           });
 
-          setTimeout(() => {
-            this.router.navigate(['/dashboard/admin/operaciones/reservas']);
-          }, 2000);
+          this.guardar.emit(response);
         },
 
         error: (error) => {
-          console.error('Error al guardar reserva:', error);
-
           this.messageService.add({
             severity: 'error',
             summary: 'Error del servidor',
@@ -292,29 +346,21 @@ export class CreateReserva implements OnInit, OnDestroy {
   }
 
   getClienteNombre(): string {
-    const clienteId = this.reservaForm.get('clienteId')?.value;
-    const cliente = this.clientesCache.find(c => c.clienteId === clienteId);
-    return cliente?.nombreCompleto || 'Cargando...';
+    return this.clienteSeleccionado?.persona?.nombre + ' ' + this.clienteSeleccionado?.persona?.apellido || 'Cargando...';
   }
 
   getBarberoNombre(): string {
-    const barberoId = this.reservaForm.get('barberoId')?.value;
-    const barbero = this.barberosCache.find(b => b.barberoId === barberoId);
-    return barbero?.nombreCompleto || 'Cargando...';
+    return this.barberoSeleccionado?.persona?.nombre + ' ' + this.barberoSeleccionado?.persona?.apellido || 'Cargando...';
   }
 
   getServicioNombre(): string {
-    const servicioId = this.reservaForm.get('servicioId')?.value;
-    if (servicioId == null) return 'Cargando...';
-    const servicio = this.serviciosCache.find(s => s.servicioId === servicioId);
-    return servicio?.nombre || 'Cargando...';
+    return this.servicioSeleccionado?.nombre || 'Cargando...';
   }
 
   cancelar(): void {
-    this.router.navigate(['/dashboard/admin/operaciones/reservas']);
+    this.cancelarEvento.emit();
   }
 
-  // Getters para validaciones
   get clienteInvalido(): boolean {
     const control = this.reservaForm.get('clienteId');
     return !!control?.invalid && control.touched;

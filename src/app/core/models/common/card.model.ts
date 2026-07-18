@@ -33,5 +33,5 @@ export const RECLAMOS_STATS_CONFIG: StatsCardConfig[] = [
     { key: 'resueltos', title: 'Resueltos',   icon: 'pi pi-check-circle',       accentClass: 'bg-green-500',   accentTextClass: 'text-green-400',   iconBgClass: 'bg-green-500/10'   },
     { key: 'cerrados',  title: 'Cerrados',    icon: 'pi pi-lock',               accentClass: 'bg-teal-500',    accentTextClass: 'text-teal-400',    iconBgClass: 'bg-teal-500/10'    },
     { key: 'anulados',  title: 'Anulados',    icon: 'pi pi-ban',                accentClass: 'bg-red-500',     accentTextClass: 'text-red-400',     iconBgClass: 'bg-red-500/10'     },
-    { key: 'total',     title: 'Total',       icon: 'pi pi-list',               accentClass: 'bg-purple-500',  accentTextClass: 'text-purple-400',  iconBgClass: 'bg-purple-500/10'  },
+    { key: 'total',     title: 'Total',       icon: 'pi pi-list',               accentClass: 'bg-brand-gold',  accentTextClass: 'text-brand-gold',  iconBgClass: 'bg-brand-gold/10'  },
 ];

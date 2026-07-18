@@ -483,7 +483,8 @@ p-colorpicker {
 	@apply bg-ui-border text-white border border-ui-border;
 }
 
-.p-button.boton-danger {
+.p-button.boton-danger,
+.boton-danger {
 	@apply boton-base bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white border border-red-400;
 }
 
@@ -493,6 +494,15 @@ p-colorpicker {
 
 .p-button.boton-warning {
 	@apply boton-base bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500 hover:text-black;
+}
+
+.p-button.boton-anular,
+.boton-anular {
+	@apply boton-base bg-amber-500/10 text-amber-400 hover:bg-amber-500 hover:text-white border border-amber-400;
+}
+
+.p-button.boton-anular:not(:disabled):hover {
+	@apply bg-amber-500 text-white border border-amber-400;
 }
 
 .p-button.boton-cierre,
@@ -608,19 +618,19 @@ p-colorpicker {
 }
 
 .boton-agregar .p-button {
-	@apply boton-tabla text-emerald-500 border border-emerald-500/30 bg-emerald-500/10;
+	@apply boton-tabla text-teal-500 border border-teal-500/30 bg-teal-500/10;
 }
 
 .boton-agregar .p-button:not(:disabled):hover {
-	@apply bg-emerald-500 text-white border border-emerald-500/30;
+	@apply bg-teal-500 text-white border border-teal-500/30;
 }
 
 .boton-agregar-texto .p-button {
-	@apply font-bold py-3 px-6 w-auto rounded-xl transition-all duration-300 cursor-pointer hover:scale-105 text-emerald-500 border border-emerald-500/30 bg-emerald-500/10;
+	@apply font-bold py-3 px-6 w-auto rounded-xl transition-all duration-300 cursor-pointer hover:scale-105 text-teal-500 border border-teal-500/30 bg-teal-500/10;
 }
 
 .boton-agregar-texto .p-button:not(:disabled):hover {
-	@apply bg-emerald-500 text-white border border-emerald-500/30;
+	@apply bg-teal-500 text-white border border-teal-500/30;
 }
 
 .boton-search {
@@ -1461,6 +1471,11 @@ p-paginator.p-paginator {
 .p-datepicker-next-button:hover {
 	color: var(--color-brand-gold) !important;
 	background: var(--color-brand-gold-soft) !important;
+}
+.p-datepicker-dropdown {
+	background: var(--color-brand-dark) !important;
+	border: 1px solid var(--color-ui-border) !important;
+	color: var(--color-text-primary) !important;
 }
 
 /* Días de la semana */

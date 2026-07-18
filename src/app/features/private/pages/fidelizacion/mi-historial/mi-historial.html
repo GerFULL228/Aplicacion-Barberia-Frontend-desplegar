@@ -23,9 +23,8 @@
 
                 <!-- Error -->
                 <div *ngIf="!cargandoGiros() && errorGiros()">
-                    <p-message severity="error" [text]="errorGiros()!" styleClass="w-full"></p-message>
-                    <p-button label="Reintentar" icon="pi pi-refresh" [text]="true" size="small" styleClass="mt-2"
-                        (onClick)="cargarGiros()"></p-button>
+                    <p-message severity="error" [text]="errorGiros()!" styleClass="w-full" variant="simple" size="small"></p-message>
+                    <p-button label="Reintentar" icon="pi pi-refresh" [text]="true" size="small" styleClass="mt-2" (onClick)="cargarGiros()"></p-button>
                 </div>
 
                 <!-- Empty -->
@@ -47,8 +46,7 @@
                         </div>
                         <div class="giro-bottom">
                             <span>{{ giro.fecha | date:'dd MMM yyyy, HH:mm' }}</span>
-                            <span *ngIf="giro.probAplicada != null">Prob. {{ formatearProbabilidad(giro.probAplicada)
-                                }}</span>
+                            <span *ngIf="giro.probAplicada != null">Prob. {{ formatearProbabilidad(giro.probAplicada)}}</span>
                         </div>
                     </div>
                 </div>
@@ -63,8 +61,7 @@
                         <i class="pi pi-clock"></i>
                         {{ vistaCompleta() ? 'Mis movimientos' : 'Últimos movimientos' }}
                     </span>
-                    <p-button [label]="vistaCompleta() ? 'Ver recientes' : 'Ver todos'" [text]="true" size="small"
-                        (onClick)="toggleVistaMovimientos()"></p-button>
+                    <p-button [label]="vistaCompleta() ? 'Ver recientes' : 'Ver todos'" [text]="true" size="small" (onClick)="toggleVistaMovimientos()"></p-button>
                 </div>
             </ng-template>
 
@@ -76,9 +73,8 @@
 
                 <!-- Error -->
                 <div *ngIf="!cargandoMovimientos() && errorMovimientos()">
-                    <p-message severity="error" [text]="errorMovimientos()!" styleClass="w-full"></p-message>
-                    <p-button label="Reintentar" icon="pi pi-refresh" [text]="true" size="small" styleClass="mt-2"
-                        (onClick)="recargarMovimientos()"></p-button>
+                    <p-message severity="error" [text]="errorMovimientos()!" styleClass="w-full" variant="simple" size="small"></p-message>
+                    <p-button label="Reintentar" icon="pi pi-refresh" [text]="true" size="small" styleClass="mt-2" (onClick)="recargarMovimientos()"></p-button>
                 </div>
 
                 <!-- Empty -->
@@ -89,8 +85,7 @@
                 </div>
 
                 <!-- Timeline -->
-                <p-timeline *ngIf="!cargandoMovimientos() && !errorMovimientos() && movimientos().length > 0"
-                    [value]="movimientos()" align="left">
+                <p-timeline *ngIf="!cargandoMovimientos() && !errorMovimientos() && movimientos().length > 0" [value]="movimientos()" align="left">
                     <ng-template pTemplate="marker" let-mov>
                         <span class="mov-marker" [ngClass]="'sev-' + origenSeverity(mov.origen)">
                             <i [class]="origenIcon(mov.origen)"></i>
@@ -101,11 +96,9 @@
                         <div class="mov-content">
                             <div class="mov-row">
                                 <span class="mov-desc">{{ mov.descripcion || origenLabel(mov.origen) }}</span>
-                                <p-tag [value]="(mov.puntos >= 0 ? '+' : '') + mov.puntos + ' pts'"
-                                    [severity]="mov.puntos >= 0 ? 'success' : 'danger'"></p-tag>
+                                <p-tag [value]="(mov.puntos >= 0 ? '+' : '') + mov.puntos + ' pts'" [severity]="mov.puntos >= 0 ? 'success' : 'danger'"></p-tag>
                             </div>
-                            <div class="mov-meta">{{ origenLabel(mov.origen) }} · {{ mov.createdAt | date:'dd MMM yyyy,
-                                HH:mm' }}</div>
+                            <div class="mov-meta">{{ origenLabel(mov.origen) }} · {{ mov.createdAt | date:'dd MMM yyyy,HH:mm' }}</div>
                         </div>
                     </ng-template>
                 </p-timeline>
