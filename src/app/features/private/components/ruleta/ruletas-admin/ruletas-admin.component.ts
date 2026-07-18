@@ -20,7 +20,6 @@ import { RuletaItemTableComponent } from './ruleta-item/ruleta-item-table/ruleta
 import { RULETA_TABS } from '@/app/core/config/tabs.config';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RuletaConfiguracionesComponent } from './ruleta-configuraciones/ruleta-configuraciones.component';
-import { ConfiguracionFiltro } from '@/app/core/models/ruleta/ruleta-configuracion.model';
 import { FILTROS_ITEM, FILTROS_RULETA } from '@/app/core/config/filtros.config';
 import { FiltrosComponent } from '@/app/shared/components/filtros/filtros.component';
 

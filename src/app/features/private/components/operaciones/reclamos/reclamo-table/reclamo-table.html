@@ -29,8 +29,15 @@
                             </div>
                         </td>
                 
-                        <td class="whitespace-nowrap text-center text-sm text-brand-white">
-                            {{ reclamo.fechaReclamo || '—' | date:'dd/MM/yyyy HH:mm'  }}
+                        <td class="whitespace-nowrap text-center">
+                            <div class="flex flex-col items-center">
+                                <span class="font-medium text-white text-sm">
+                                    {{ reclamo.fechaReclamo | date:'dd/MM/yyyy' }}
+                                </span> 
+                                <span class="text-xs text-[#888888]">
+                                    {{ reclamo.fechaReclamo | date:'HH:mm' }}
+                                </span>
+                            </div>
                         </td>
 
                         <td class="whitespace-nowrap text-center">

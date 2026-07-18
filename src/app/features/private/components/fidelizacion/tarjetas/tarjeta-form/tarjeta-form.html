@@ -1,3 +1,4 @@
+@if (tarjetaForm) {
 <form [formGroup]="tarjetaForm" class="flex flex-col gap-6 p-2 m-10">
     <div class="part-form">
         <label for="clienteId">Cliente *</label>
@@ -20,3 +21,4 @@
         <button pButton label="Cancelar" class="boton-cancel w-full sm:w-auto" type="button" (click)="onCancelar()"></button>
     </div>
 </form>
+}

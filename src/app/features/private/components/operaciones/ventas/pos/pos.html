@@ -225,14 +225,11 @@
 
             <div class="flex flex-col gap-3 mt-2">
                 <button pButton type="button" icon="pi pi-check-circle" label="Procesar Cobro"
-                    [disabled]="ventaForm.invalid || itemsCarrito.length === 0" class="boton-submit w-full h-12 text-lg"
+                    [disabled]="ventaForm.invalid || itemsCarrito.length === 0" class="boton-submit w-full h-12 text-lg cursor-pointer"
                     (click)="abrirModalPago()">
                 </button>
 
-                <button pButton type="button" icon="pi pi-arrow-left" label="Regresar a Ventas"
-                    class="boton-cancel w-full h-10 p-button-secondary p-button-outlined text-sm"
-                    (click)="regresarAlHistorial()">
-                </button>
+                <button pButton type="button" icon="pi pi-arrow-left" label="Regresar a Ventas" class="boton-cancel w-full h-10 p-button-secondary p-button-outlined text-sm" (click)="regresarAlHistorial()"> </button>
             </div>
 
         </div>

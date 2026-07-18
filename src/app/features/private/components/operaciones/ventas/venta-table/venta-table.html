@@ -23,10 +23,7 @@
                     <td class="px-4 py-3 whitespace-nowrap">
                         <div class="inline-flex items-center gap-3">
                             @if((venta.detalles ?? []).length > 0) {
-                                <p-button type="button" [pRowToggler]="venta" 
-                                    [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" 
-                                    class="boton-expandir-tabla">
-                                </p-button>
+                                <p-button type="button" [pRowToggler]="venta"  [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"  class="boton-expandir-tabla"></p-button>
                             }
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/5 text-[#888888] border border-white/10">
                                 {{ venta.numeroCorrelativo || ('#' + venta.ventaId) }}

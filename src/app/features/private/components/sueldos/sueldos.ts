@@ -8,8 +8,7 @@ import { TablaSueldos } from './components/tabla-sueldos/tabla-sueldos';
 import { PlanillaService } from '@core/services/planilla/planilla.service';
 
 import {
-  PlanillaResumen,
-  PlanillaBarbero
+  PlanillaResumen
 } from '@core/models/planilla/planilla.model';
 
 @Component({

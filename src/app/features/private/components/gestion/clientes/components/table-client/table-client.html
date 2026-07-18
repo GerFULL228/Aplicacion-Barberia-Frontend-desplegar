@@ -1,119 +1,73 @@
-<div class="table-base p-4 md:p-6 lg:p-8">
+<div class="p-4 md:p-6 lg:p-8 bg-neutral-primary-lighter rounded-base shadow-sm">
 
-	<div
-		class="relative w-full overflow-x-auto rounded-xl border border-ui-border bg-brand-black shadow-lg shadow-black/20">
+	<div class="relative w-full overflow-x-auto">
+		<p-table [value]="clients" [lazy]="true" (onLazyLoad)="onLazyLoad($event)" [paginator]="true"
+			[rows]="rows" [first]="currentPage * rows" [totalRecords]="totalElements" dataKey="clienteId"
+			[showCurrentPageReport]="true" currentPageReportTemplate="Viendo {first} a {last} de {totalRecords} entradas"
+			[tableStyle]="{ 'min-width': '960px' }" class="rounded-xl">
 
-		<table class="w-full min-w-240 table-fixed border-collapse">
-
-			<thead>
-				<tr class="table-header border-b border-gray-800 text-xs uppercase tracking-[0.2em] text-brand-gold/80">
-
-					<th class="py-3 px-3 text-center w-[8%]">
-						ID
-					</th>
-
-					<th class="py-3 px-3 text-left w-[16%]">
-						Nombre
-					</th>
-
-					<th class="py-3 px-3 text-left w-[16%]">
-						Apellido
-					</th>
-
-					<th class="py-3 px-3 text-left w-[18%]">
-						Número
-					</th>
-
-					<th class="py-3 px-3 text-left w-[22%]">
-						Correo
-					</th>
-
-
-					<th class="py-3 px-3 text-center w-[6%]">
-						Acción
-					</th>
-
+			<ng-template #header>
+				<tr>
+					<th class="whitespace-nowrap text-center">ID</th>
+					<th class="whitespace-nowrap text-left">Nombre</th>
+					<th class="whitespace-nowrap text-left">Apellido</th>
+					<th class="whitespace-nowrap text-left">Número</th>
+					<th class="whitespace-nowrap text-left">Correo</th>
+					<th class="whitespace-nowrap text-center">Acción</th>
 				</tr>
-			</thead>
+			</ng-template>
 
-			<tbody class="divide-y divide-gray-800">
-
-				<tr *ngFor="let c of clients"
-					class="table-row align-middle transition-colors duration-200 hover:bg-white/5">
-
-					<td class="py-4 px-3 text-center w-[8%]">
-
-						<div class="cliente-avatar mx-auto">
-							{{ c.clienteId }}
-						</div>
-
+			<ng-template #body let-c pTemplate="body">
+				<tr>
+					<td class="whitespace-nowrap text-center">
+						<span class="cliente-avatar mx-auto">{{ initials(c.persona.nombre + ' ' + c.persona.apellido) }}</span>
 					</td>
 
-					<td class="py-4 px-3 font-semibold text-gray-100 leading-tight">
+					<td class="whitespace-nowrap text-left font-medium text-neutral-primary-darker">
 						{{ c.persona.nombre }}
 					</td>
 
-					<td class="py-4 px-3 font-semibold text-gray-100 leading-tight">
+					<td class="whitespace-nowrap text-left font-medium text-neutral-primary-darker">
 						{{ c.persona.apellido }}
 					</td>
 
-					<td class="py-4 px-3 text-gray-400 whitespace-nowrap">
-
-						{{ c.persona.telefono }}
+					<td class="whitespace-nowrap text-left text-neutral-primary-dark">
+						{{ c.persona.telefono || 'N/A' }}
 					</td>
 
-					<td class="py-4 px-3 text-gray-400 whitespace-nowrap">
-						{{ c.persona.email }}
+					<td class="whitespace-nowrap text-left text-neutral-primary-dark">
+						{{ c.persona.email || 'N/A' }}
 					</td>
 
-
-					<td class="py-4 px-3 text-center w-[6%]">
-
-						<div class="table-actions">
+					<td class="whitespace-nowrap text-center">
+						<div class="flex flex-row justify-center gap-1">
 							@if (isSearchMode) {
-								<p-button icon="pi pi-eye" class="boton-editar-tabla" [routerLink]="[c.clienteId]"></p-button>
-								<p-button icon="pi pi-user-minus" class="boton-eliminar-tabla" (click)="onDelete(c.clienteId)"></p-button>
-								<p-button icon="pi pi-user-plus" class="boton-editar-tabla" (click)="onReactivate(c.clienteId)"></p-button>
+								<p-button icon="pi pi-eye" class="boton-editar-tabla" pTooltip="Ver detalle" tooltipPosition="top" [routerLink]="[c.clienteId]" />
+								<p-button icon="pi pi-user-minus" class="boton-eliminar-tabla" pTooltip="Deshabilitar" tooltipPosition="top" (onClick)="onDelete(c.clienteId)" />
+								<p-button icon="pi pi-user-plus" class="boton-editar-tabla" pTooltip="Reactivar" tooltipPosition="top" (onClick)="onReactivate(c.clienteId)" />
 							} @else if (activeFilter === 'deshabilitados') {
-								<p-button icon="pi pi-user-plus" class="boton-editar-tabla" (click)="onReactivate(c.clienteId)"></p-button>
+								<p-button icon="pi pi-user-plus" class="boton-editar-tabla" pTooltip="Reactivar" tooltipPosition="top" (onClick)="onReactivate(c.clienteId)" />
 							} @else {
-								<p-button icon="pi pi-eye" class="boton-editar-tabla" [routerLink]="[c.clienteId]"></p-button>
-								<p-button icon="pi pi-user-minus" class="boton-eliminar-tabla" (click)="onDelete(c.clienteId)"></p-button>
+								<p-button icon="pi pi-eye" class="boton-editar-tabla" pTooltip="Ver detalle" tooltipPosition="top" [routerLink]="[c.clienteId]" />
+								<p-button icon="pi pi-user-minus" class="boton-eliminar-tabla" pTooltip="Deshabilitar" tooltipPosition="top" (onClick)="onDelete(c.clienteId)" />
 							}
 						</div>
-
 					</td>
-
 				</tr>
+			</ng-template>
 
-			</tbody>
+			<ng-template #emptymessage>
+				<tr>
+					<td colspan="6" class="text-center py-16">
+						<div class="flex flex-col items-center gap-3 text-neutral-primary-dark">
+							<i class="pi pi-users text-4xl"></i>
+							<p class="text-sm font-medium">No hay clientes que coincidan</p>
+						</div>
+					</td>
+				</tr>
+			</ng-template>
 
-		</table>
-
-		<div class="flex items-center justify-between gap-3 px-4 py-3 text-sm text-gray-400 border-t border-gray-800">
-
-			<div>
-				Mostrando {{ clients.length }} de {{ totalElements }}
-			</div>
-
-			<div class="flex items-center gap-2">
-
-				<button pButton type="button" class="boton-paginacion-cliente" label="|Ant"
-					(click)="onPrev()" [disabled]="!canGoPrev">
-				</button>
-
-				<button pButton type="button" class="boton-paginacion-cliente activo"
-					[label]="(currentPage + 1).toString()">
-				</button>
-
-				<button pButton type="button" class="boton-paginacion-cliente" label="Sig"
-					(click)="onNext()" [disabled]="!canGoNext">
-				</button>
-
-			</div>
-
-		</div>
-
+		</p-table>
 	</div>
 
 </div>

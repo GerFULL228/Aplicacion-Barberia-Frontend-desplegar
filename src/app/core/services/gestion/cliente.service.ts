@@ -17,87 +17,29 @@ export class ClienteService {
 
     private apiUrl = `${environment.apiUrl}/clientes`;
 
-    listar(
-        page: number = 0,
-        size: number = 5
-    ): Observable<ApiResponse<Page<Cliente>>> {
-
-        const params = new HttpParams()
-            .set('page', page)
-            .set('size', size);
-
-        return this.http.get<ApiResponse<Page<Cliente>>>(
-            this.apiUrl,
-            { params }
-        );
+    listar(page: number = 0, size: number = 5): Observable<ApiResponse<Page<Cliente>>> {
+        const params = new HttpParams().set('page', page).set('size', size);
+        return this.http.get<ApiResponse<Page<Cliente>>>(this.apiUrl, { params });
     }
 
-     listarInhabilitados(
-        page: number = 0,
-        size: number = 5
-    ): Observable<ApiResponse<Page<Cliente>>> {
-
-        const params = new HttpParams()
-            .set('page', page)
-            .set('size', size);
-
-        return this.http.get<ApiResponse<Page<Cliente>>>(
-             `${this.apiUrl}/inhabilitados`,
-            { params }
-        );
+    listarInhabilitados(page: number = 0, size: number = 5): Observable<ApiResponse<Page<Cliente>>> {
+        const params = new HttpParams().set('page', page).set('size', size);
+        return this.http.get<ApiResponse<Page<Cliente>>>(`${this.apiUrl}/inhabilitados`, { params });
     }
 
-    buscarPorNombre(
-        nombre: string,
-        page: number = 0,
-        size: number = 5
-    ): Observable<ApiResponse<Page<Cliente>>> {
-
-        const params = new HttpParams()
-            .set('nombre', nombre)
-            .set('page', page)
-            .set('size', size);
-
-        return this.http.get<ApiResponse<Page<Cliente>>>(
-            `${this.apiUrl}/buscar`,
-            { params }
-        );
+    buscarPorNombre(nombre: string, page: number = 0, size: number = 5): Observable<ApiResponse<Page<Cliente>>> {
+        const params = new HttpParams().set('nombre', nombre).set('page', page).set('size', size);
+        return this.http.get<ApiResponse<Page<Cliente>>>(`${this.apiUrl}/buscar`, { params });
     }
 
-    filtrarPorTipo(
-        filtro: 'recientes' | 'mes' | 'anio',
-        page: number = 0,
-        size: number = 5
-    ): Observable<ApiResponse<Page<Cliente>>> {
-
-        const params = new HttpParams()
-            .set('filtro', filtro)
-            .set('page', page)
-            .set('size', size);
-
-        return this.http.get<ApiResponse<Page<Cliente>>>(
-            `${this.apiUrl}/filtrar`,
-            { params }
-        );
+    filtrarPorTipo(filtro: 'recientes' | 'mes' | 'anio', page: number = 0, size: number = 5): Observable<ApiResponse<Page<Cliente>>> {
+        const params = new HttpParams().set('filtro', filtro).set('page', page).set('size', size);
+        return this.http.get<ApiResponse<Page<Cliente>>>(`${this.apiUrl}/filtrar`, { params });
     }
 
-    filtrarPorRango(
-        fechaInicio: string,
-        fechaFin: string,
-        page: number = 0,
-        size: number = 5
-    ): Observable<ApiResponse<Page<Cliente>>> {
-
-        const params = new HttpParams()
-            .set('fechaInicio', fechaInicio)
-            .set('fechaFin', fechaFin)
-            .set('page', page)
-            .set('size', size);
-
-        return this.http.get<ApiResponse<Page<Cliente>>>(
-            `${this.apiUrl}/filtrar/rango`,
-            { params }
-        );
+    filtrarPorRango(fechaInicio: string, fechaFin: string, page: number = 0, size: number = 5): Observable<ApiResponse<Page<Cliente>>> {
+        const params = new HttpParams().set('fechaInicio', fechaInicio).set('fechaFin', fechaFin).set('page', page).set('size', size)
+        return this.http.get<ApiResponse<Page<Cliente>>>(`${this.apiUrl}/filtrar/rango`, { params });
     }
 
     obtenerPorId(id: number): Observable<ApiResponse<Cliente>> {
@@ -105,39 +47,26 @@ export class ClienteService {
     }
 
     obtenerResumen(): Observable<ApiResponse<ClienteResumen>> {
-        return this.http.get<ApiResponse<ClienteResumen>>(
-            `${this.apiUrl}/resumen`
-        );
-
+        return this.http.get<ApiResponse<ClienteResumen>>(`${this.apiUrl}/resumen`);
     }
 
     obtenerResumenCliente(id: number): Observable<ApiResponse<ClienteDetalleResumen>> {
-        return this.http.get<ApiResponse<ClienteDetalleResumen>>(
-            `${this.apiUrl}/${id}/resumen`
-        );
+        return this.http.get<ApiResponse<ClienteDetalleResumen>>(`${this.apiUrl}/${id}/resumen`);
     }
 
     obtenerActividadReciente(id: number): Observable<ApiResponse<ActividadReciente[]>> {
-        return this.http.get<ApiResponse<ActividadReciente[]>>(
-            `${this.apiUrl}/${id}/actividad`
-        );
+        return this.http.get<ApiResponse<ActividadReciente[]>>(`${this.apiUrl}/${id}/actividad`);
     }
 
     deshabilitar(id: number): Observable<ApiResponse<string>> {
-    return this.http.patch<ApiResponse<string>>(
-        `${this.apiUrl}/${id}/deshabilitar`,
-        {}
-    );
-}
+        return this.http.patch<ApiResponse<string>>(`${this.apiUrl}/${id}/deshabilitar`, {});
+    }
 
-reactivar(id: number): Observable<ApiResponse<string>> {
-    return this.http.patch<ApiResponse<string>>(
-        `${this.apiUrl}/${id}/reactivar`,
-        {}
-    );
-}
-// Obtener perfil propio del cliente autenticado
-obtenerPerfilPropio(): Observable<ApiResponse<any>> {
-  return this.http.get<ApiResponse<any>>(`${this.apiUrl}/perfil-propio`);
-}
+    reactivar(id: number): Observable<ApiResponse<string>> {
+        return this.http.patch<ApiResponse<string>>(`${this.apiUrl}/${id}/reactivar`, {});
+    }
+    // Obtener perfil propio del cliente autenticado
+    obtenerPerfilPropio(): Observable<ApiResponse<any>> {
+        return this.http.get<ApiResponse<any>>(`${this.apiUrl}/perfil-propio`);
+    }
 }
