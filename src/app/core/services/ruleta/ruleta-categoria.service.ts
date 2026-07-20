@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { environment } from "@/environments/environment.development";
+import { environment } from "@/environments/environment"
 import { HttpClient } from "@angular/common/http";
 import { RuletaCategoriaFiltro, RuletaCategoriaRequest, RuletaCategoriaResponse } from "../../models/ruleta/ruleta-categoria.model";
 import { buildHttpParamsComponent } from "@/app/shared/utils/build-http-params.component";
