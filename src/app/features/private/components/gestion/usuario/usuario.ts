@@ -19,18 +19,7 @@ import { campoInvalido, marcarFormulario } from '@/app/shared/utils/form-utils.c
 @Component({
   selector: 'app-usuario',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    ButtonModule,
-    DialogModule,
-    InputTextModule,
-    MessageModule,
-    PasswordModule,
-    HeaderUsuario,
-    FiltrarUsers,
-    TableUsers,
-  ],
+  imports: [CommonModule, ReactiveFormsModule, ButtonModule, DialogModule, InputTextModule, MessageModule, PasswordModule, HeaderUsuario, FiltrarUsers, TableUsers,],
   templateUrl: './usuario.html',
   styleUrl: './usuario.css',
 })
@@ -40,7 +29,7 @@ export class Usuario implements OnInit {
   private readonly notificationService = inject(NotificationService);
   private readonly pageSize = 10;
 
-  usuarios: any[] = [];
+  usuarios: UsuarioTablaResponse[] = [];
   totalElements = 0;
   totalPages = 0;
   currentPage = 0;
@@ -84,6 +73,10 @@ export class Usuario implements OnInit {
     this.cargarUsuarios(0);
   }
 
+  onPageChange(event: { page: number; size: number }): void {
+  this.cargarUsuarios(event.page);
+}
+
   cargarUsuarios(page: number = 0): void {
     this.cargando = true;
     this.errorCarga = '';
@@ -91,8 +84,8 @@ export class Usuario implements OnInit {
     const request$ = this.isSearchMode && this.searchTerm.trim().length > 0
       ? this.usuarioService.buscar(this.searchTerm.trim(), page, this.pageSize)
       : this.tieneFiltrosActivos()
-      ? this.usuarioService.filtrar(this.filtrosConsulta, page, this.pageSize)
-      : this.usuarioService.listar(page, this.pageSize);
+        ? this.usuarioService.filtrar(this.filtrosConsulta, page, this.pageSize)
+        : this.usuarioService.listar(page, this.pageSize);
 
     request$.subscribe({
       next: (response) => this.aplicarRespuesta(response, page),
@@ -287,7 +280,7 @@ export class Usuario implements OnInit {
         apellido: usuario.apellido,
       },
       roles: usuario.roles ?? [],
-      tieneQr: usuario.tieneQr, 
+      tieneQr: usuario.tieneQr,
       tienePin: usuario.tienePin ?? false,
       activo: null,
       ultimoAcceso: '—',

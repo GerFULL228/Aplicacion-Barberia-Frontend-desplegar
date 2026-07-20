@@ -35,10 +35,8 @@ export class TarjetaFormComponent implements OnInit, OnChanges {
   campoInvalido = (campo: string) => campoInvalido(this.tarjetaForm, campo, this.formSubmitted);
 
   ngOnInit(): void {
-    this.tarjetaForm = this.fb.group({
-      clienteId: [null, Validators.required],
-      categoriaId: [null, Validators.required],
-    });
+    console.log('ngOnInit');
+    this.construirFormulario();
     this.cargarClientes();
     this.cargarCategoriasEnTree();
   }
@@ -51,6 +49,13 @@ export class TarjetaFormComponent implements OnInit, OnChanges {
       this.formSubmitted = false;
       this.tarjetaForm?.reset();
     }
+  }
+
+  private construirFormulario(): void {
+    this.tarjetaForm = this.fb.group({
+      clienteId: [null, Validators.required],
+      categoriaId: [null, Validators.required],
+    });
   }
 
   private cargarClientes(): void {

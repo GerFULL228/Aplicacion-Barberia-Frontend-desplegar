@@ -59,12 +59,12 @@
                 <td class="whitespace-nowrap text-center">
                     <div class="flex items-center justify-center gap-1">
                         @if (puedeCanjear(r)) {
-                            <p-button icon="pi pi-check" pTooltip="Canjear" tooltipPosition="top" class="boton-primary" size="small" (click)="onCanjear(r, $event)" />
-                            <p-button icon="pi pi-clock" pTooltip="Marcar vencida" tooltipPosition="top" [text]="true" severity="warn" size="small" (click)="onVencer(r, $event)" />
-                            <p-button icon="pi pi-ban" pTooltip="Anular" tooltipPosition="top" [text]="true" severity="danger" size="small" (click)="onAnular(r, $event)" />
+                            <button pButton icon="pi pi-check" pTooltip="Canjear" tooltipPosition="top" class="boton-primary" size="small" (click)="onCanjear(r, $event)"></button>
+                            <button pButton icon="pi pi-clock" pTooltip="Marcar vencida" tooltipPosition="top" class="boton-anular" size="small" (click)="onVencer(r, $event)"></button>
+                            <button pButton icon="pi pi-ban" pTooltip="Anular" tooltipPosition="top" class="boton-danger" size="small" (click)="onAnular(r, $event)"></button>
                         } @else if (r.estado === EstadoRecompensa.VENCIDO) {
-                            <p-button icon="pi pi-refresh" pTooltip="Reactivar" tooltipPosition="top" [text]="true" severity="success" size="small" (click)="onReactivar(r, $event)" />
-                            <p-button icon="pi pi-ban" pTooltip="Anular" tooltipPosition="top" [text]="true" severity="danger" size="small" (click)="onAnular(r, $event)" />
+                            <button pButton icon="pi pi-refresh" pTooltip="Reactivar" tooltipPosition="top" [text]="true" severity="success" size="small" (click)="onReactivar(r, $event)"></button>
+                            <button pButton icon="pi pi-ban" pTooltip="Anular" tooltipPosition="top" [text]="true" severity="danger" size="small" (click)="onAnular(r, $event)" ></button>
                         } @else if (r.estado === EstadoRecompensa.CANJEADO) {
                             @if (recienCanjeadoId === r.id) {
                                 <span class="check-canje inline-flex">
@@ -73,7 +73,6 @@
                             }
                             <app-status-badge type="text" [value]="r.estado" />
                         } @else {
-                            <!-- ANULADO: estado final, sin acciones -->
                             <app-status-badge type="text" [value]="r.estado" />
                         }
                     </div>

@@ -9,10 +9,12 @@
 </div>
 
 <p-dialog [(visible)]="mostrarForm" [modal]="true" [dismissableMask]="true" [closable]="true" [style]="{ width: '100vw', maxWidth: '50rem'}">
-    <ng-template pTemplate="header">
-        <app-dialog-header icono="pi-id-card" title="Nueva tarjeta" mode="crear" />
-    </ng-template>
-    <app-tarjeta-form [categorias]="categorias"  [resetTrigger]="resetFormTrigger" (guardar)="guardarTarjeta($event)" (cancelarEvento)="cerrarForm()" />
+    @if (mostrarForm) {
+        <ng-template pTemplate="header">
+            <app-dialog-header icono="pi-id-card" title="Nueva tarjeta" mode="crear" />
+        </ng-template>
+        <app-tarjeta-form [categorias]="categorias"  [resetTrigger]="resetFormTrigger" (guardar)="guardarTarjeta($event)" (cancelarEvento)="cerrarForm()" />
+    }
 </p-dialog>
 
 <p-dialog [(visible)]="mostrarPreview" [modal]="true" [dismissableMask]="true" [closable]="true" [style]="{ width: '100vw', maxWidth: '80rem' }">

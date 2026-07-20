@@ -21,7 +21,9 @@
                     <app-reglas />
                 </p-tabpanel>
                 <p-tabpanel value="tarjetas">
-                    <app-tarjetas />
+                    @if (activeTab === 'tarjetas') {
+                        <app-tarjetas />
+                    }
                 </p-tabpanel> 
             </p-tabpanels>
         </p-tabs>

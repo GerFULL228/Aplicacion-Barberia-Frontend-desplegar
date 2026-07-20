@@ -2,56 +2,35 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { TableModule, TableLazyLoadEvent } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
+import { StatusBadgeComponent } from '@/app/shared/components/status-badge/status-badge.component';
+import { UsuarioTablaResponse } from '@/app/core/models/gestion/usuario.model';
 
 @Component({
   selector: 'app-table-users',
   standalone: true,
-  imports: [CommonModule, RouterModule, ButtonModule],
+  imports: [CommonModule, RouterModule, ButtonModule, TableModule, TooltipModule, StatusBadgeComponent],
   templateUrl: './table-users.html',
   styleUrl: './table-users.css',
 })
 export class TableUsers {
 
-  @Input() usuarios: any[] = [];
+  @Input() usuarios: UsuarioTablaResponse[] = [];
+  @Input() totalElements = 0;
+  @Input() pageSize = 10;
+  @Input() inhabilitadosMode = false;
+  @Input() isSearchMode = false;
 
-  @Input() totalElements: number = 0;
-
-  @Input() currentPage: number = 0;
-
-  @Input() totalPages: number = 0;
-
-  @Input() pageSize: number = 7;
-
-  @Input() inhabilitadosMode: boolean = false;
-
-  @Input() isSearchMode: boolean = false;
-
-  @Output() prev = new EventEmitter<void>();
-
-  @Output() next = new EventEmitter<void>();
-
+  @Output() pageChange = new EventEmitter<{ page: number; size: number }>();
   @Output() delete = new EventEmitter<number>();
-
   @Output() reactivate = new EventEmitter<number>();
-
   @Output() createAdmin = new EventEmitter<void>();
 
-  get canGoPrev(): boolean {
-    return this.currentPage > 0;
-  }
-
-  get canGoNext(): boolean {
-    return this.totalPages > 0 && this.currentPage < this.totalPages - 1;
-  }
-
-  onPrev(): void {
-    if (!this.canGoPrev) return;
-    this.prev.emit();
-  }
-
-  onNext(): void {
-    if (!this.canGoNext) return;
-    this.next.emit();
+  onLazyLoad(event: TableLazyLoadEvent): void {
+    const first = event.first ?? 0;
+    const rows = event.rows ?? this.pageSize;
+    this.pageChange.emit({ page: Math.floor(first / rows), size: rows });
   }
 
   onDelete(id: number): void {
@@ -81,17 +60,15 @@ export class TableUsers {
   initials(username: string): string {
     if (!username) return '';
     const parts = username.trim().split(/[\s._-]/).filter(Boolean);
-    if (parts.length === 1) {
-      return parts[0].slice(0, 2).toUpperCase();
-    }
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
     return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
   }
 
   getRoleBadgeClass(rol: string): string {
     const r = (rol || '').toLowerCase();
-    if (r.includes('admin')) return 'role-admin';
-    if (r.includes('barber') || r.includes('barbero')) return 'role-barbero';
-    if (r.includes('recep')) return 'role-recep';
-    return 'role-default';
+    if (r.includes('admin')) return 'badge-text role-admin';
+    if (r.includes('barber')) return 'badge-text role-barbero';
+    if (r.includes('recep')) return 'badge-text role-recep';
+    return 'badge-text role-default';
   }
 }

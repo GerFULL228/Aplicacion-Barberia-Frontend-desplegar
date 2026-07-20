@@ -6,10 +6,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MiResumenComponent } from './mi-resumen/mi-resumen.component';
 import { MisTarjetasComponent } from './mis-tarjetas/mis-tarjetas.component';
 import { MiHistorialComponent } from './mi-historial/mi-historial.component';
+import { MisPremiosComponent } from './mis-premios/mis-premios.component';
 
 @Component({
   selector: 'app-fidelizacion',
-  imports: [CommonModule, TabsModule, MiResumenComponent, MisTarjetasComponent, MiHistorialComponent],
+  imports: [CommonModule, TabsModule, MiResumenComponent, MisTarjetasComponent, MiHistorialComponent, MisPremiosComponent],
   templateUrl: './fidelizacion.html',
   styleUrl: './fidelizacion.css',
 })
