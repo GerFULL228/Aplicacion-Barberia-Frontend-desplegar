@@ -2,17 +2,20 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { TableLazyLoadEvent, TableModule } from 'primeng/table';
+import { TooltipModule } from 'primeng/tooltip';
 import { ClienteFilterMode } from '@/app/core/models/gestion/cliente/cliente-filter.model';
+import { Cliente } from '@/app/core/models/gestion/cliente/cliente.model';
 
 @Component({
   selector: 'app-table-client',
-  imports: [CommonModule, RouterModule, ButtonModule],
+  imports: [CommonModule, RouterModule, ButtonModule, TableModule, TooltipModule],
   templateUrl: './table-client.html',
   styleUrl: './table-client.css',
 })
 export class TableClient {
 
-  @Input() clients: any[] = [];
+  @Input() clients: Cliente[] = [];
 
   @Input() totalElements: number = 0;
 
@@ -24,30 +27,19 @@ export class TableClient {
 
   @Input() isSearchMode: boolean = false;
 
-  @Output() prev = new EventEmitter<void>();
+  @Input() rows: number = 10;
 
-  @Output() next = new EventEmitter<void>();
-  
+  @Output() pageChange = new EventEmitter<number>();
+
   @Output() delete = new EventEmitter<number>();
 
   @Output() reactivate = new EventEmitter<number>();
 
-  get canGoPrev(): boolean {
-    return this.currentPage > 0;
-  }
-
-  get canGoNext(): boolean {
-    return this.totalPages > 0 && this.currentPage < this.totalPages - 1;
-  }
-
-  onPrev(): void {
-    if (!this.canGoPrev) return;
-    this.prev.emit();
-  }
-
-  onNext(): void {
-    if (!this.canGoNext) return;
-    this.next.emit();
+  onLazyLoad(event: TableLazyLoadEvent): void {
+    const first = event.first ?? 0;
+    const rows = event.rows ?? this.rows;
+    const page = Math.floor(first / rows);
+    this.pageChange.emit(page);
   }
 
   onDelete(id: number): void {
@@ -58,19 +50,16 @@ export class TableClient {
     this.reactivate.emit(id);
   }
 
-  initials(name: string) {
-
+  initials(name: string | null | undefined): string {
     if (!name) return '';
 
-    const parts = name.split(' ').filter(Boolean);
+    const parts = name.trim().split(' ').filter(Boolean);
 
+    if (parts.length === 0) return '';
     if (parts.length === 1) {
       return parts[0].slice(0, 2).toUpperCase();
     }
 
-    return (
-      parts[0][0] +
-      (parts[1] ? parts[1][0] : '')
-    ).toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
   }
 }

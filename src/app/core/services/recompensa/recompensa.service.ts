@@ -15,15 +15,11 @@ export class RecompensaService {
 
   // Cliente autenticado ve su propia tarjeta
   getMiTarjeta(): Observable<ApiResponse<Recompensa>> {
-    return this.http.get<ApiResponse<Recompensa>>(
-      `${this.apiUrl}/mi-tarjeta`
-    );
+    return this.http.get<ApiResponse<Recompensa>>(`${this.apiUrl}/mi-tarjeta`);
   }
 
   // Admin / barbero consulta tarjeta de cualquier cliente
   getByClienteId(clienteId: number): Observable<ApiResponse<Recompensa>> {
-    return this.http.get<ApiResponse<Recompensa>>(
-      `${this.apiUrl}/${clienteId}`
-    );
+    return this.http.get<ApiResponse<Recompensa>>(`${this.apiUrl}/${clienteId}`);
   }
 }

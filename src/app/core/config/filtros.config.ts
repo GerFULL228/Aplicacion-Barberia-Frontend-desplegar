@@ -4,7 +4,7 @@ import { CategoriaFiltro } from "../models/catalogos/categorias.model";
 import { ProductoFiltro } from "../models/catalogos/productos.model";
 import { ServicioFiltro } from "../models/catalogos/servicios.model";
 import { FilterField } from "../models/common/filtro.model";
-import { BOOLEAN_FILTERS, CATEGORIA_OPTIONS, CAUSA_RECLAMO_OPTIONS, ESTADO_RECLAMO_OPTIONS, ESTADO_RECOMPENSA_OPTIONS, ORIGEN_MOVIMIENTO_OPTIONS, TIPO_ALCANCE_FIDELIZACION_OPTIONS, TIPO_PREMIO_OPTIONS, TIPO_PROBLEMA_OPTIONS, TIPO_RECLAMACION_OPTIONS, TIPO_RULETA_OPTIONS } from "../models/common/select.option.model";
+import { BOOLEAN_FILTERS, CATEGORIA_OPTIONS, CAUSA_RECLAMO_OPTIONS, ESTADO_RECLAMO_OPTIONS, ESTADO_RECOMPENSA_OPTIONS, ESTADO_RESERVA_OPTIONS, METODO_PAGO_OPTIONS, ORIGEN_MOVIMIENTO_OPTIONS, TIPO_ALCANCE_FIDELIZACION_OPTIONS, TIPO_PREMIO_OPTIONS, TIPO_PROBLEMA_OPTIONS, TIPO_RECLAMACION_OPTIONS, TIPO_RESERVA_OPTIONS, TIPO_RULETA_OPTIONS } from "../models/common/select.option.model";
 import { ConfiguracionFiltro } from "../models/ruleta/ruleta-configuracion.model";
 import { FidelizacionReglaFiltro } from "../models/fidelizacion/regla.model";
 import { ReclamoFiltro } from "../models/operaciones/reclamos-model/reclamo.filtro.model";
@@ -17,6 +17,7 @@ import { GiroFiltro } from "../models/ruleta/giro.model";
 import { RecompensaFiltro } from "../models/ruleta/recompensa.model";
 import { HistorialClienteFiltro } from "../models/operaciones/historial-cliente.model";
 import { HistorialBarberFiltro } from "../models/operaciones/historial-barbero.model";
+import { ReservaFiltro } from "../models/operaciones/Reserva.model";
 
 
 export const FILTROS_CATEGORIA: FilterField<CategoriaFiltro>[] = [
@@ -78,8 +79,8 @@ export const FILTROS_REPORTE: FilterField<ReporteFiltro>[] = [
     { key: 'hasta', label: 'Hasta', type: 'date', placeholder: 'Fecha fin' },
     { key: 'barberoId', label: 'Barbero', type: 'select', placeholder: 'Seleccione barbero', options: [] },
     { key: 'servicioId', label: 'Servicio', type: 'select', placeholder: 'Seleccione servicio', options: [] },
-    { key: 'estado', label: 'Estado', type: 'select', placeholder: 'Seleccione estado', options: Object.values(EstadoReserva).map(e => ({ label: e, value: e })) },
-    { key: 'metodoPago', label: 'Método de pago', type: 'select', placeholder: 'Seleccione método', options: Object.values(MetodoPago).map(e => ({ label: e, value: e })) },
+    { key: 'estado', label: 'Estado', type: 'select', placeholder: 'Seleccione estado', options: ESTADO_RESERVA_OPTIONS },
+    { key: 'metodoPago', label: 'Método de pago', type: 'select', placeholder: 'Seleccione método', options: METODO_PAGO_OPTIONS },
 ];
 export const FILTROS_METRICAS: FilterField<MetricasFiltro>[] = [
     { key: 'fechaInicio', label: 'Desde', type: 'date', placeholder: 'Fecha inicio' },
@@ -144,7 +145,7 @@ export const FILTROS_GIRO: FilterField<GiroFiltro>[] = [
     { key: 'ruletaId', label: 'Ruleta', type: 'select', placeholder: 'Seleccione ruleta', options: [] },
     { key: 'fechaInicio', label: 'Fecha de inicio', type: 'date', placeholder: 'Desde' },
     { key: 'fechaFin', label: 'Fecha de fin', type: 'date', placeholder: 'Hasta', endOfDay: true }
-]   
+]
 
 export const FILTROS_RECOMPENSA: FilterField<RecompensaFiltro>[] = [
     { key: 'clienteId', label: 'Cliente', type: 'select', placeholder: 'Seleccione cliente', options: [] },
@@ -152,48 +153,22 @@ export const FILTROS_RECOMPENSA: FilterField<RecompensaFiltro>[] = [
     { key: 'itemId', label: 'Item', type: 'select', placeholder: 'Seleccione item', options: [] },
 ]
 export const FILTROS_HISTORIAL: FilterField<HistorialClienteFiltro>[] = [
-    {
-        key: 'estado',
-        label: 'Estado',
-        type: 'select',
-        placeholder: 'Seleccione estado',
-        options: Object.values(EstadoReserva).map(e => ({
-            label: e,
-            value: e
-        }))
-    },
-    {
-        key: 'desde',
-        label: 'Desde',
-        type: 'date',
-        placeholder: 'Fecha inicio'
-    },
-    {
-        key: 'hasta',
-        label: 'Hasta',
-        type: 'date',
-        placeholder: 'Fecha fin',
-        endOfDay: true
-    }
+    { key: 'estado', label: 'Estado', type: 'select', placeholder: 'Seleccione estado', options: ESTADO_RESERVA_OPTIONS },
+    { key: 'desde', label: 'Desde', type: 'date', placeholder: 'Fecha inicio' },
+    { key: 'hasta', label: 'Hasta', type: 'date', placeholder: 'Fecha fin', endOfDay: true }
 ];
 export const FILTROS_HISTORIAL_BARBERO: FilterField<HistorialBarberFiltro>[] = [
-    {
-        key: 'clienteNombre',
-        label: 'Cliente',
-        type: 'text',
-        placeholder: 'Buscar por nombre del cliente'
-    },
-    {
-        key: 'desde',
-        label: 'Desde',
-        type: 'date',
-        placeholder: 'Fecha inicio'
-    },
-    {
-        key: 'hasta',
-        label: 'Hasta',
-        type: 'date',
-        placeholder: 'Fecha fin',
-        endOfDay: true
-    }
+    { key: 'clienteNombre', label: 'Cliente', type: 'text', placeholder: 'Buscar por nombre del cliente' },
+    { key: 'desde', label: 'Desde', type: 'date', placeholder: 'Fecha inicio' },
+    { key: 'hasta', label: 'Hasta', type: 'date', placeholder: 'Fecha fin', endOfDay: true }
+];
+
+export const FILTROS_RESERVA: FilterField<ReservaFiltro>[] = [
+    { key: 'clienteNombre', label: 'Cliente', type: 'text', placeholder: 'Buscar por nombre del cliente' },
+    { key: 'barberoNombre', label: 'Barbero', type: 'text', placeholder: 'Buscar por nombre del barbero' },
+    // { key: 'servicioId', label: 'Servicio', type: 'select', placeholder: 'Seleccione servicio', options: [] },
+    { key: 'estadoReserva', label: 'Estado de la reserva', type: 'select', placeholder: 'Seleccione estado', options: ESTADO_RESERVA_OPTIONS },
+    { key: 'tipoReserva', label: 'Tipo de reserva', type: 'select', placeholder: 'Seleccione tipo', options: TIPO_RESERVA_OPTIONS },
+    { key: 'fecha', label: 'Fecha de inicio', type: 'date', placeholder: 'Desde' },
+    { key: 'fechaHasta', label: 'Fecha de fin', type: 'date', placeholder: 'Hasta', endOfDay: true }
 ];

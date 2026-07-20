@@ -19,9 +19,7 @@ import { RuletaEngineService } from '@/app/core/services/ruleta/engine.service';
 export class MiRuletaComponent implements OnInit, OnChanges {
   @Input({ required: true }) tarjeta!: FidelizacionTarjetaResponse;
   @Input() activa = false;
-  /** Emite la recompensa real obtenida cada vez que se completa un giro contra el backend */
   @Output() girado = new EventEmitter<RecompensaObtenida>();
-
   @ViewChild(RuletaGraficoComponent) ruletaGraficoRef?: RuletaGraficoComponent;
 
   private configuracionService = inject(ConfiguracionService);

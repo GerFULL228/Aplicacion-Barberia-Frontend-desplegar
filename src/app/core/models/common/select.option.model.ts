@@ -1,7 +1,10 @@
 import { CategoriaTipo } from "../catalogos/categorias.model";
 import { Origen } from "../fidelizacion/movimiento.model";
 import { TipoAlcanceFidelizacion } from "../fidelizacion/regla.model";
+import { EstadoReserva } from "../operaciones/EstadoReserva";
 import { CausaReclamo, EstadoReclamo, SolucionReclamo, TipoProblema, TipoReclamacion } from "../operaciones/reclamos-model/reclamo.enum.model";
+import { TipoReserva } from "../operaciones/TipoRserva";
+import { MetodoPago } from "../pagos/pago.model";
 import { EstadoRecompensa } from "../ruleta/recompensa.model";
 import { TipoPremio } from "../ruleta/ruleta-item.model";
 import { TipoRuleta } from "../ruleta/ruleta.model";
@@ -148,4 +151,27 @@ export const ESTADO_RECOMPENSA_OPTIONS: SelectOption<EstadoRecompensa>[] = [
     { label: 'Canjeada', value: EstadoRecompensa.CANJEADO },
     { label: 'Vencida', value: EstadoRecompensa.VENCIDO },
     { label: 'Anulado', value: EstadoRecompensa.ANULADO },
+];
+
+export const ESTADO_RESERVA_OPTIONS: SelectOption<EstadoReserva>[] = [
+    { label: 'Pendiente de pago', value: EstadoReserva.PENDIENTE_PAGO },
+    { label: 'Confirmada', value: EstadoReserva.CONFIRMADA },
+    { label: 'En proceso', value: EstadoReserva.EN_PROCESO },
+    { label: 'Finalizada', value: EstadoReserva.FINALIZADA },
+    { label: 'Cancelada', value: EstadoReserva.CANCELADA },
+    { label: 'Cancelada automática', value: EstadoReserva.CANCELADA_AUTOMATICA },
+    { label: 'No asistió', value: EstadoReserva.NO_ASISTIO },
+]
+
+export const TIPO_RESERVA_OPTIONS: SelectOption<TipoReserva>[] = [
+    { label: 'Presencial', value: TipoReserva.RESERVA_PRESENCIAL_INSTANTANEO },
+    { label: 'Virtual', value: TipoReserva.RESERVA_VIRTUAL },
+]
+
+export const METODO_PAGO_OPTIONS: SelectOption<MetodoPago>[] = [
+    { label: 'Efectivo', value: 'EFECTIVO' },
+    { label: 'Tarjeta de crédito/débito', value: 'TARJETA' },
+    { label: 'Yape', value: 'YAPE' },
+    { label: 'Plin', value: 'PLIN' },
+    { label: 'Transferencia bancaria', value: 'TRANSFERENCIA' },
 ];

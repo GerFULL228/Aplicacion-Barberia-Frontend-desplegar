@@ -19,7 +19,8 @@ export class Clientes implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private clienteService = inject(ClienteService);
-  private readonly pageSize = 7;
+
+  readonly pageSize = 7;
 
   icono: string = 'pi-users';
   activeFilter: ClienteFilterMode = 'todos';
@@ -52,14 +53,8 @@ export class Clientes implements OnInit {
     });
   }
 
-  onPrevPage(): void {
-    if (this.currentPage <= 0) return;
-    this.cargarPaginaActual(this.currentPage - 1);
-  }
-
-  onNextPage(): void {
-    if (this.currentPage >= this.totalPages - 1) return;
-    this.cargarPaginaActual(this.currentPage + 1);
+  onPageChange(page: number): void {
+    this.cargarPaginaActual(page);
   }
 
   abrirCrear() {

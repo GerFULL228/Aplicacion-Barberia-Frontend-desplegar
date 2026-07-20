@@ -22,64 +22,29 @@ export interface FiltroBarberoBusqueda {
     providedIn: 'root'
 })
 export class BarberoService {
-
     private http = inject(HttpClient);
     private apiUrl = `${environment.apiUrl}/barberos`;
 
-    listar(
-        page: number = 0,
-        size: number = 5
-    ): Observable<ApiResponse<Page<Barbero>>> {
-
-        const params = new HttpParams()
-            .set('page', page)
-            .set('size', size);
-
-        return this.http.get<ApiResponse<Page<Barbero>>>(
-            this.apiUrl,
-            { params }
-        );
+    listar(page: number = 0, size: number = 5): Observable<ApiResponse<Page<Barbero>>> {
+        const params = new HttpParams().set('page', page).set('size', size);
+        return this.http.get<ApiResponse<Page<Barbero>>>(this.apiUrl, { params });
     }
 
-    listarInhabilitados(
-        page: number = 0,
-        size: number = 5
-    ): Observable<ApiResponse<Page<Barbero>>> {
-
-        const params = new HttpParams()
-            .set('page', page)
-            .set('size', size);
-
-        return this.http.get<ApiResponse<Page<Barbero>>>(
-            `${this.apiUrl}/inhabilitados`,
-            { params }
-        );
+    listarInhabilitados(page: number = 0, size: number = 5): Observable<ApiResponse<Page<Barbero>>> {
+        const params = new HttpParams().set('page', page).set('size', size);
+        return this.http.get<ApiResponse<Page<Barbero>>>(`${this.apiUrl}/inhabilitados`, { params });
     }
+
     deshabilitar(id: number): Observable<ApiResponse<string>> {
-
-        return this.http.patch<ApiResponse<string>>(
-            `${this.apiUrl}/${id}/deshabilitar`,
-            {}
-        );
+        return this.http.patch<ApiResponse<string>>(`${this.apiUrl}/${id}/deshabilitar`, {});
     }
 
     reactivar(id: number): Observable<ApiResponse<string>> {
-
-        return this.http.patch<ApiResponse<string>>(
-            `${this.apiUrl}/${id}/reactivar`,
-            {}
-        );
+        return this.http.patch<ApiResponse<string>>(`${this.apiUrl}/${id}/reactivar`, {});
     }
-    buscar(
-        filtros: FiltroBarberoBusqueda = {},
-        page: number = 0,
-        size: number = 10
-    ): Observable<ApiResponse<Page<Barbero>>> {
 
-        let params = new HttpParams()
-            .set('page', page)
-            .set('size', size);
-
+    buscar(filtros: FiltroBarberoBusqueda = {}, page: number = 0, size: number = 10): Observable<ApiResponse<Page<Barbero>>> {
+        let params = new HttpParams().set('page', page).set('size', size);
         if (filtros.estado && filtros.estado !== 'todos') {
             params = params.set('estado', filtros.estado);
         }
@@ -92,108 +57,64 @@ export class BarberoService {
             params = params.set('direccion', filtros.direccion);
         }
 
-        return this.http.get<ApiResponse<Page<Barbero>>>(
-            `${this.apiUrl}/buscar`,
-            { params }
-        );
+        return this.http.get<ApiResponse<Page<Barbero>>>(`${this.apiUrl}/buscar`, { params });
     }
 
-    buscarPorNombre(
-        termino: string = '',
-        page: number = 0,
-        size: number = 10
-    ): Observable<ApiResponse<Page<Barbero>>> {
-        const params = new HttpParams()
-            .set('q', termino.trim())
-            .set('page', page)
-            .set('size', size);
-
-        return this.http.get<ApiResponse<Page<Barbero>>>(
-            `${this.apiUrl}/buscar-nombre`,
-            { params }
-        );
+    buscarPorNombre(termino: string = '', page: number = 0, size: number = 10): Observable<ApiResponse<Page<Barbero>>> {
+        const params = new HttpParams().set('q', termino.trim()).set('page', page).set('size', size);
+        return this.http.get<ApiResponse<Page<Barbero>>>(`${this.apiUrl}/buscar-nombre`, { params });
     }
 
     obtenerPorId(id: number): Observable<ApiResponse<Barbero>> {
-        return this.http.get<ApiResponse<Barbero>>(
-            `${this.apiUrl}/${id}`
-        );
+        return this.http.get<ApiResponse<Barbero>>(`${this.apiUrl}/${id}`);
     }
 
     crear(data: Partial<Barbero>): Observable<ApiResponse<Barbero>> {
-        return this.http.post<ApiResponse<Barbero>>(
-            this.apiUrl,
-            data
-        );
+        return this.http.post<ApiResponse<Barbero>>(this.apiUrl, data);
     }
 
     actualizar(id: number, data: Partial<Barbero>): Observable<ApiResponse<Barbero>> {
-        return this.http.patch<ApiResponse<Barbero>>(
-            `${this.apiUrl}/actualizar/${id}`,
-            data
-        );
+        return this.http.patch<ApiResponse<Barbero>>(`${this.apiUrl}/actualizar/${id}`, data);
     }
 
     eliminar(id: number): Observable<ApiResponse<Barbero>> {
-        return this.http.delete<ApiResponse<Barbero>>(
-            `${this.apiUrl}/eliminar/${id}`
-        );
+        return this.http.delete<ApiResponse<Barbero>>(`${this.apiUrl}/eliminar/${id}`);
     }
 
     obtenerResumenGeneral(): Observable<ApiResponse<ResumenGeneralBarbero>> {
-        return this.http.get<ApiResponse<ResumenGeneralBarbero>>(
-            `${this.apiUrl}/resumen-general`
-        );
+        return this.http.get<ApiResponse<ResumenGeneralBarbero>>(`${this.apiUrl}/resumen-general`);
     }
 
     obtenerResumenIndividual(id: number): Observable<ApiResponse<ResumenIndividualBarbero>> {
-        return this.http.get<ApiResponse<ResumenIndividualBarbero>>(
-            `${this.apiUrl}/${id}/resumen`
-        );
+        return this.http.get<ApiResponse<ResumenIndividualBarbero>>(`${this.apiUrl}/${id}/resumen`);
     }
 
 
-getPerfil(): Observable<ApiResponse<PerfilBarbero>> {
-    return this.http.get<ApiResponse<PerfilBarbero>>(
-        `${environment.apiUrl}/barberos/perfil-propio`
-    );
-}
+    getPerfil(): Observable<ApiResponse<PerfilBarbero>> {
+        return this.http.get<ApiResponse<PerfilBarbero>>(`${environment.apiUrl}/barberos/perfil-propio`);
+    }
 
-toggleOcupado(id: number): Observable<ApiResponse<EstadoResponse>> {
-    return this.http.patch<ApiResponse<EstadoResponse>>(
-        `${this.apiUrl}/${id}/ocupado`,
-        {}
-    );
-}
+    toggleOcupado(id: number): Observable<ApiResponse<EstadoResponse>> {
+        return this.http.patch<ApiResponse<EstadoResponse>>(`${this.apiUrl}/${id}/ocupado`, {});
+    }
 
-getStatsHoy(id: number): Observable<ApiResponse<StatsHoy>> {
-    return this.http.get<ApiResponse<StatsHoy>>(
-        `${environment.apiUrl}/barbero/reservas/barbero/${id}/hoy`
-    );
-}
+    getStatsHoy(id: number): Observable<ApiResponse<StatsHoy>> {
+        return this.http.get<ApiResponse<StatsHoy>>(`${environment.apiUrl}/barbero/reservas/barbero/${id}/hoy`);
+    }
 
-getCitasHoy(): Observable<ApiResponse<Cita[]>> {
-    return this.http.get<ApiResponse<Cita[]>>(
-        `${environment.apiUrl}/barbero/citas/hoy`
-    );
-}
+    getCitasHoy(): Observable<ApiResponse<Cita[]>> {
+        return this.http.get<ApiResponse<Cita[]>>(`${environment.apiUrl}/barbero/citas/hoy`);
+    }
 
-getResumenSemanal(id: number): Observable<ApiResponse<ResumenSemanal>> {
-    return this.http.get<ApiResponse<ResumenSemanal>>(
-        `${environment.apiUrl}/barbero/reservas/barbero/${id}/semanal`
-    );
-}
+    getResumenSemanal(id: number): Observable<ApiResponse<ResumenSemanal>> {
+        return this.http.get<ApiResponse<ResumenSemanal>>(`${environment.apiUrl}/barbero/reservas/barbero/${id}/semanal`);
+    }
 
-logout(): Observable<ApiResponse<string>> {
-    return this.http.post<ApiResponse<string>>(
-        `${environment.apiUrl}/auth/logout`,
-        {}
-    );
-}
+    logout(): Observable<ApiResponse<string>> {
+        return this.http.post<ApiResponse<string>>(`${environment.apiUrl}/auth/logout`, {});
+    }
 
-obtenerMiBarberoId(): Observable<ApiResponse<number>> {
-    return this.http.get<ApiResponse<number>>(
-        `${this.apiUrl}/mi-barbero`
-    );
-}
+    obtenerMiBarberoId(): Observable<ApiResponse<number>> {
+        return this.http.get<ApiResponse<number>>(`${this.apiUrl}/mi-barbero`);
+    }
 }

@@ -8,7 +8,7 @@ export const BARBERO_MENU = [
 
     {
         label: "Cortes",
-        icon: "pi pi-scissors",
+        icon: "pi pi-sparkles",
         routerLink: ["cortes"],
         permission: "CORTE_READ_ASSIGNED"
     },

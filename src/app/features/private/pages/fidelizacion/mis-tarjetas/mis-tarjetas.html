@@ -10,25 +10,15 @@
         {{ error }}
     </div>
 
-    <app-tarjeta-grafico *ngIf="!cargando && !error" variante="cliente" [tarjetas]="misTarjetas"
-        (canjear)="onCanjear($event)" (verRuleta)="verRuleta($event)" />
+    <app-tarjeta-grafico *ngIf="!cargando && !error" variante="cliente" [tarjetas]="misTarjetas" (canjear)="onCanjear($event)" (verRuleta)="verRuleta($event)" />
 </div>
 
-<!-- MODAL RESERVA GRATUITA -->
-<div *ngIf="showReservaModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
-    (click)="cerrarModal()">
-    <div class="bg-[#111] border border-[#b8952a]/30 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl"
-        (click)="$event.stopPropagation()">
-        <!-- ... contenido completo del form (barbero, servicio, fecha, hora, observaciones) que ya te pasé antes ... -->
-    </div>
-</div>
-
-<!-- MODAL RULETA -->
+<!-- MODAL RULETA (se usa tanto para "Ver ruleta" como para "Canjear") -->
 <div *ngIf="showRuletaModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
     (click)="cerrarModalRuleta()">
-    <app-mi-ruleta *ngIf="tarjetaRuletaSeleccionada" [tarjeta]="tarjetaRuletaSeleccionada" [activa]="showRuletaModal"
-        (girado)="onGiroRealizado($event)">
-    </app-mi-ruleta>
+    <div (click)="$event.stopPropagation()">
+        <app-mi-ruleta *ngIf="tarjetaRuletaSeleccionada" [tarjeta]="tarjetaRuletaSeleccionada" [activa]="showRuletaModal" (girado)="onGiroRealizado($event)"/>
+    </div>
 </div>
 
 <p-toast position="top-right"></p-toast>
