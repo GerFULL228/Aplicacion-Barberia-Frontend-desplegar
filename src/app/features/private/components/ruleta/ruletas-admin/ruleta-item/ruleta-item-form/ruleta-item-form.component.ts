@@ -10,7 +10,7 @@ import { ImageModule } from 'primeng/image';
 import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { RuletaItemResponse, RuletaItemRequest, TipoPremio } from '@/app/core/models/ruleta/ruleta-item.model';
 import { campoInvalido, marcarFormulario } from '@/app/shared/utils/form-utils.component';
-import { environment } from '@/environments/environment.development';
+import { environment } from "@/environments/environment";
 import { TIPO_PREMIO_OPTIONS } from '@/app/core/models/common/select.option.model';
 import { ProductoSelectorComponent } from '@/app/shared/components/selector/producto-selector/producto-selector.component';
 import { ServicioSelectorComponent } from '@/app/shared/components/selector/servicio-selector/servicio-selector.component';

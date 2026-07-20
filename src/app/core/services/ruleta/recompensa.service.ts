@@ -1,6 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { environment } from "@/environments/environment.development";
+import { environment } from "@/environments/environment"
 import { ApiResponse, PageResponse } from "../../models/common/index.model";
 import { RecompensaFiltro, RecompensaObtenidaRequest, RecompensaObtenida, EstadoRecompensa } from "../../models/ruleta/recompensa.model";
 import { buildHttpParamsComponent } from "@/app/shared/utils/build-http-params.component";

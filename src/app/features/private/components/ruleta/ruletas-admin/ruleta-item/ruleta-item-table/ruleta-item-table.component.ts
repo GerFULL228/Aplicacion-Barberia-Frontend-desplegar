@@ -7,7 +7,7 @@ import { ImageModule } from 'primeng/image';
 import { ConfirmPopoverComponent } from '@/app/shared/components/confirm-popover/confirm-popover.component';
 import { StatusBadgeComponent } from '@/app/shared/components/status-badge/status-badge.component';
 import { RuletaItemResponse } from '@/app/core/models/ruleta/ruleta-item.model';
-import { environment } from '@/environments/environment.development';
+import { environment } from "@/environments/environment";
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { SafeImageUrlPipe } from '@/app/shared/pipes/safe-image-url.pipe';
 import { RuletaCategoriasComponent } from '../../ruleta-categoria/ruleta-categoria.component';
